@@ -1,20 +1,13 @@
 # pylint: skip-file
 
-from typing import Any, Callable, Generic, Iterable, Literal, overload
+from typing import Any, Callable, Generic, Iterable, Literal, Self, overload
 
+from numpy import float64
+from numpy.typing import NDArray
+from torch import Tensor
 from typing_extensions import TypeVar
 
-ComputeTypes = Literal[
-    'default',
-    'auto',
-    'int8',
-    'int8_float16',
-    'int8_bfloat16',
-    'int16',
-    'float16',
-    'bfloat16',
-    'float32',
-]
+from server.types import ComputeTypes
 
 Devices = Literal['cpu', 'cuda', 'auto']
 
@@ -42,6 +35,11 @@ class AsyncGenerationResult(Generic[Scores]):
     def done(self) -> bool: ...
 
     def result(self) -> GenerationResult[Scores]: ...
+
+
+class EncoderForwardOutput:
+    last_hidden_state: Any
+    pooler_output: Any
 
 
 class Generator:
@@ -303,3 +301,32 @@ class Generator:
         static_prompt: list[str] | None = None,
         cache_static_prompt: bool = True,
     ) -> Iterable[GenerationStepResult[float]]: ...
+
+
+class StorageView:
+    @classmethod
+    def from_array(cls, array: NDArray[float64] | Tensor) -> Self: ...
+
+
+class Encoder:
+    def __init__(
+        self,
+        model_path: str,
+        device: Devices = 'cpu',
+        *,
+        device_index: int | list[int] = 0,
+        compute_type: ComputeTypes = 'default',
+        inter_threads: int = 1,
+        intra_threads: int = 0,
+        max_queued_batches: int = 0,
+        files: object = None
+    ) -> None: ...
+
+
+    def forward_batch(
+        self,
+        inputs: list[list[str]] | list[list[int]] | StorageView,
+        lengths: StorageView | None = None,
+        token_type_ids: list[list[int]] | None = None
+    ) -> EncoderForwardOutput: ...
+
