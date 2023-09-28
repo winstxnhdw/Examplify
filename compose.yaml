@@ -8,32 +8,6 @@ services:
       interval: 5s
       retries: 5
 
-  storage:
-    container_name: storage
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    image: minio/minio:latest
-    command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
-    ports: ['${MINIO_PORT}:${MINIO_CONSOLE_PORT}']
-    volumes: [./storage:/data]
-    healthcheck:
-      test: ['CMD-SHELL', 'curl http://localhost:${MINIO_PORT}/minio/health/live']
-      interval: 5s
-      retries: 5
-
-  mc:
-    container_name: mc
-    image: minio/mc:latest
-    entrypoint: ["/bin/sh","-c"]
-    depends_on:
-      storage:
-        condition: service_healthy
-    command: >
-        mc alias set storage http://storage:${MINIO_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD}
-        echo "Attempting to update MinIO Server"
-        mc admin update storage -y
-
   caddy:
     container_name: caddy
     environment:
@@ -51,9 +25,6 @@ services:
     container_name: backend
     environment:
       REDIS_URL: redis://redis:6379
-      STORAGE_URL: storage:${MINIO_PORT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       BACKEND_PORT: ${BACKEND_PORT}
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
@@ -65,5 +36,3 @@ services:
         condition: service_started
       redis:
         condition: service_healthy
-      mc:
-        condition: service_completed_successfully

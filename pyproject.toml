@@ -33,19 +33,18 @@ fastapi = "^0.103.1"
 python-multipart = "^0.0.6"
 hypercorn = "^0.14.4"
 uvloop = "^0.17.0"
+httpx = "^0.25.0"
 ctranslate2 = "^3.20.0"
 transformers = "^4.33.3"
 sentencepiece = "^0.1.99"
 protobuf = "^4.24.3"
-nvidia-cublas-cu11 = { version = "^11.11.3.6", optional = true }
+redis = { extras = ["hiredis"], version = "^5.0.1" }
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.328"
 pylint = "^2.17.5"
 pytest = "^7.4.2"
 isort = "^5.12.0"
-httpx = "^0.25.0"
-
 
 [tool.poetry.extras]
 cuda = ["nvidia-cublas-cu11"]
