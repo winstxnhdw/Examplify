@@ -1,8 +1,7 @@
-from os import environ as env
-
 from hypercorn import Config as HypercornConfig
 
-from server.config.exceptions import NoPortFoundError
+from server.config.exceptions import InvalidPortError, InvalidWorkerCountError
+from server.config.get_config import get_config
 
 
 class Config(HypercornConfig):
@@ -10,14 +9,16 @@ class Config(HypercornConfig):
     Summary
     -------
     the config class for the server
+
+    Attributes
+    ----------
+    worker_count (int) : the number of workers to use
     """
+    worker_count = get_config('WORKER_COUNT', int, InvalidWorkerCountError, 1)
+
     def __init__(self, default_port: int = 49494):
 
-        if not (port := env.get('SERVER_PORT', default_port)):
-            if not isinstance(port, int):
-                raise NoPortFoundError
-
-        if port == default_port:
+        if (port := get_config('BACKEND_PORT', int, InvalidPortError, default_port)) == default_port:
             print(f'WARNING: using default port {default_port}')
 
         self.application_path = 'server:initialise()'
@@ -26,6 +27,6 @@ class Config(HypercornConfig):
         self.accesslog = '-'
         self.use_reloader = True
         self.worker_class = 'uvloop'
-        self.workers = 2
+        self.workers = self.worker_count
 
         super().__init__()
