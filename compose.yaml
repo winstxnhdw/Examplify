@@ -31,7 +31,9 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
-    volumes: [./tmp/backend:/home/user/.cache/huggingface/hub]
+    volumes:
+      - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
+      - ./tmp/backend/torch:/home/user/.cache/torch
     build:
       context: .
       dockerfile: Dockerfile.backend
