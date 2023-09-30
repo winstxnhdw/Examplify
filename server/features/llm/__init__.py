@@ -47,6 +47,14 @@ class LLM:
         Summary
         -------
         query the model
+
+        Parameters
+        ----------
+        messages (Iterable[Message]) : the messages to query the model with
+
+        Returns
+        -------
+        answer (Message | None) : the answer to the query
         """
         prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)  # type: ignore
         tokens = cls.tokeniser(prompts).tokens()
