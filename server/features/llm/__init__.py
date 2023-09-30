@@ -4,6 +4,8 @@ from ctranslate2 import Generator as LLMGenerator
 from huggingface_hub import snapshot_download
 from transformers.models.llama import LlamaTokenizerFast
 
+from server.features.llm.types import Message
+
 
 class LLM:
     """
@@ -13,15 +15,21 @@ class LLM:
 
     Methods
     -------
-    generate(prompt: str) -> Generator[str, None, None]
-        generate text from a prompt
+    stop_generation()
+        stop the generation of text
+
+    query(messages: Iterable[Message]) -> Message | None
+        query the model
+
+    generate(tokens_list: Iterable[list[str]]) -> Generator[str, None, None]
+        generate text from a series/single prompt(s)
     """
-    model_path = snapshot_download('winstxnhdw/Luban-13B-ct2-int8')
+    model_path = snapshot_download('winstxnhdw/Mistral-7B-Instruct-v0.1-ct2-int8')
     generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
     tokeniser: LlamaTokenizerFast = LlamaTokenizerFast.from_pretrained(model_path)
-    suppress_sequences = [['<s>', '▁###', '▁Inst', 'ruction', ':']]
     stop_generator = False
-    max_generation_length = 512
+    max_generation_length = 256
+    max_prompt_length = 4096 - max_generation_length
 
     @classmethod
     def stop_generation(cls):
@@ -34,7 +42,26 @@ class LLM:
 
 
     @classmethod
-    def generate(cls, prompts: list[str] | Iterable[str]) -> Generator[str, None, None]:
+    def query(cls, messages: Iterable[Message]) -> Message | None:
+        """
+        Summary
+        -------
+        query the model
+        """
+        prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)  # type: ignore
+        tokens = cls.tokeniser(prompts).tokens()
+
+        if len(tokens) <= cls.max_prompt_length:
+            return None
+
+        return {
+            'role': 'assistant',
+            'content': next(cls.generate([tokens]))
+        }
+
+
+    @classmethod
+    def generate(cls, tokens_list: Iterable[list[str]]) -> Generator[str, None, None]:
         """
         Summary
         -------
@@ -52,15 +79,12 @@ class LLM:
 
         yield from (
             cls.tokeniser.decode(result.sequences_ids[0]) for result in cls.generator.generate_iterable(
-                (cls.tokeniser(prompt).tokens() for prompt in prompts),
-                length_penalty=1.1,
+                tokens_list,
                 repetition_penalty=1.2,
-                suppress_sequences=cls.suppress_sequences,
                 max_length=cls.max_generation_length,
                 include_prompt_in_result=False,
-                sampling_topk=20,
-                sampling_topp=0.95,
-                sampling_temperature=0.6,
+                sampling_topp=0.9,
+                sampling_temperature=0.9,
                 callback=lambda _: cls.stop_generator
             )
         )
