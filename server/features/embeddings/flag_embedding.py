@@ -1,9 +1,7 @@
-from array import array
 from typing import Any, Iterator, TypedDict
 
 from ctranslate2 import Encoder, StorageView
-from huggingface_hub import snapshot_download
-from sentence_transformers import SentenceTransformer
+from numpy import array
 from torch import as_tensor, float32, get_num_threads, int32
 from torch.nn import Module, Sequential
 
@@ -22,11 +20,11 @@ class Features(TypedDict):
     token_embeddings: Any
 
 
-class CT2Transformer(Module):
+class FlagEmbedding(Module):
     """
     Summary
     -------
-    wrapper around a sentence_transformers.models.Transformer which routes the forward
+    wrapper around a transformer model which routes the forward
 
     Attributes
     ----------
@@ -100,20 +98,3 @@ class CT2Transformer(Module):
         features['token_embeddings'] = as_tensor(last_hidden_state, device=device).to(float32)
 
         return features
-
-
-class FlagEmbedding(SentenceTransformer):
-    """
-    Summary
-    -------
-    wrapper around a SentenceTransformer which routes the forward
-    """
-    def __init__(
-        self,
-        *args: Any,
-        compute_type: ComputeTypes = 'default',
-        **kwargs: dict[str, Any]
-    ):
-        super().__init__('BAAI/bge-base-en-v1.5', *args, **kwargs)
-        model_path = snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2')
-        self[0] = CT2Transformer(self[0], model_path, compute_type=compute_type)
