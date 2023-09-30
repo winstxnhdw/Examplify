@@ -1,5 +1,4 @@
-storage/
-redis/
+tmp/
 
 .env
 *.pyc

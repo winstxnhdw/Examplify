@@ -5,8 +5,9 @@
 *.pyc
 Dockerfile*
 
-.github/
 tests/
+tmp/
+.github/
 .vscode/
 .venv/
 .pytest_cache/

@@ -2,7 +2,9 @@ services:
   redis:
     container_name: redis
     image: redis/redis-stack-server:latest
-    volumes: [./redis:/data]
+    volumes:
+      - ./tmp/redis:/data
+      - ./redis.conf:/redis-stack.conf
     healthcheck:
       test: ['CMD-SHELL', 'redis-cli -h localhost -p 6379 ping']
       interval: 5s
@@ -17,7 +19,8 @@ services:
     ports: ['${BACKEND_PORT}:${BACKEND_PORT}']
     volumes: [./Caddyfile:/etc/caddy/Caddyfile]
     entrypoint: ["/bin/sh","-c"]
-    command: >
+    command:
+      - |
         caddy fmt --overwrite /etc/caddy/Caddyfile
         caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
 
@@ -28,6 +31,7 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
+    volumes: [./tmp/backend:/home/user/.cache/huggingface/hub]
     build:
       context: .
       dockerfile: Dockerfile.backend
