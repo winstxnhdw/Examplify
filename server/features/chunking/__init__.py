@@ -19,7 +19,7 @@ def chunk_document(document: Document, text_splitter: MetadataAwareTextSplitter)
     list[Chunk]: the chunks of text
     """
     return [
-        Chunk(chunk)
-        for section in document.sections
+        Chunk(f'{document.id}-{i}', chunk)
+        for i, section in enumerate(document.sections)
         for chunk in text_splitter.split_text(section.content)
     ]

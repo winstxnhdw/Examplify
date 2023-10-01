@@ -59,7 +59,7 @@ class LLM:
         prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)  # type: ignore
         tokens = cls.tokeniser(prompts).tokens()
 
-        if len(tokens) <= cls.max_prompt_length:
+        if len(tokens) > cls.max_prompt_length:
             return None
 
         return {

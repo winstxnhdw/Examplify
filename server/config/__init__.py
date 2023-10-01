@@ -13,11 +13,15 @@ class Config(HypercornConfig):
 
     Attributes
     ----------
+    server_root_path (str) : the root path for the server
     worker_count (int) : the number of workers to use
+    document_index_prefix (str) : the prefix for the document index
+    redis_index_name (str) : the name of the Redis index
     """
     server_root_path = get_config('ROOT_PATH', str, InvalidRootPathError, '/api')
     worker_count = get_config('WORKER_COUNT', int, InvalidWorkerCountError, 1)
     document_index_prefix = 'doc:'
+    redis_index_name = 'index'
 
     def __init__(self, default_port: int = 49494):
 
