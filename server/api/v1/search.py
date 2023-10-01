@@ -22,11 +22,13 @@ def search(
     -------
     the `/search` route provides an endpoint for searching the vector database
     """
+    top_k = 1
+
     redis_query = (
-        RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN 1 @vector $vec as score]')
+        RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN {top_k} @vector $vec as score]')
             .sort_by('score')
             .return_fields("content", "score")
-            .paging(0, 2)
+            .paging(0, top_k)
             .dialect(2)
     )
 

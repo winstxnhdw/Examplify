@@ -22,11 +22,13 @@ def query(
     -------
     the `/query` route provides an endpoint for performning retrieval-augmented generation
     """
+    top_k = 3
+
     redis_query = (
-        RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN 5 @vector $vec as score]')
+        RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN {top_k} @vector $vec as score]')
             .sort_by('score')
             .return_fields("content", "score")
-            .paging(0, 2)
+            .paging(0, top_k)
             .dialect(2)
     )
 
