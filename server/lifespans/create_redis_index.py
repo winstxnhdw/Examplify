@@ -1,7 +1,9 @@
-from redis import Redis as RedisProtocol, ResponseError
+from redis import Redis as RedisProtocol
+from redis import ResponseError
 from redis.commands.search.field import TagField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 
+from server.config import Config
 from server.databases import Redis
 
 
@@ -27,11 +29,10 @@ def try_create_index(client: RedisProtocol, vector_dimensions: int, index_name: 
             'DIM': vector_dimensions,
         })
 
-        schema = (TagField('tag'), vector_field)
-
-        definition = IndexDefinition(prefix=['doc:'], index_type=IndexType.HASH)
-
-        client.ft(index_name).create_index(fields=schema, definition=definition)
+        client.ft(index_name).create_index(
+            fields=(TagField('tag'), vector_field),
+            definition=IndexDefinition(prefix=[Config.document_index_prefix], index_type=IndexType.HASH)
+        )
 
 
 def create_redis_index():

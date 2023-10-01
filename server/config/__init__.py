@@ -17,6 +17,7 @@ class Config(HypercornConfig):
     """
     server_root_path = get_config('ROOT_PATH', str, InvalidRootPathError, '/api')
     worker_count = get_config('WORKER_COUNT', int, InvalidWorkerCountError, 1)
+    document_index_prefix = 'doc:'
 
     def __init__(self, default_port: int = 49494):
 
@@ -31,5 +32,4 @@ class Config(HypercornConfig):
         self.worker_class = 'uvloop'
         self.workers = self.worker_count
 
-        super().__init__()
         super().__init__()
