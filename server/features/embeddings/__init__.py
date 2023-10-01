@@ -14,11 +14,16 @@ class Embedding(SentenceTransformer):
     Summary
     -------
     wrapper around a SentenceTransformer which routes the forward
+
+    Methods
+    -------
+    encode_normalise(sentences: str | list[str]) -> NDArray[float64]
+        encode a sentence or list of sentences into a normalised embedding
     """
     def __init__(
         self,
         *args: Any,
-        compute_type: ComputeTypes = 'default',
+        compute_type: ComputeTypes = 'auto',
         **kwargs: dict[str, Any]
     ):
 
