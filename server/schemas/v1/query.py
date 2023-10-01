@@ -17,7 +17,7 @@ class Query(Search):
     messages: list[Message] = Field(examples=[[
         {
             'role': 'user',
-            'content': 'You are a helpful AI assistant. You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may say respond with "I do not know". What is the Baloney Detection Kit?'
+            'content': 'You are a helpful AI assistant. You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?'
         },
         {
             'role': 'assistant',
