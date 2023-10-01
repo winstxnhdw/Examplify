@@ -37,7 +37,7 @@ def upload_files(
     with redis.pipeline() as pipeline:
         for document in documents:
             chunks = chunk_document(document, SentenceSplitter(
-                chunk_size=256,
+                chunk_size=128,
                 chunk_overlap=0,
                 tokenizer=LLM.tokeniser,
             ))
