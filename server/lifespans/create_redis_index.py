@@ -42,4 +42,4 @@ def create_redis_index():
     initialise a Redis index
     """
     with RedisProtocol.from_pool(Redis.pool) as client:
-        try_create_index(client, 768, 'index')
+        try_create_index(client, 768, Config.redis_index_name)
