@@ -9,7 +9,7 @@ from server.config import Config
 from server.dependencies import get_redis_client
 
 
-@v1.get('/delete_file/{file_id}')
+@v1.get(f'/delete_file/{file_id}', deprecated=True)
 async def delete_file(
     file_id: str,
     redis: Annotated[Redis, Depends(get_redis_client)],
