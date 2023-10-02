@@ -15,7 +15,7 @@ def has_internet_access() -> bool:
         connection.request('HEAD', '/')
         return True
 
-    except ConnectionError:
+    except (TimeoutError, OSError):
         return False
 
     finally:

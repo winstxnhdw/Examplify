@@ -9,4 +9,7 @@ async def download_embeddings():
     -------
     download the embeddings model
     """
-    get_running_loop().run_in_executor(None, lambda: huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2'))
+    await get_running_loop().run_in_executor(
+        None,
+        lambda: huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2')
+    )
