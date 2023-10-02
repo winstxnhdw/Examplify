@@ -1,12 +1,14 @@
+from typing import Generator
 from uuid import uuid4
 
+from fastapi import UploadFile
 from fitz import Document as FitzDocument
 
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
 
 
-def extract_text(file_name: str, file: bytes, file_type: str) -> Document:
+def extract_text(file_name: str, file_type: str, file: bytes) -> Document:
     """
     Summary
     -------
@@ -33,3 +35,24 @@ def extract_text(file_name: str, file: bytes, file_type: str) -> Document:
         sections=sections,
         semantic_identifier=file_name
     )
+
+
+def extract_texts_from_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+    """
+    Summary
+    -------
+    extract the text from a list of requests
+
+    Parameters
+    ----------
+    requests (list[UploadFile]): the requests to extract the text from
+
+    Yields
+    ------
+    documents (list[Document]): the parsed documents
+    """
+    for request in requests:
+        if not request.filename:
+            return None
+
+        yield extract_text(*request.filename.rsplit('.', 1), file=request.file.read())
