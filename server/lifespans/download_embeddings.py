@@ -1,6 +1,6 @@
 from asyncio import get_running_loop
 
-from huggingface_hub import snapshot_download
+from server.helpers import huggingface_download
 
 
 async def download_embeddings():
@@ -9,4 +9,4 @@ async def download_embeddings():
     -------
     download the embeddings model
     """
-    get_running_loop().run_in_executor(None, lambda: snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2'))
+    get_running_loop().run_in_executor(None, lambda: huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2'))

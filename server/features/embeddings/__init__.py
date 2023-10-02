@@ -1,11 +1,11 @@
 from typing import Any
 
-from huggingface_hub import snapshot_download
 from numpy import float64
 from numpy.typing import NDArray
 from sentence_transformers import SentenceTransformer
 
 from server.features.embeddings.flag_embedding import FlagEmbedding
+from server.helpers import huggingface_download
 from server.types import ComputeTypes
 
 
@@ -28,7 +28,7 @@ class Embedding(SentenceTransformer):
     ):
 
         super().__init__('BAAI/bge-base-en-v1.5', *args, **kwargs)
-        model_path = snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2')
+        model_path = huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2')
         self[0] = FlagEmbedding(self[0], model_path, compute_type=compute_type)
 
 
