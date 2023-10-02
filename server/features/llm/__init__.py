@@ -85,7 +85,7 @@ class LLM:
         """
         cls.stop_generator = False
 
-        yield from (
+        return (
             cls.tokeniser.decode(result.sequences_ids[0]) for result in cls.generator.generate_iterable(
                 tokens_list,
                 repetition_penalty=1.2,
