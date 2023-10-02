@@ -11,5 +11,6 @@ class Chunk(NamedTuple):
     ----------
     content (str): the content of the chunk
     """
-    id: str
+    id: int
+    source_id: str
     content: str

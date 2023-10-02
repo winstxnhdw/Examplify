@@ -39,11 +39,11 @@ def upload_files(
             chunks = chunk_document(document, SentenceSplitter(
                 chunk_size=128,
                 chunk_overlap=0,
-                tokenizer=LLM.tokeniser,
+                tokenizer=LLM.tokeniser
             ))
 
             for chunk in chunks:
-                pipeline.hset(f'{Config.document_index_prefix}:{chunk.id}', mapping={
+                pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}-{chunk.id}', mapping={
                     'vector': embedder.encode_normalise(chunk.content).tobytes(),
                     'content': chunk.content,
                     'tag': chat_id
