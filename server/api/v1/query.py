@@ -22,7 +22,7 @@ def query(
     -------
     the `/query` route provides an endpoint for performning retrieval-augmented generation
     """
-    top_k = 3
+    top_k = 1
 
     redis_query = (
         RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN {top_k} @vector $vec as score]')
