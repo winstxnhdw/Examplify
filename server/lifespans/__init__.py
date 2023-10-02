@@ -1,4 +1,4 @@
-from asyncio import gather, to_thread
+from asyncio import gather
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -17,7 +17,7 @@ async def lifespans(_: FastAPI) -> AsyncGenerator[None, None]:
     """
     await gather(
         download_embeddings(),
-        to_thread(create_redis_index)
+        create_redis_index()
     )
 
     yield

@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
-from redis import Redis
+from redis.asyncio import Redis
 from redis.commands.search.query import Query as RedisQuery
 
 from server.api.v1 import v1
@@ -12,7 +12,7 @@ from server.schemas.v1 import Search
 
 
 @v1.post('/{chat_id}/search')
-def search(
+async def search(
     chat_id: str,
     request: Search,
     redis: Annotated[Redis, Depends(get_redis_client)]
@@ -32,13 +32,14 @@ def search(
             .dialect(2)
     )
 
-    redis_query_parameters: dict[str, str | int | float | bytes] = {
-        'vec': Embedding().encode_normalise(request.query).tobytes()
+    redis_query_parameters = {
+        'vec': Embedding().encode_normalise(request.query).tobytes(),
+        'vec_field': 'vector',
     }
 
-    return (
-        redis
-            .ft(Config.redis_index_name)
-            .search(redis_query, redis_query_parameters)
-            .docs[0]['content']  # type: ignore
+    search_response = await redis.ft(Config.redis_index_name).search(
+        redis_query,
+        redis_query_parameters  # type: ignore  (this is a bug in the redis-py library)
     )
+
+    return search_response.docs[0]['content']  # type: ignore

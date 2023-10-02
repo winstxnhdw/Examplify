@@ -1,5 +1,5 @@
-from redis import Redis as RedisProtocol
 from redis import ResponseError
+from redis.asyncio import Redis as RedisAsync
 from redis.commands.search.field import TagField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 
@@ -7,7 +7,7 @@ from server.config import Config
 from server.databases import Redis
 
 
-def try_create_index(client: RedisProtocol, vector_dimensions: int, index_name: str):
+async def try_create_index(client: RedisAsync, vector_dimensions: int, index_name: str):
     """
     Summary
     -------
@@ -15,11 +15,11 @@ def try_create_index(client: RedisProtocol, vector_dimensions: int, index_name: 
 
     Parameters
     ----------
-    client (RedisProtocol) : a Redis client
+    client (RedisAsync) : a Redis client
     vector_dimensions (int) : number of vector dimensions
     """
     try:
-        client.ft(index_name).info()
+        await client.ft(index_name).info()
 
     except ResponseError:
         vector_field = VectorField('vector', 'FLAT', {
@@ -34,11 +34,11 @@ def try_create_index(client: RedisProtocol, vector_dimensions: int, index_name: 
         )
 
 
-def create_redis_index():
+async def create_redis_index():
     """
     Summary
     -------
     initialise a Redis index
     """
-    with RedisProtocol.from_pool(Redis.pool) as client:
-        try_create_index(client, 768, Config.redis_index_name)
+    async with RedisAsync.from_pool(Redis.pool) as client:
+        await try_create_index(client, 768, Config.redis_index_name)

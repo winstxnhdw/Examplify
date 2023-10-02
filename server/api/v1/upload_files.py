@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, UploadFile
 from llama_index.text_splitter import SentenceSplitter
-from redis import Redis
+from redis.asyncio import Redis
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
@@ -14,7 +14,7 @@ from server.features.extraction import Document
 
 
 @v1.post('/{chat_id}/upload_files')
-def upload_files(
+async def upload_files(
     chat_id: str,
     requests: list[UploadFile],
     redis: Annotated[Redis, Depends(get_redis_client)]
@@ -34,7 +34,7 @@ def upload_files(
         file_name, file_type = request.filename.rsplit('.', 1)
         documents.append(extract_text(file_name, request.file.read(), file_type))
 
-    with redis.pipeline() as pipeline:
+    async with redis.pipeline() as pipeline:
         for document in documents:
             chunks = chunk_document(document, SentenceSplitter(
                 chunk_size=128,
@@ -49,6 +49,6 @@ def upload_files(
                     'tag': chat_id
                 })
 
-        pipeline.execute()
+        await pipeline.execute()
 
     return [document.id for document in documents]

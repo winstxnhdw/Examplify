@@ -1,19 +1,19 @@
-from typing import Generator
+from typing import AsyncGenerator
 
-from redis import Redis as RedisProtocol
+from redis.asyncio import Redis as RedisAsync
 
 from server.databases import Redis
 
 
-def get_redis_client() -> Generator[RedisProtocol, None, None]:
+async def get_redis_client() -> AsyncGenerator[RedisAsync, None]:
     """
     Summary
     -------
-    get a Redis client from the connection pool
+    get an async Redis client from the connection pool
 
     Yields
     ------
-    client (RedisProtocol) : a Redis client
+    client (RedisAsync) : a Redis client
     """
-    with RedisProtocol.from_pool(Redis.pool) as redis:
+    async with RedisAsync.from_pool(Redis.pool) as redis:
         yield redis

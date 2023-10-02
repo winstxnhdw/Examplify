@@ -2,7 +2,7 @@
 from typing import Annotated
 
 from fastapi import Depends
-from redis import Redis
+from redis.asyncio import Redis
 
 from server.api.v1 import v1
 from server.config import Config
