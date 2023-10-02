@@ -20,7 +20,6 @@ def try_create_index(client: RedisProtocol, vector_dimensions: int, index_name: 
     """
     try:
         client.ft(index_name).info()
-        print('Index already exists!')
 
     except ResponseError:
         vector_field = VectorField('vector', 'FLAT', {
