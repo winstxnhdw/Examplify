@@ -34,7 +34,7 @@ services:
     volumes:
       - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
       - ./tmp/backend/torch:/home/user/.cache/torch
-      - ./tmp/backend/llama-index:/tmp/llama-index
+      - ./tmp/backend/nltk:/home/user/.cache/nltk
     build:
       context: .
       dockerfile: Dockerfile.backend
