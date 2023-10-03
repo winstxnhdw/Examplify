@@ -31,7 +31,10 @@ async def query(
     )
 
     redis_query_parameters = {
-        'vec': Embedding().encode_normalise(request.query).tobytes()
+        'vec': Embedding().encode_normalise(
+            'Represent this sentence for searching relevant passages: '
+            f'{request.query}'
+        ).tobytes()
     }
 
     search_response = await redis.ft(Config.redis_index_name).search(
