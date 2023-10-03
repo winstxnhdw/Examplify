@@ -12,4 +12,4 @@ async def create_chat() -> Chat:
     -------
     the `/create_chat` route provides an endpoint to retrieve a chat
     """
-    return Chat(chat_id=''.join(str(uuid4()).split('-')))
+    return Chat(chat_id=''.join(str(uuid4())))
