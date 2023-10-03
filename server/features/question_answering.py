@@ -15,7 +15,7 @@ def question_answering(question: str, context: str, message_history: deque[Messa
     ----------
     question (str): the question to ask
     context (str): the context to ask the question in
-    message_history (list[Message]): the message history
+    message_history (deque[Message]): the message history
 
     Returns
     -------
