@@ -41,7 +41,7 @@ async def query(
         redis_query_parameters  # type: ignore  (this is a bug in the redis-py library)
     )
 
-    context = '\n'.join(
+    context = ' '.join(
         document['content'] for document
         in search_response.docs # type: ignore
     )
