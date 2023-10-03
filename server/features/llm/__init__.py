@@ -4,6 +4,7 @@ from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.features.llm.types import Message
+from server.helpers import huggingface_download
 
 
 class LLM:
@@ -25,9 +26,37 @@ class LLM:
     """
     generator: LLMGenerator
     tokeniser: LlamaTokenizerFast
+    max_generation_length: int
+    max_prompt_length: int
+    static_prompt: list[str]
     stop_generator = False
-    max_generation_length = 256
-    max_prompt_length = 4096 - max_generation_length
+
+    @classmethod
+    def load(cls):
+        """
+        Summary
+        -------
+        download and load the language model
+        """
+        model_path = huggingface_download('winstxnhdw/Mistral-7B-Instruct-v0.1-ct2-int8')
+        cls.generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
+        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path)
+
+        system_messages: tuple[Message, Message] = (
+            {
+                'content': 'You are a helpful AI assistant. You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?',
+                'role': 'user'
+            },
+            {
+                'content': 'The Baloney Detection Kit is a a set of cognitive tools and techniques that fortify the mind against penetration by falsehoods. It was created by Carl Sagan.',
+                'role': 'assistant'
+            }
+        )
+
+        cls.static_prompt = cls.tokeniser(cls.tokeniser.apply_chat_template(system_messages, tokenize=False)).tokens()
+        cls.max_generation_length = 256
+        cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
+
 
     @classmethod
     def stop_generation(cls):
@@ -88,6 +117,7 @@ class LLM:
                 tokens_list,
                 repetition_penalty=1.2,
                 max_length=cls.max_generation_length,
+                static_prompt=cls.static_prompt,
                 include_prompt_in_result=False,
                 sampling_topp=0.9,
                 sampling_temperature=0.9,
