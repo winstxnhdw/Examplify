@@ -52,7 +52,7 @@ class Generator:
         *,
         device_index: int | list[int] = 0,
         compute_type: ComputeTypes = 'default',
-        inter_threads: int = 0,
+        inter_threads: int = 1,
         intra_threads: int = 0,
         max_queued_batches: int = 0,
         files: object = None
