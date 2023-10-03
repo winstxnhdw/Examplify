@@ -26,4 +26,4 @@ class Uploaded(BaseModel):
     ----------
     documents (list[DocumentSchema]) : the document schemas
     """
-    documents: list[DocumentSchema | None]
+    documents: list[DocumentSchema]

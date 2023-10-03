@@ -52,4 +52,4 @@ async def upload_files(
 
         await pipeline.execute()
 
-    return Uploaded(documents=response)
+    return Uploaded(documents=response)  # type: ignore
