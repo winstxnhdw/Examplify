@@ -18,10 +18,10 @@ async def lifespans(_: FastAPI) -> AsyncGenerator[None, None]:
     the FastAPI lifespan function
     """
     await gather(
-        load_model(),
         download_nltk(),
         download_embeddings(),
-        create_redis_index()
+        create_redis_index(),
+        load_model(),
     )
 
     yield

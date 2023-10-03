@@ -11,5 +11,5 @@ async def download_embeddings():
     """
     await get_running_loop().run_in_executor(
         None,
-        lambda: huggingface_download('winstxnhdw/bge-large-en-v1.5-ct2-int8')
+        lambda: huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2')
     )

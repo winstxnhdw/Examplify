@@ -23,15 +23,15 @@ class Embedding(SentenceTransformer):
     def __init__(
         self,
         *args: Any,
-        compute_type: ComputeTypes = 'auto',
+        compute_type: ComputeTypes = 'float32',
         **kwargs: dict[str, Any]
     ):
 
-        super().__init__('BAAI/bge-large-en-v1.5', *args, **kwargs)
+        super().__init__('BAAI/bge-base-en-v1.5', *args, **kwargs)
 
         self[0] = FlagEmbedding(
             self[0],
-            snapshot_download('winstxnhdw/bge-large-en-v1.5-ct2-int8', local_files_only=True),
+            snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2', local_files_only=True),
             compute_type=compute_type
         )
 
