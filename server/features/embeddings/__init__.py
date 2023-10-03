@@ -24,7 +24,7 @@ class Embedding(SentenceTransformer):
         self,
         *args: Any,
         compute_type: ComputeTypes = 'float32',
-        **kwargs: dict[str, Any]
+        **kwargs: Any
     ):
 
         super().__init__('BAAI/bge-base-en-v1.5', *args, **kwargs)
