@@ -41,4 +41,4 @@ async def create_redis_index():
     initialise a Redis index
     """
     async with RedisAsync.from_pool(Redis.pool) as client:
-        await try_create_index(client, 768, Config.redis_index_name)
+        await try_create_index(client, 1024, Config.redis_index_name)

@@ -27,8 +27,8 @@ class Embedding(SentenceTransformer):
         **kwargs: dict[str, Any]
     ):
 
-        super().__init__('BAAI/bge-base-en-v1.5', *args, **kwargs)
-        model_path = huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2')
+        super().__init__('BAAI/bge-large-en-v1.5', *args, **kwargs)
+        model_path = huggingface_download('winstxnhdw/bge-large-en-v1.5-ct2-int8')
         self[0] = FlagEmbedding(self[0], model_path, compute_type=compute_type)
 
 
