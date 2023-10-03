@@ -1,4 +1,4 @@
-# type: ignre pylit: skip-file
+# type: ignore pylint: skip-file
 # Monkey-patch of LlamaIndex's SentenceSplitter because their code sucks
 
 import json
