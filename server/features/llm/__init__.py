@@ -4,7 +4,6 @@ from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.features.llm.types import Message
-from server.helpers import huggingface_download
 
 
 class LLM:
@@ -24,9 +23,8 @@ class LLM:
     generate(tokens_list: Iterable[list[str]]) -> Generator[str, None, None]
         generate text from a series/single prompt(s)
     """
-    model_path = huggingface_download('winstxnhdw/Mistral-7B-Instruct-v0.1-ct2-int8')
-    generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
-    tokeniser: LlamaTokenizerFast = LlamaTokenizerFast.from_pretrained(model_path)
+    generator: LLMGenerator
+    tokeniser: LlamaTokenizerFast
     stop_generator = False
     max_generation_length = 256
     max_prompt_length = 4096 - max_generation_length
