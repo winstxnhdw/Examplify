@@ -39,7 +39,7 @@ ctranslate2 = "^3.20.0"
 sentencepiece = "^0.1.99"
 sentence-transformers = "^2.2.2"
 protobuf = "^4.24.3"
-llama-index = "^0.8.37"
+llama-index = "^0.8.39"
 pymupdf = "^1.23.4"
 
 [tool.poetry.group.special.dependencies]
@@ -49,6 +49,6 @@ torch = ">=2.0.0, !=2.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.328"
-pylint = "^2.17.5"
+pylint = "^3.0.0"
 pytest = "^7.4.2"
 isort = "^5.12.0"
