@@ -40,9 +40,9 @@ class LLM:
         """
         model_path = huggingface_download('winstxnhdw/Mistral-7B-Instruct-v0.1-ct2-int8')
         cls.generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
-        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path)
+        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
 
-        system_messages: tuple[Message, Message] = (
+        system_prompt = cls.tokeniser.apply_chat_template((
             {
                 'content': 'You are a helpful AI assistant. You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?',
                 'role': 'user'
@@ -51,9 +51,9 @@ class LLM:
                 'content': 'The Baloney Detection Kit is a a set of cognitive tools and techniques that fortify the mind against penetration by falsehoods. It was created by Carl Sagan.',
                 'role': 'assistant'
             }
-        )
+        ), tokenize=False)
 
-        cls.static_prompt = cls.tokeniser(cls.tokeniser.apply_chat_template(system_messages, tokenize=False)).tokens()
+        cls.static_prompt = cls.tokeniser(system_prompt).tokens()
         cls.max_generation_length = 256
         cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
 
@@ -83,7 +83,7 @@ class LLM:
         -------
         answer (Message | None) : the answer to the query
         """
-        prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)  # type: ignore
+        prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)
         tokens = cls.tokeniser(prompts).tokens()
 
         if len(tokens) > cls.max_prompt_length:
