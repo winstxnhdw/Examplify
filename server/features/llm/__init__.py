@@ -54,7 +54,7 @@ class LLM:
         ), tokenize=False)
 
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
-        cls.max_generation_length = 256
+        cls.max_generation_length = 512
         cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
 
 
