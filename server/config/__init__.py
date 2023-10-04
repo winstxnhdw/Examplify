@@ -32,7 +32,7 @@ class Config(HypercornConfig):
         self.bind = [f"0.0.0.0:{port}"]
         self.access_log_format = '%(s)s "%(R)s" %(h)s "%(a)s"'
         self.accesslog = '-'
-        self.use_reloader = True
+        self.use_reloader = False
         self.worker_class = 'uvloop'
         self.workers = self.worker_count
 
