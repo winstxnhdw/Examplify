@@ -52,10 +52,8 @@ def extract_texts_from_requests(requests: list[UploadFile]) -> Generator[Documen
     documents (Document): the parsed document
     """
     for request in requests:
-        if not request.filename:
-            return None
-
-        yield extract_text(
-            *request.filename.rsplit('.', 1),
-            file=request.file.read()
+        yield (
+            extract_text(*request.filename.rsplit('.', 1), file=request.file.read())
+            if request.filename
+            else None
         )
