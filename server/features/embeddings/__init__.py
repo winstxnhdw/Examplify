@@ -51,3 +51,23 @@ class Embedding(SentenceTransformer):
         embeddings (NDArray[float64]) : the normalised embeddings
         """
         return self.encode(sentences, normalize_embeddings=True)
+
+
+    def encode_query(self, sentence: str) -> NDArray[float64]:
+        """
+        Summary
+        -------
+        encode a sentence for searching relevant passages
+
+        Parameters
+        ----------
+        sentence (str) : the sentence to encode
+
+        Returns
+        -------
+        embeddings (NDArray[float64]) : the normalised embeddings
+        """
+        return self.encode(
+            f'Represent this sentence for searching relevant passages: {sentence}',
+            normalize_embeddings=False
+        )

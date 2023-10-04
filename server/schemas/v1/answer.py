@@ -18,10 +18,10 @@ class Answer(BaseModel):
     messages: deque[Message] = Field(examples=[[
         {
             'role': 'user',
-            'content': 'What is 1 + 1?'
+            'content': 'What is the capital of Japan?'
         },
         {
             'role': 'assistant',
-            'content': '2.'
-        }
+            'content': 'Tokyo.'
+        },
     ]])

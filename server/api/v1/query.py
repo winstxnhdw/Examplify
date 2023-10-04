@@ -2,12 +2,13 @@ from typing import Annotated
 
 from fastapi import Depends
 from redis.asyncio import Redis
-from redis.commands.search.query import Query as RedisQuery
 
 from server.api.v1 import v1
 from server.config import Config
+from server.databases.redis import create_query_parameters
+from server.databases.redis import redis_query as redis_query_helper
 from server.dependencies import get_redis_client
-from server.features import Embedding, question_answering
+from server.features import LLM, Embedding, question_answering
 from server.schemas.v1 import Answer, Query
 
 
@@ -22,20 +23,11 @@ async def query(
     -------
     the `/query` route provides an endpoint for performning retrieval-augmented generation
     """
-    redis_query = (
-        RedisQuery(f'(@tag:{{ {chat_id} }})=>[KNN {request.top_k} @vector $vec as score]')
-            .sort_by('score')
-            .return_fields("content", "score")
-            .paging(0, request.top_k)
-            .dialect(2)
-    )
+    redis_query = redis_query_helper('tag', chat_id, request.top_k)
 
-    redis_query_parameters = {
-        'vec': Embedding().encode_normalise(
-            'Represent this sentence for searching relevant passages: '
-            f'{request.query}'
-        ).tobytes()
-    }
+    redis_query_parameters = create_query_parameters(
+        Embedding().encode_query(request.query)
+    )
 
     search_response = await redis.ft(Config.redis_index_name).search(
         redis_query,
@@ -50,5 +42,6 @@ async def query(
     return Answer(messages=question_answering(
         request.query,
         context,
-        request.messages
+        request.messages,
+        LLM.query
     ))

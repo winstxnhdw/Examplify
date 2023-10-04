@@ -1,10 +1,15 @@
 from collections import deque
+from typing import Callable, Iterable
 
-from server.features import LLM
 from server.features.llm.types import Message
 
 
-def question_answering(question: str, context: str, message_history: deque[Message]) -> deque[Message]:
+def question_answering(
+    question: str,
+    context: str,
+    message_history: deque[Message],
+    chain: Callable[[Iterable[Message]], Message | None]
+) -> deque[Message]:
     """
     Summary
     -------
@@ -25,7 +30,7 @@ def question_answering(question: str, context: str, message_history: deque[Messa
         'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{question}'
     })
 
-    while not (answer := LLM.query(message_history)):
+    while not (answer := chain(message_history)):
         message_history.popleft()
         message_history.popleft()
 
