@@ -12,7 +12,10 @@ def generate(request: Generate) -> StreamingResponse:
     -------
     the `/generate` route provides an endpoint for generating text directly from the LLM model
     """
-    prompts = (f'<s>[INST] {instruction} [\\INST]' for instruction in request.instructions)
+    prompts = (
+        f'<s>[INST] {instruction} [\\INST]'
+        for instruction in request.instructions
+    )
 
     return StreamingResponse(
         LLM.generate(LLM.tokeniser(prompt).tokens() for prompt in prompts),

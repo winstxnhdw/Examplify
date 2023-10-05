@@ -16,7 +16,7 @@ async def delete_chat(
     """
     Summary
     -------
-    the `/delete_chat` route provides an endpoint for deleting a chat from the Redis database
+    the `/delete_chat` route provides an endpoint for deleting a chat
     """
     for key in redis.scan_iter():  # type: ignore
         tag = await redis.hget(key, 'tag')  # type: ignore

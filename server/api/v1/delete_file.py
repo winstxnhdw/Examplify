@@ -17,6 +17,6 @@ async def delete_file(
     """
     Summary
     -------
-    the `/delete_file` route provides an endpoint for deleting a file from the Redis database
+    the `/delete_file` route provides an endpoint for deleting a file
     """
     return await redis.delete(f'{Config.document_index_prefix}:{file_id}')
