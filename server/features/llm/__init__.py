@@ -44,11 +44,11 @@ class LLM:
 
         system_prompt = cls.tokeniser.apply_chat_template((
             {
-                'content': 'You are a helpful AI assistant. You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?',
+                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?',
                 'role': 'user'
             },
             {
-                'content': 'The Baloney Detection Kit is a a set of cognitive tools and techniques that fortify the mind against penetration by falsehoods. It was created by Carl Sagan.',
+                'content': 'The Baloney Detection Kit is a a set of cognitive tools and techniques created by Carl Sagan, that fortify the mind against penetration by falsehoods.',
                 'role': 'assistant'
             }
         ), tokenize=False)
