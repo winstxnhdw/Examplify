@@ -16,9 +16,10 @@ from server.schemas.v1 import Answer, Query
 
 @v1.post('/{chat_id}/query')
 async def query(
+    redis: Annotated[Redis, Depends(get_redis_client)],
     chat_id: str,
     request: Query,
-    redis: Annotated[Redis, Depends(get_redis_client)],
+    store_query: bool = True
 ) -> Answer:
     """
     Summary
@@ -47,9 +48,9 @@ async def query(
         'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{request.query}'
     })
 
-    await redis.set(
-        f'chat:{chat_id}',
-        dumps(messages := question_answering(message_history, LLM.query))
-    )
+    messages = question_answering(message_history, LLM.query)
+
+    if not store_query:
+        await redis.set(f'chat:{chat_id}', dumps(messages))
 
     return Answer(messages=messages)
