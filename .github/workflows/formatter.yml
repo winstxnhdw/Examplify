@@ -3,6 +3,7 @@ name: Format
 on:
   push:
     paths:
+      - .github/workflows/formatter.yml
       - pyproject.toml
       - '**.py'
 
