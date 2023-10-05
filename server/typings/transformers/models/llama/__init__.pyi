@@ -4,9 +4,12 @@ from os import PathLike
 from typing import Any, Iterable, Literal, Mapping, Self, overload
 
 from transformers.pipelines.conversational import Conversation
-from transformers.tokenization_utils_base import (BatchEncoding,
-                                                  PreTokenizedInput, TextInput,
-                                                  TruncationStrategy)
+from transformers.tokenization_utils_base import (
+    BatchEncoding,
+    PreTokenizedInput,
+    TextInput,
+    TruncationStrategy,
+)
 from transformers.tokenization_utils_fast import PreTrainedTokenizerFast
 from transformers.utils import PaddingStrategy, TensorType
 
