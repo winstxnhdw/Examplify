@@ -9,7 +9,8 @@ from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from server.api.v1 import v1
 from server.config import Config
 from server.dependencies import get_redis_client
-from server.features import LLM, Embedding, chunk_document, extract_texts_from_requests
+from server.features import (LLM, Embedding, chunk_document,
+                             extract_texts_from_requests)
 from server.features.chunking import SentenceSplitter
 from server.schemas.v1 import DocumentSchema, Uploaded
 
