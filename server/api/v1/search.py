@@ -9,13 +9,13 @@ from server.databases.redis import create_query_parameters
 from server.databases.redis import redis_query as redis_query_helper
 from server.dependencies import get_redis_client
 from server.features import Embedding
-from server.schemas.v1 import Search
+from server.schemas.v1 import Query
 
 
 @v1.post('/{chat_id}/search')
 async def search(
     chat_id: str,
-    request: Search,
+    request: Query,
     redis: Annotated[Redis, Depends(get_redis_client)]
 ) -> str:
     """

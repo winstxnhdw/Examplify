@@ -1,15 +1,12 @@
-from collections import deque
 from typing import Callable, Iterable
 
 from server.features.llm.types import Message
 
 
 def question_answering(
-    question: str,
-    context: str,
-    message_history: deque[Message],
+    messages: list[Message],
     chain: Callable[[Iterable[Message]], Message | None]
-) -> deque[Message]:
+) -> list[Message]:
     """
     Summary
     -------
@@ -17,23 +14,14 @@ def question_answering(
 
     Parameters
     ----------
-    question (str): the question to ask
-    context (str): the context to ask the question in
-    message_history (deque[Message]): the message history
+    messages (list[Message]): the message history
+    chain (Callable[[Iterable[Message]], Message | None]): the model
 
     Returns
     -------
-    deque[Message]: the message history
+    messages (list[Message]): the message history
     """
-    message_history.append({
-        'role': 'user',
-        'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{question}'
-    })
+    while not (answer := chain(messages)):
+        messages = messages[1:]
 
-    while not (answer := chain(message_history)):
-        message_history.popleft()
-        message_history.popleft()
-
-    message_history.append(answer)
-
-    return message_history
+    return messages + [answer]

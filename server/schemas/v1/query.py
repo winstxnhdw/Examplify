@@ -1,12 +1,7 @@
-from collections import deque
-
-from pydantic import Field
-
-from server.features.llm.types import Message
-from server.schemas.v1.base import Search
+from pydantic import BaseModel, Field
 
 
-class Query(Search):
+class Query(BaseModel):
     """
     Summary
     -------
@@ -14,15 +9,8 @@ class Query(Search):
 
     Attributes
     ----------
-    messages (deque[Message]) : the list of previous messages
+    query (str) : the query
+    index_name (str) : the index name
     """
-    messages: deque[Message] = Field(examples=[[
-        {
-            'role': 'user',
-            'content': 'What is 1 + 1?'
-        },
-        {
-            'role': 'assistant',
-            'content': '2.'
-        },
-    ]], default=deque())
+    query: str = Field(examples=['Why did the chicken cross the road?'])
+    top_k: int = Field(examples=[1])

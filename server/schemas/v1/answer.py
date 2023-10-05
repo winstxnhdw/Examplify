@@ -1,5 +1,3 @@
-from collections import deque
-
 from pydantic import BaseModel, Field
 
 from server.features.llm.types import Message
@@ -15,7 +13,7 @@ class Answer(BaseModel):
     ----------
     answer (str) : the answer
     """
-    messages: deque[Message] = Field(examples=[[
+    messages: list[Message] = Field(examples=[[
         {
             'role': 'user',
             'content': 'What is the capital of Japan?'
@@ -23,5 +21,5 @@ class Answer(BaseModel):
         {
             'role': 'assistant',
             'content': 'Tokyo.'
-        },
+        }
     ]])

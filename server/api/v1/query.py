@@ -1,3 +1,4 @@
+from json import dumps
 from typing import Annotated
 
 from fastapi import Depends
@@ -5,10 +6,11 @@ from redis.asyncio import Redis
 
 from server.api.v1 import v1
 from server.config import Config
-from server.databases.redis import create_query_parameters
+from server.databases.redis import create_query_parameters, redis_get
 from server.databases.redis import redis_query as redis_query_helper
 from server.dependencies import get_redis_client
 from server.features import LLM, Embedding, question_answering
+from server.features.llm.types import Message
 from server.schemas.v1 import Answer, Query
 
 
@@ -16,7 +18,7 @@ from server.schemas.v1 import Answer, Query
 async def query(
     chat_id: str,
     request: Query,
-    redis: Annotated[Redis, Depends(get_redis_client)]
+    redis: Annotated[Redis, Depends(get_redis_client)],
 ) -> Answer:
     """
     Summary
@@ -39,9 +41,15 @@ async def query(
         in search_response.docs # type: ignore
     )
 
-    return Answer(messages=question_answering(
-        request.query,
-        context,
-        request.messages,
-        LLM.query
-    ))
+    message_history: list[Message] = await redis_get(redis, f'chat:{chat_id}', _ := [])
+    message_history.append({
+        'role': 'user',
+        'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{request.query}'
+    })
+
+    await redis.set(
+        f'chat:{chat_id}',
+        dumps(messages := question_answering(message_history, LLM.query))
+    )
+
+    return Answer(messages=messages)
