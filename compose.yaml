@@ -8,7 +8,6 @@ services:
     healthcheck:
       test: ['CMD-SHELL', 'redis-cli -h localhost -p 6379 ping']
       interval: 5s
-      retries: 5
 
   caddy:
     container_name: caddy
@@ -39,7 +38,5 @@ services:
       context: .
       dockerfile: Dockerfile.backend
     depends_on:
-      caddy:
-        condition: service_started
       redis:
         condition: service_healthy
