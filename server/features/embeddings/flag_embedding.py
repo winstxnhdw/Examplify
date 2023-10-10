@@ -2,7 +2,7 @@ from typing import Any, Iterator, TypedDict
 
 from ctranslate2 import Encoder, StorageView
 from numpy import array
-from torch import as_tensor, float32, get_num_threads, int32
+from torch import as_tensor, float32, int32
 from torch.nn import Module, Sequential
 
 from server.types import ComputeTypes
@@ -72,7 +72,6 @@ class FlagEmbedding(Module):
                 self.model_path,
                 device=device.type,
                 device_index=device.index or 0,
-                intra_threads=get_num_threads(),
                 compute_type=self.compute_type,
             )
 
