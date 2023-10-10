@@ -29,7 +29,6 @@ class LLM:
     max_generation_length: int
     max_prompt_length: int
     static_prompt: list[str]
-    stop_generator = False
 
     @classmethod
     def load(cls):
@@ -56,17 +55,6 @@ class LLM:
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
         cls.max_generation_length = 512
         cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
-
-
-    @classmethod
-    def stop_generation(cls):
-        """
-        Summary
-        -------
-        stop the generation of text
-        """
-        cls.stop_generator = True
-
 
     @classmethod
     def query(cls, messages: Iterable[Message]) -> Message | None:
@@ -110,8 +98,6 @@ class LLM:
         -------
         answer (str) : the generated answer
         """
-        cls.stop_generator = False
-
         return (
             cls.tokeniser.decode(result.sequences_ids[0]) for result in cls.generator.generate_iterable(
                 tokens_list,
@@ -120,7 +106,6 @@ class LLM:
                 static_prompt=cls.static_prompt,
                 include_prompt_in_result=False,
                 sampling_topp=0.9,
-                sampling_temperature=0.9,
-                callback=lambda _: cls.stop_generator
+                sampling_temperature=0.9
             )
         )
