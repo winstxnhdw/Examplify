@@ -1,0 +1,24 @@
+services:
+  backend:
+    container_name: backend
+    environment:
+      REDIS_URL: redis://redis:6379
+      BACKEND_PORT: ${BACKEND_PORT}
+      DEVICE: cuda
+    volumes:
+      - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
+      - ./tmp/backend/torch:/home/user/.cache/torch
+      - ./tmp/backend/nltk:/home/user/.cache/nltk
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
