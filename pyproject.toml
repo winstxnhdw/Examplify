@@ -42,7 +42,7 @@ ctranslate2 = "^3.20.0"
 sentencepiece = "^0.1.99"
 sentence-transformers = "^2.2.2"
 protobuf = "^4.24.4"
-llama-index = "^0.8.37"
+llama-index = "^0.8.42"
 pymupdf = "^1.23.4"
 
 [tool.poetry.group.special.dependencies]
