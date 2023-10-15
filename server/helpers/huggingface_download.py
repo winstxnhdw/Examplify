@@ -16,13 +16,21 @@ class DisableTqdm(tqdm_asyncio):  # type: ignore
         super().__init__(*args, **kwargs)
 
 
-def has_internet_access() -> bool:
+def has_internet_access(repository: str) -> bool:
     """
     Summary
     -------
     check if the server has internet access
+
+    Parameters
+    ----------
+    repository (str) : the name of the Hugging Face repository
+
+    Returns
+    -------
+    has_internet_access (bool) : whether there is relevant internet connection
     """
-    connection = HTTPConnection('1.1.1.1', timeout=1)
+    connection = HTTPConnection(f'https://huggingface.co/{repository}', timeout=1)
 
     try:
         connection.request('HEAD', '/')
@@ -40,10 +48,19 @@ def huggingface_download(repository: str, enable_progress_bar: bool = True) -> s
     Summary
     -------
     download the huggingface model
+
+    Parameters
+    ----------
+    repository (str) : the name of the Hugging Face repository
+    enable_progress_bar (bool?) : flag to disable the tqdm progress bar
+
+    Returns
+    -------
+    repository_path (str) : local path to the downloaded repository
     """
     return snapshot_download(
         repository,
         resume_download=True,
-        local_files_only=not has_internet_access(),
+        local_files_only=not has_internet_access(repository),
         tqdm_class=None if enable_progress_bar else DisableTqdm  # type: ignore
     )
