@@ -56,6 +56,7 @@ class LLM:
         cls.max_generation_length = 512
         cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
 
+
     @classmethod
     def query(cls, messages: Iterable[Message]) -> Message | None:
         """
