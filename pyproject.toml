@@ -52,6 +52,6 @@ torch = "2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.331"
-pylint = "^3.0.1"
+pylint = "^3.0.2"
 pytest = "^7.4.2"
 ruff = "^0.1.0"
