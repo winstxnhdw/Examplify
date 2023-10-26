@@ -1,4 +1,4 @@
-from typing import Any
+enfrom typing import Any
 
 from huggingface_hub import snapshot_download
 from numpy import float64
@@ -67,7 +67,4 @@ class Embedding(SentenceTransformer):
         -------
         embeddings (NDArray[float64]) : the normalised embeddings
         """
-        return self.encode(
-            f'Represent this sentence for searching relevant passages: {sentence}',
-            normalize_embeddings=False
-        )
+        return self.encode_normalise(f'Represent this sentence for searching relevant passages: {sentence}')
