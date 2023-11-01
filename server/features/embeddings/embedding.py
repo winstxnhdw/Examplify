@@ -23,7 +23,8 @@ class Embedding(SentenceTransformer):
     def __init__(
         self,
         *args: Any,
-        compute_type: ComputeTypes = 'float32',
+        compute_type: ComputeTypes = 'auto',
+        force_download: bool = False,
         **kwargs: Any
     ):
 
@@ -31,7 +32,7 @@ class Embedding(SentenceTransformer):
 
         self[0] = FlagEmbedding(
             self[0],
-            snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2', local_files_only=True),
+            snapshot_download('winstxnhdw/bge-base-en-v1.5-ct2', local_files_only=not force_download),
             compute_type=compute_type
         )
 
