@@ -15,10 +15,10 @@ def has_internet_access(repository: str) -> bool:
     -------
     has_internet_access (bool) : whether there is relevant internet connection
     """
-    connection = HTTPConnection(f'https://huggingface.co/{repository}', timeout=1)
+    connection = HTTPConnection('huggingface.co', timeout=1)
 
     try:
-        connection.request('HEAD', '/')
+        connection.request('HEAD', f'/{repository}')
         return True
 
     except (TimeoutError, OSError):
