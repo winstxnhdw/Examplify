@@ -43,7 +43,7 @@ transformers = "^4.34.0"
 sentencepiece = "^0.1.99"
 sentence-transformers = "^2.2.2"
 protobuf = "^4.24.4"
-pymupdf = "^1.23.5"
+pymupdf = "^1.23.6"
 redis = "^5.0.1"
 hiredis = "^2.2.3"
 
