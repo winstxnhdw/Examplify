@@ -37,7 +37,7 @@ class LLM:
         -------
         download and load the language model
         """
-        model_path = huggingface_download('winstxnhdw/Mistral-7B-Instruct-v0.1-ct2-int8')
+        model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
         cls.generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
 
