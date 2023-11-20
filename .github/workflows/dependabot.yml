@@ -3,12 +3,6 @@ name: Dependabot
 on: pull_request
 
 jobs:
-  test:
-    uses: winstxnhdw/actions/.github/workflows/python.yml@main
-    with:
-      python-version: 3.11
-      disable-test: true
-
   auto-merge:
     needs: test
     uses: winstxnhdw/actions/.github/workflows/dependabot-public.yml@main
