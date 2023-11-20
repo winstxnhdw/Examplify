@@ -40,3 +40,11 @@ You can start the application and access the Swagger UI at [http://localhost:500
 ```bash
 make u
 ```
+
+## Development
+
+Install all dependencies with the following.
+
+```bash
+poetry install
+```
