@@ -1,4 +1,3 @@
-
 from typing import NamedTuple
 
 
@@ -15,6 +14,7 @@ class Section(NamedTuple):
     """
     link: str
     content: str
+
 
 class Document(NamedTuple):
     """
