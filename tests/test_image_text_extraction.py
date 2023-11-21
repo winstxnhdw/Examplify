@@ -10,8 +10,7 @@ from server.features.extraction.extract_text import extract_texts_from_image
 @fixture()
 def image():
     with Image.open("./tests/assets/image.png") as img:
-        yield img.tobytes()
-
+        yield img
 
 def test_image_text_extraction(image):
-    print(extract_texts_from_image("image", image))
+    assert len(extract_texts_from_image("image", image).sections) > 0
