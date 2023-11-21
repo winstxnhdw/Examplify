@@ -4,7 +4,7 @@ from pytest import fixture
 from PIL import Image
 from fastapi import UploadFile
 
-from server.features.extraction.extract_text import extract_texts_from_image
+from server.features.extraction.extract_from_image import extract_texts_from_image
 
 
 @fixture()
