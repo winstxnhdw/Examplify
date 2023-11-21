@@ -9,7 +9,7 @@ WORKDIR /
 COPY pyproject.toml .
 
 RUN apt update
-RUN apt install -y curl
+RUN apt install -y curl tesseract-ocr libtesseract-dev libleptonica-dev pkg-config
 RUN curl -sSL https://install.python-poetry.org | python -
 RUN poetry install --without=dev
 
