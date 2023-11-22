@@ -1,14 +1,14 @@
+from io import BytesIO
 from typing import Generator
 from uuid import uuid4
 
 from fastapi import UploadFile
-
-from tesserocr import PyTessBaseAPI
-from io import BytesIO
 from PIL import Image
+from tesserocr import PyTessBaseAPI
 
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
+
 
 def extract_texts_from_image(file_name: str, image: Image) -> Document:
     """
@@ -27,11 +27,11 @@ def extract_texts_from_image(file_name: str, image: Image) -> Document:
     """
     with PyTessBaseAPI(path='/usr/share/tesseract-ocr/5/tessdata') as ocr:
         ocr.SetImage(image)
-        sections = [ocr.GetUTF8Text()]
+        section = Section('', ocr.GetUTF8Text())
 
     return Document(
         id=str(uuid4()),
-        sections=sections,
+        sections=[section],
         semantic_identifier=file_name
     )
 
