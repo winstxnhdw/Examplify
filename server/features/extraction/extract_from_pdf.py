@@ -4,10 +4,6 @@ from uuid import uuid4
 from fastapi import UploadFile
 from fitz import Document as FitzDocument
 
-from tesserocr import PyTessBaseAPI
-from io import BytesIO
-from PIL import Image
-
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
 
@@ -40,7 +36,7 @@ def extract_text(file_name: str, file_type: str, file: bytes) -> Document:
         semantic_identifier=file_name
     )
 
-def extract_texts_from_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+def extract_texts_from_pdf_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
     """
     Summary
     -------
