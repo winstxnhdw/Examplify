@@ -47,7 +47,6 @@ pymupdf = "^1.23.6"
 redis = "^5.0.1"
 hiredis = "^2.2.3"
 tesserocr = "^2.6.2"
-pillow = "^10.1.0"
 
 [tool.poetry.group.special.dependencies]
 torch = "2.0.0"
