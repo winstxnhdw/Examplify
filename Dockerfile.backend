@@ -19,11 +19,12 @@ FROM python:3.11.6-slim
 ENV HOME /home/user
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV TESSDATA_PREFIX /usr/share/tesseract-ocr/5/tessdata/
 
 WORKDIR $HOME/app
 
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/share/tesseract-ocr/5/tessdata/ /usr/share/tesseract-ocr/5/tessdata/
+COPY --from=builder /usr/share/tesseract-ocr/5/tessdata/ $TESSDATA_PREFIX
 COPY . $HOME/app
 
 CMD ["python", "main.py"]
