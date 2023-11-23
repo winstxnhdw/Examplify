@@ -4,9 +4,9 @@ from fastapi import UploadFile
 from PIL.Image import open as open_image
 from tesserocr import image_to_text
 
+from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
-from server.helpers import create_document
 
 
 def extract_text_from_image(file: BinaryIO) -> str:

@@ -3,9 +3,9 @@ from typing import Generator
 from fastapi import UploadFile
 from fitz import Document as FitzDocument
 
+from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
-from server.helpers import create_document
 
 
 def extract_document_from_pdf(file_name: str, file_type: str, file: bytes) -> Document:
