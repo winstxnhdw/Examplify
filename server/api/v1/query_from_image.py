@@ -11,9 +11,9 @@ from server.databases.redis import create_query_parameters, redis_get
 from server.databases.redis import redis_query as redis_query_helper
 from server.dependencies import get_redis_client
 from server.features import (
-    LLM, 
-    Embedding, 
-    question_answering, 
+    LLM,
+    Embedding,
+    question_answering,
     extract_query_from_image_request
 )
 from server.features.llm.types import Message
