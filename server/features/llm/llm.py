@@ -4,7 +4,7 @@ from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.features.llm.types import Message
-from server.helpers import huggingface_download
+from server.helpers.network import huggingface_download
 
 
 class LLM:
