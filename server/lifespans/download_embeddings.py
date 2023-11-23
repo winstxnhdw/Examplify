@@ -1,6 +1,6 @@
 from asyncio import get_running_loop
 
-from server.helpers.network import huggingface_download
+from server.helpers import huggingface_download
 
 
 async def download_embeddings():
