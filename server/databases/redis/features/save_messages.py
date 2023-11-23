@@ -6,7 +6,7 @@ from redis.asyncio import Redis
 from server.features.llm.types import Message
 
 
-async def throwaway(messages: list[Message]):
+async def throwaway(messages: list[Message]) -> list[Message]:
     """
     Summary
     -------
@@ -46,7 +46,7 @@ def save_messages(
     if store_query:
         return throwaway
 
-    async def save(messages: list[Message]):
+    async def save(messages: list[Message]) -> list[Message]:
         """
         Summary
         -------
