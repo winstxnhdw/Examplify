@@ -43,13 +43,13 @@ class LLM:
 
         system_prompt = cls.tokeniser.apply_chat_template((
             {
-                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know". What is the Baloney Detection Kit?',
+                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know".',
                 'role': 'system'
             },
-        ), tokenize=False)
+        ), tokenize=False, add_generation_prompt=True)
 
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
-        cls.max_generation_length = 512
+        cls.max_generation_length = 1024
         cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
 
 
@@ -68,7 +68,7 @@ class LLM:
         -------
         answer (Message | None) : the answer to the query
         """
-        prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False)
+        prompts: str = cls.tokeniser.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         tokens = cls.tokeniser(prompts).tokens()
 
         if len(tokens) > cls.max_prompt_length:
