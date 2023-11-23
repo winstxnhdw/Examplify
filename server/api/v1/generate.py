@@ -20,7 +20,7 @@ def generate(request: Generate) -> StreamingResponse:
         for instruction in request.instructions
     )
 
-    return StreamingResponse(
-        LLM.generate(LLM.tokeniser(prompt).tokens() for prompt in prompts),
+    return StreamingResponse((f'{response}\n\n' for response in
+        LLM.generate(LLM.tokeniser(prompt).tokens() for prompt in prompts)),
         media_type='text/event-stream'
     )
