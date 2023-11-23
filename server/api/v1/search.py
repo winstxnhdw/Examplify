@@ -14,9 +14,10 @@ from server.schemas.v1 import Query
 
 @v1.post('/{chat_id}/search')
 async def search(
+    redis: Annotated[Redis, Depends(get_redis_client)],
     chat_id: str,
     request: Query,
-    redis: Annotated[Redis, Depends(get_redis_client)]
+    top_k: int = 5
 ) -> str:
     """
     Summary
@@ -28,7 +29,7 @@ async def search(
     )
 
     search_response = await redis.ft(Config.redis_index_name).search(
-        redis_query_helper('tag', chat_id, request.top_k),
+        redis_query_helper('tag', chat_id, top_k),
         redis_query_parameters  # type: ignore  (this is a bug in the redis-py library)
     )
 

@@ -1,16 +1,11 @@
-from json import dumps
 from typing import Annotated
 
 from fastapi import Depends, UploadFile
 from redis.asyncio import Redis
 
 from server.api.v1 import v1
-from server.config import Config
-from server.databases.redis import create_query_parameters, redis_get
-from server.databases.redis import redis_query as redis_query_helper
 from server.dependencies import get_redis_client
-from server.features import LLM, Embedding, extract_text_from_image, question_answering
-from server.features.llm.types import Message
+from server.features import extract_text_from_image, query_llm
 from server.schemas.v1 import Answer
 
 
@@ -25,35 +20,9 @@ async def query_with_image(
     """
     Summary
     -------
-    the `/query_with_image` route provides an endpoint for performning retrieval-augmented generation
+    the `/query_with_image` route is similar to `/query` but it accepts an image as input
     """
-    redis_query = redis_query_helper('tag', chat_id, top_k)
-
     extracted_query = extract_text_from_image(request.file)
-
-    redis_query_parameters = create_query_parameters(
-        Embedding().encode_query(extracted_query)
-    )
-
-    search_response = await redis.ft(Config.redis_index_name).search(
-        redis_query,
-        redis_query_parameters  # type: ignore  (this is a bug in the redis-py library)
-    )
-
-    context = ' '.join(
-        document['content'] for document
-        in search_response.docs # type: ignore
-    )
-
-    message_history: list[Message] = await redis_get(redis, f'chat:{chat_id}', _ := [])
-    message_history.append({
-        'role': 'user',
-        'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{extracted_query}'
-    })
-
-    messages = question_answering(message_history, LLM.query)
-
-    if not store_query:
-        await redis.set(f'chat:{chat_id}', dumps(messages))
+    messages = await query_llm(redis, extracted_query, chat_id, top_k, store_query)
 
     return Answer(messages=messages)
