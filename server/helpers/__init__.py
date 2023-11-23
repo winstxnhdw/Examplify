@@ -1,3 +1,1 @@
-from server.helpers.huggingface_download import (
-    huggingface_download as huggingface_download,
-)
+from server.helpers.create_document import create_document as create_document
