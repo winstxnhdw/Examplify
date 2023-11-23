@@ -3,7 +3,8 @@ from typing import Generator
 from uuid import uuid4
 
 from fastapi import UploadFile
-from PIL import Image
+from PIL.Image import Image
+from PIL.Image import open as open_image
 from tesserocr import PyTessBaseAPI
 
 from server.features.extraction.models import Document
@@ -36,6 +37,7 @@ def extract_document_from_image(file_name: str, image: Image) -> Document:
         semantic_identifier=file_name
     )
 
+
 def extract_text_from_image(image: Image) -> str:
     """
     Summary
@@ -50,11 +52,10 @@ def extract_text_from_image(image: Image) -> str:
     -------
     text (str): the text in the image
     """
-    with PyTessBaseAPI(path='/usr/share/tesseract-ocr/5/tessdata') as ocr:
+    with PyTessBaseAPI() as ocr:
         ocr.SetImage(image)
-        text = ocr.GetUTF8Text()
+        return ocr.GetUTF8Text()
 
-    return text
 
 def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
     """
@@ -71,9 +72,9 @@ def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generat
     documents (Document): the parsed document
     """
     for request in requests:
-        with Image.open(BytesIO(request.file.read())) as img:
+        with open_image(BytesIO(request.file.read())) as image:
             yield (
-                extract_document_from_image(request.filename.rsplit('.', 1)[0], image=img)
+                extract_document_from_image(request.filename.rsplit('.', 1)[0], image=image)
                 if request.filename
                 else None
             )
@@ -93,5 +94,5 @@ def extract_query_from_image_request(request: UploadFile) -> str:
     ------
     text (str): the parsed text
     """
-    with Image.open(BytesIO(request.file.read())) as img:
-        return extract_text_from_image(img)
+    with open_image(BytesIO(request.file.read())) as image:
+        return extract_text_from_image(image)
