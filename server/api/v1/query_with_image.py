@@ -4,8 +4,11 @@ from fastapi import Depends, UploadFile
 from redis.asyncio import Redis
 
 from server.api.v1 import v1
+from server.databases.redis.features import save_messages, search
+from server.databases.redis.helpers import redis_get
 from server.dependencies import get_redis_client
-from server.features import extract_text_from_image, query_llm
+from server.features import Embedding, extract_text_from_image, query_llm
+from server.features.llm.types import Message
 from server.schemas.v1 import Answer
 
 
@@ -22,7 +25,19 @@ async def query_with_image(
     -------
     the `/query_with_image` route is similar to `/query` but it accepts an image as input
     """
-    extracted_query = extract_text_from_image(request.file)
-    messages = await query_llm(redis, extracted_query, chat_id, top_k, store_query)
+    embedding = Embedding().encode_query(
+        extracted_query := extract_text_from_image(request.file)
+    )
+
+    context = await search(redis, chat_id, embedding, top_k)
+    message_history: list[Message] = await redis_get(redis, f'chat:{chat_id}', _ := [])
+    save_messages_middleware = save_messages(redis, chat_id, store_query)
+
+    messages = await query_llm(
+        extracted_query,
+        context,
+        message_history,
+        save_messages_middleware
+    )
 
     return Answer(messages=messages)
