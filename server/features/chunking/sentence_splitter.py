@@ -136,23 +136,7 @@ class CallbackManager(BaseCallbackHandler, ABC):
 
     def __init__(self, handlers: Optional[List[BaseCallbackHandler]] = None):
         """Initialize the manager with a list of handlers."""
-        from llama_index import global_handler
-
         handlers = handlers or []
-
-        # add eval handlers based on global defaults
-        if global_handler is not None:
-            new_handler = global_handler
-            # go through existing handlers, check if any are same type as new handler
-            # if so, error
-            for existing_handler in handlers:
-                if isinstance(existing_handler, type(new_handler)):
-                    raise ValueError(
-                        "Cannot add two handlers of the same type "
-                        f"{type(new_handler)} to the callback manager."
-                    )
-            handlers.append(new_handler)
-
         self.handlers = handlers
         self._trace_map: Dict[str, List[str]] = defaultdict(list)
 
