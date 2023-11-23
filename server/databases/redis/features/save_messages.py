@@ -11,6 +11,14 @@ async def throwaway(messages: list[Message]):
     Summary
     -------
     a throwaway async function
+
+    Parameters
+    ----------
+    messages (list[Message]) : a list of messages
+
+    Returns
+    -------
+    messages (list[Message]) : a list of messages
     """
     return messages
 
@@ -30,6 +38,10 @@ def save_messages(
     redis (Redis) : a Redis client
     chat_id (str) : a chat id
     store_query (bool) : whether or not to store the query in the database
+
+    Returns
+    -------
+    save (Callable[[list[Message]], Awaitable[list[Message]]]) : a function that save messages
     """
     if store_query:
         return throwaway
@@ -42,6 +54,10 @@ def save_messages(
 
         Parameters
         ----------
+        messages (list[Message]) : a list of messages
+
+        Returns
+        -------
         messages (list[Message]) : a list of messages
         """
         redis.set(f'chat:{chat_id}', dumps(messages))
