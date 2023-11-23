@@ -27,7 +27,7 @@ def extract_texts_from_image(file_name: str, image: Image) -> Document:
     """
     with PyTessBaseAPI(path='/usr/share/tesseract-ocr/5/tessdata') as ocr:
         ocr.SetImage(image)
-        section = Section('', ocr.GetUTF8Text())
+        section = Section(link=f'{file_name}', content=ocr.GetUTF8Text())
 
     return Document(
         id=str(uuid4()),
