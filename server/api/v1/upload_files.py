@@ -13,7 +13,7 @@ from server.features import (
     LLM,
     Embedding,
     chunk_document,
-    extract_texts_from_pdf_requests,
+    extract_documents_from_pdf_requests,
 )
 from server.features.chunking import SentenceSplitter
 from server.schemas.v1 import DocumentSchema, Uploaded
@@ -35,7 +35,7 @@ async def upload_files(
     text_splitter = SentenceSplitter(LLM.tokeniser, chunk_size=128, chunk_overlap=0)
 
     async with redis.pipeline() as pipeline:
-        for i, document in enumerate(extract_texts_from_pdf_requests(requests)):
+        for i, document in enumerate(extract_documents_from_pdf_requests(requests)):
             if not document:
                 raise HTTPException(HTTP_422_UNPROCESSABLE_ENTITY, 'No file name!')
 

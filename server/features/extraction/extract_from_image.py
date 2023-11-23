@@ -1,17 +1,33 @@
-from io import BytesIO
-from typing import Generator
-from uuid import uuid4
+from typing import BinaryIO, Generator
 
 from fastapi import UploadFile
-from PIL.Image import Image
 from PIL.Image import open as open_image
-from tesserocr import PyTessBaseAPI
+from tesserocr import image_to_text
 
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
+from server.helpers import create_document
 
 
-def extract_document_from_image(file_name: str, image: Image) -> Document:
+def extract_text_from_image(file: BinaryIO) -> str:
+    """
+    Summary
+    -------
+    extract the text from an image
+
+    Parameters
+    ----------
+    file (BinaryIO): the image
+
+    Returns
+    -------
+    text (str): the text in the image
+    """
+    with open_image(file) as image:
+        return image_to_text(image)
+
+
+def extract_document_from_image(file_name: str, file: BinaryIO) -> Document:
     """
     Summary
     -------
@@ -20,41 +36,16 @@ def extract_document_from_image(file_name: str, image: Image) -> Document:
     Parameters
     ----------
     file_name (str): the name of the file
-    file (bytes): the file
+    file (BinaryIO): the image
 
     Returns
     -------
     document (Document): the parsed document
     """
-    section = Section(
+    return create_document(file_name, [Section(
         link=f'{file_name}',
-        content=extract_text_from_image(image)
-    )
-
-    return Document(
-        id=str(uuid4()),
-        sections=[section],
-        semantic_identifier=file_name
-    )
-
-
-def extract_text_from_image(image: Image) -> str:
-    """
-    Summary
-    -------
-    extract the text from an image
-
-    Parameters
-    ----------
-    file (bytes): the file
-
-    Returns
-    -------
-    text (str): the text in the image
-    """
-    with PyTessBaseAPI() as ocr:
-        ocr.SetImage(image)
-        return ocr.GetUTF8Text()
+        content=extract_text_from_image(file)
+    )])
 
 
 def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
@@ -72,27 +63,8 @@ def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generat
     documents (Document): the parsed document
     """
     for request in requests:
-        with open_image(BytesIO(request.file.read())) as image:
-            yield (
-                extract_document_from_image(request.filename.rsplit('.', 1)[0], image=image)
-                if request.filename
-                else None
-            )
-
-
-def extract_query_from_image_request(request: UploadFile) -> str:
-    """
-    Summary
-    -------
-    extract a text for a request containing an image
-
-    Parameters
-    ----------
-    request (UploadFile): the request to extract the text from
-
-    Returns
-    ------
-    text (str): the parsed text
-    """
-    with open_image(BytesIO(request.file.read())) as image:
-        return extract_text_from_image(image)
+        yield (
+            extract_document_from_image(request.filename.rsplit('.', 1)[0], request.file)
+            if request.filename
+            else None
+        )
