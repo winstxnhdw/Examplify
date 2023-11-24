@@ -3,7 +3,7 @@ from typing import Any
 from huggingface_hub import snapshot_download
 from tqdm.asyncio import tqdm_asyncio
 
-from server.helpers.has_internet_access import has_internet_access
+from server.helpers.network.has_internet_access import has_internet_access
 
 
 class DisableTqdm(tqdm_asyncio):  # type: ignore

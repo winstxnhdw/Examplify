@@ -1,6 +1,6 @@
 # pylint: disable=missing-function-docstring
 
-from server.helpers.has_internet_access import has_internet_access
+from server.helpers.network.has_internet_access import has_internet_access
 
 
 def test_has_internet_access():

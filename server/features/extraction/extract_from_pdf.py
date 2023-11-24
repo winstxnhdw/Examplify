@@ -1,14 +1,14 @@
 from typing import Generator
-from uuid import uuid4
 
 from fastapi import UploadFile
 from fitz import Document as FitzDocument
 
+from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
 
 
-def extract_text(file_name: str, file_type: str, file: bytes) -> Document:
+def extract_document_from_pdf(file_name: str, file_type: str, file: bytes) -> Document:
     """
     Summary
     -------
@@ -30,14 +30,10 @@ def extract_text(file_name: str, file_type: str, file: bytes) -> Document:
             for page in document
         ]
 
-    return Document(
-        id=str(uuid4()),
-        sections=sections,
-        semantic_identifier=file_name
-    )
+    return create_document(file_name, sections)
 
 
-def extract_texts_from_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+def extract_documents_from_pdf_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
     """
     Summary
     -------
@@ -53,7 +49,7 @@ def extract_texts_from_requests(requests: list[UploadFile]) -> Generator[Documen
     """
     for request in requests:
         yield (
-            extract_text(*request.filename.rsplit('.', 1), file=request.file.read())
+            extract_document_from_pdf(*request.filename.rsplit('.', 1), file=request.file.read())
             if request.filename
             else None
         )

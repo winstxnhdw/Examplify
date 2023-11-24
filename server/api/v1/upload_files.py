@@ -9,7 +9,12 @@ from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 from server.api.v1 import v1
 from server.config import Config
 from server.dependencies import get_redis_client
-from server.features import LLM, Embedding, chunk_document, extract_texts_from_requests
+from server.features import (
+    LLM,
+    Embedding,
+    chunk_document,
+    extract_documents_from_pdf_requests,
+)
 from server.features.chunking import SentenceSplitter
 from server.schemas.v1 import DocumentSchema, Uploaded
 
@@ -30,7 +35,7 @@ async def upload_files(
     text_splitter = SentenceSplitter(LLM.tokeniser, chunk_size=128, chunk_overlap=0)
 
     async with redis.pipeline() as pipeline:
-        for i, document in enumerate(extract_texts_from_requests(requests)):
+        for i, document in enumerate(extract_documents_from_pdf_requests(requests)):
             if not document:
                 raise HTTPException(HTTP_422_UNPROCESSABLE_ENTITY, 'No file name!')
 
