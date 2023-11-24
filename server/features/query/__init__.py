@@ -1,6 +1,6 @@
 from typing import Awaitable, Callable, Iterable
 
-from server.features import LLM
+from server.features.llm import LLM
 from server.features.llm.types import Message
 
 
