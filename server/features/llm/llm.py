@@ -43,8 +43,8 @@ class LLM:
 
         system_prompt = cls.tokeniser.apply_chat_template((
             {
-                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know".',
-                'role': 'system'
+                'role': 'system',
+                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know".'
             },
         ), tokenize=False, add_generation_prompt=True)
 
