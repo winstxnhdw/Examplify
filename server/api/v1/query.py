@@ -17,7 +17,7 @@ async def query(
     redis: Annotated[Redis, Depends(get_redis_client)],
     chat_id: str,
     request: Query,
-    top_k: int = 5,
+    top_k: int = 1,
     store_query: bool = True
 ) -> Answer:
     """
