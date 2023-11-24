@@ -1,0 +1,22 @@
+name: Dockerise
+
+on:
+  pull_request:
+  push:
+    paths:
+      - .github/workflows/docker.yml
+      - .dockerignore
+      - Dockerfile*
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Build Docker image
+        run: docker build -f Dockerfile.backend -t examplify .

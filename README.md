@@ -4,6 +4,7 @@
 
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
 [![main.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/main.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/main.yml)
+[![Dockerise](https://github.com/winstxnhdw/Examplify/actions/workflows/docker.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/docker.yml)
 [![formatter.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml)
 [![dependabot.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml)
 
