@@ -1,6 +1,7 @@
 name: Format
 
 on:
+  pull_request_target:
   push:
     paths:
       - .github/workflows/formatter.yml
