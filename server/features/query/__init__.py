@@ -50,9 +50,11 @@ async def query_llm(
     -------
     messages (list[Message]) : a list of messages
     """
+    context_prompt = f'Given the following context:\n\n{context}\n\n' if context else ''
+
     message_history.append({
         'role': 'user',
-        'content': f'Given the following context:\n\n{context}\n\nPlease answer the following question:\n\n{query}'
+        'content': f'{context_prompt}Please answer the following question:\n\n{query}'
     })
 
     return await save_messages(question_answering(message_history, LLM.query))
