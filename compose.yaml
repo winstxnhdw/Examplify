@@ -29,7 +29,7 @@ services:
     container_name: backend
     environment:
       REDIS_URL: redis://redis:6379
-      BACKEND_PORT: ${BACKEND_PORT}
+      SERVER_PORT: ${BACKEND_PORT}
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
     volumes:
