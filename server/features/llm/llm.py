@@ -39,19 +39,47 @@ class LLM:
         download and load the language model
         """
         model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
-        cls.generator = LLMGenerator(model_path, device='cuda' if Config.use_cuda else 'cpu', compute_type='auto', inter_threads=1)
-        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
+        device = 'cuda' if Config.use_cuda else 'cpu'
 
-        system_prompt = cls.tokeniser.apply_chat_template((
-            {
+        cls.generator = LLMGenerator(model_path, device=device, compute_type='auto', inter_threads=1)
+        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
+        cls.max_generation_length = 1024
+        cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
+            'You may be given the following chat history.'
+            'Answer the question based on the context (if provided) as truthfully as you are able to.'
+            'If you do not know the answer, you may respond with "I do not know".'
+        )
+
+
+    @classmethod
+    def set_static_prompt(cls, static_prompt: str) -> int:
+        """
+        Summary
+        -------
+        set the model's static prompt
+
+        Parameters
+        ----------
+        static_prompt (str) : the static prompt
+
+        Returns
+        -------
+        tokens (int) : the number of tokens in the static prompt
+        """
+        system_message = {
                 'role': 'system',
-                'content': 'You are given the following chat history. Answer the question based on the context provided as truthfully as you are able to. If you do not know the answer, you may respond with "I do not know".'
-            },
-        ), tokenize=False, add_generation_prompt=True)
+                'content': static_prompt
+        }
+
+        system_prompt = cls.tokeniser.apply_chat_template(
+            [system_message],
+            tokenize=False,
+            add_generation_prompt=True
+        )
 
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
-        cls.max_generation_length = 1024
-        cls.max_prompt_length = 4096 - cls.max_generation_length - len(cls.static_prompt)
+
+        return len(cls.static_prompt)
 
 
     @classmethod
