@@ -12,6 +12,8 @@ updates:
 
   - package-ecosystem: docker
     directory: /
+    ignore:
+      - dependency-name: python
     schedule:
       interval: daily
       time: '18:00'
