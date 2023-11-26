@@ -31,25 +31,6 @@ class LLM:
     max_prompt_length: int
     static_prompt: list[str]
 
-    @classmethod
-    def load(cls):
-        """
-        Summary
-        -------
-        download and load the language model
-        """
-        model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
-        device = 'cuda' if Config.use_cuda else 'cpu'
-
-        cls.generator = LLMGenerator(model_path, device=device, compute_type='auto', inter_threads=1)
-        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
-        cls.max_generation_length = 1024
-        cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
-            'You may be given the following chat history.'
-            'Answer the question based on the context (if provided) as truthfully as you are able to.'
-            'If you do not know the answer, you may respond with "I do not know".'
-        )
-
 
     @classmethod
     def set_static_prompt(cls, static_prompt: str) -> int:
@@ -66,7 +47,7 @@ class LLM:
         -------
         tokens (int) : the number of tokens in the static prompt
         """
-        system_message = {
+        system_message: Message = {
                 'role': 'system',
                 'content': static_prompt
         }
@@ -80,6 +61,26 @@ class LLM:
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
 
         return len(cls.static_prompt)
+
+
+    @classmethod
+    def load(cls):
+        """
+        Summary
+        -------
+        download and load the language model
+        """
+        model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
+        device = 'cuda' if Config.use_cuda else 'cpu'
+
+        cls.generator = LLMGenerator(model_path, device=device, compute_type='auto', inter_threads=1)
+        cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
+        cls.max_generation_length = 1024
+        cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
+            'You may be given the following chat history. '
+            'Answer the question based on the context (if provided) as truthfully as you are able to. '
+            'If you do not know the answer, you may respond with "I do not know".'
+        )
 
 
     @classmethod
