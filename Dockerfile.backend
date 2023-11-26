@@ -1,4 +1,4 @@
-FROM python:3.11.6-slim as builder
+FROM python:3.12.0-slim as builder
 
 ENV POETRY_VIRTUALENVS_CREATE false
 ENV POETRY_HOME /opt/poetry
@@ -15,7 +15,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 RUN poetry install --without=dev --no-root
 
 
-FROM nvidia/cuda:11.7.1-base-ubuntu22.04
+FROM nvidia/cuda:12.3.0-base-ubuntu22.04
 
 ENV HOME /home/user
 ENV PYTHONUNBUFFERED 1
