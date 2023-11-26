@@ -1,29 +1,7 @@
-from typing import TypeVar
-
 from pydantic_settings import BaseSettings
 
-T = TypeVar('T', bound=BaseSettings)
 
-
-def singleton(cls: type[T]) -> T:
-    """
-    Summary
-    -------
-    a decorator to make a class a singleton
-
-    Parameters
-    ----------
-    cls (type[T]) : the class to make a singleton
-
-    Returns
-    -------
-    cls (T) : the singleton class
-    """
-    return cls()
-
-
-@singleton
-class Config(BaseSettings):
+class ConfigModel:
     """
     Summary
     -------
@@ -42,3 +20,29 @@ class Config(BaseSettings):
     worker_count: int = 1
     document_index_prefix: str = 'doc:'
     redis_index_name: str = 'index'
+
+
+def singleton(cls: type[ConfigModel]) -> ConfigModel:
+    """
+    Summary
+    -------
+    a decorator to make a class a singleton
+
+    Parameters
+    ----------
+    cls (type[ConfigModel]) : the class to make a singleton
+
+    Returns
+    -------
+    instance (ConfigModel) : the singleton instance
+    """
+    return cls()
+
+
+@singleton
+class Config(ConfigModel, BaseSettings):
+    """
+    Summary
+    -------
+    the general config class
+    """
