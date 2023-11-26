@@ -10,10 +10,18 @@ updates:
        dependencies:
           patterns: ['*']
 
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
+      time: '18:00'
+      timezone: Asia/Singapore
+    groups:
+       dependencies:
+          patterns: ['*']
+
   - package-ecosystem: pip
     directory: /
-    ignore:
-      - dependency-name: torch
     schedule:
       interval: daily
       time: '18:00'
