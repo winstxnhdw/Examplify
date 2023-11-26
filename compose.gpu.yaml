@@ -5,7 +5,7 @@ services:
       REDIS_URL: redis://redis:6379
       BACKEND_PORT: ${BACKEND_PORT}
       USE_CUDA: True
-    privileged: true
+    security_opt: [seccomp:unconfined]
     volumes:
       - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
       - ./tmp/backend/torch:/home/user/.cache/torch
