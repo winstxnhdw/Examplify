@@ -15,8 +15,8 @@ def benchmark(request: Query) -> Benchmark:
     the `/benchmark` route
     """
     message: Message = {
-            'role': 'user',
-            'content': request.query
+        'role': 'user',
+        'content': request.query
     }
 
     prompt = LLM.tokeniser.apply_chat_template([message], tokenize=False, add_generation_prompt=True)
