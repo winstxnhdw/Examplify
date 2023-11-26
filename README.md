@@ -10,17 +10,17 @@
 
 `Examplify` is an offline CPU-first memory-scarce chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised zephyr-7b-beta model, running on CTranslate2's inference engine for maximum CPU performance.
 
+## Requirements
+
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- 10 GB RAM
+
 ## Benchmarks
 
 | Model                   | Tokens | Time (s)  | Throughput (t/s) | Device          |
 | ----------------------- | ------ | --------- |----------------- | --------------- |
 | zephyr-7b-beta-ct2-int8 | 219    | 2.272     | 96.396           | NVIDIA RTX 3090 |
 | zephyr-7b-beta-ct2-int8 | 211    | 24.482    | 8.619            | Intel i7-8700   |
-
-## Requirements
-
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- 10 GB RAM
 
 ## Setup
 
