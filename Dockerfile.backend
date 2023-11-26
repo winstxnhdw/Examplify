@@ -15,7 +15,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 RUN poetry install --without=dev --no-root
 
 
-FROM python:3.11.6-slim
+FROM nvidia/cuda:11.7.1-base-ubuntu22.04
 
 ENV HOME /home/user
 ENV PYTHONUNBUFFERED 1
@@ -24,7 +24,7 @@ ENV TESSDATA_PREFIX /usr/share/tessdata
 
 WORKDIR $HOME/app
 
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local /usr/local
 COPY --from=builder /eng.traineddata $TESSDATA_PREFIX/eng.traineddata
 COPY . $HOME/app
 

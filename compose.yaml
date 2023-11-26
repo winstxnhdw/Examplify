@@ -32,6 +32,7 @@ services:
       SERVER_PORT: ${BACKEND_PORT}
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
+    privileged: true
     volumes:
       - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
       - ./tmp/backend/torch:/home/user/.cache/torch

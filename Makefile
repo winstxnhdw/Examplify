@@ -6,3 +6,6 @@ u:
 
 d:
 	docker compose down
+
+gpu:
+	docker compose -f compose.yaml -f compose.gpu.yaml up --build

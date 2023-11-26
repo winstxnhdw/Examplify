@@ -3,6 +3,7 @@ from typing import Generator, Iterable
 from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
+from server.config import Config
 from server.features.llm.types import Message
 from server.helpers import huggingface_download
 
@@ -38,7 +39,7 @@ class LLM:
         download and load the language model
         """
         model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
-        cls.generator = LLMGenerator(model_path, device='cpu', compute_type='auto', inter_threads=1)
+        cls.generator = LLMGenerator(model_path, device='cuda' if Config.use_cuda else 'cpu', compute_type='auto', inter_threads=1)
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
 
         system_prompt = cls.tokeniser.apply_chat_template((
