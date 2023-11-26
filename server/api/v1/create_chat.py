@@ -1,4 +1,3 @@
-
 from uuid import uuid4
 
 from server.api.v1 import v1

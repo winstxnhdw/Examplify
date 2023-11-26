@@ -1,11 +1,11 @@
 from fastapi.responses import StreamingResponse
 
-from server.api.v1 import v1
+from server.api.debug import debug
 from server.features import LLM
 from server.schemas.v1 import Generate
 
 
-@v1.post('/generate')
+@debug.post('/generate')
 def generate(request: Generate) -> StreamingResponse:
     """
     Summary

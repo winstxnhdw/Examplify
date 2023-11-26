@@ -3,14 +3,14 @@ from typing import Annotated
 from fastapi import Depends
 from redis.asyncio import Redis
 
-from server.api.v1 import v1
+from server.api.debug import debug
 from server.databases.redis.features import search as redis_search
 from server.dependencies import get_redis_client
 from server.features import Embedding
 from server.schemas.v1 import Query
 
 
-@v1.post('/{chat_id}/search')
+@debug.post('/{chat_id}/search')
 async def search(
     redis: Annotated[Redis, Depends(get_redis_client)],
     chat_id: str,

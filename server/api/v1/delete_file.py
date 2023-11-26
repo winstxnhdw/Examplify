@@ -1,4 +1,3 @@
-
 from typing import Annotated
 
 from fastapi import Depends
@@ -10,7 +9,7 @@ from server.dependencies import get_redis_client
 
 
 @v1.get('/delete_file/{file_id}', deprecated=True)
-async def delete_file(
+async def delete_file( # type: ignore
     file_id: str,
     redis: Annotated[Redis, Depends(get_redis_client)],
 ):

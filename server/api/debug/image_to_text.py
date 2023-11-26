@@ -1,10 +1,10 @@
 from fastapi import UploadFile
 
-from server.api.v1 import v1
+from server.api.debug import debug
 from server.features import extract_text_from_image
 
 
-@v1.post('/image_to_text')
+@debug.post('/image_to_text')
 def image_to_text(request: UploadFile) -> str:
     """
     Summary
