@@ -58,12 +58,12 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         self,
         conversation: Iterable[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
+        add_generation_prompt: bool = False,
         tokenize: Literal[False] = False,
         padding: bool = False,
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
-        add_generation_prompt: bool = False,
         **tokenizer_kwargs: Any
     ) -> str: ...
 
@@ -73,12 +73,12 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         self,
         conversation: Iterable[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
+        add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
         padding: bool = False,
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
-        add_generation_prompt: bool = False,
         **tokenizer_kwargs: Any
     ) -> list[int]: ...
 
@@ -87,12 +87,12 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         self,
         conversation: Iterable[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
+        add_generation_prompt: bool = False,
         tokenize: bool = True,
         padding: bool = False,
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
-        add_generation_prompt: bool = False,
         **tokenizer_kwargs: Any
     ) -> str | list[int]: ...
 

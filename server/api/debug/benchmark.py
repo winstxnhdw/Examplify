@@ -19,7 +19,7 @@ def benchmark(request: Query) -> Benchmark:
         'content': request.query
     }
 
-    prompt = LLM.tokeniser.apply_chat_template([message], tokenize=False, add_generation_prompt=True)
+    prompt = LLM.tokeniser.apply_chat_template([message], add_generation_prompt=True, tokenize=False)
     tokenised_prompt = LLM.tokeniser(prompt).tokens()
 
     start = time()

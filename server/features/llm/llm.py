@@ -54,8 +54,8 @@ class LLM:
 
         system_prompt = cls.tokeniser.apply_chat_template(
             [system_message],
-            tokenize=False,
-            add_generation_prompt=True
+            add_generation_prompt=True,
+            tokenize=False
         )
 
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
