@@ -1,1 +1,1 @@
-from server.features.query.query import query_llm as query_llm
+from server.features.query.query_llm import query_llm as query_llm
