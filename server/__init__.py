@@ -16,10 +16,6 @@ class Framework(FastAPI):
     -------
     the FastAPI framework class
 
-    Attributes
-    ----------
-    api_directory (str) : the directory where the api files are located
-
     Methods
     -------
     convert_delimiters(string: str, old: str, new: str) -> str
