@@ -16,16 +16,12 @@ class Framework(FastAPI):
     -------
     the FastAPI framework class
 
-    Attributes
-    ----------
-    api_directory (str) : the directory where the api files are located
-
     Methods
     -------
     convert_delimiters(string: str, old: str, new: str) -> str
         convert delimiters in a string
 
-    initialise_routes()
+    initialise_routes(api_directory: str)
         dynamically initialise all routes
     """
     def convert_delimiters(self, string: str, old: str, new: str) -> str:
@@ -55,7 +51,7 @@ class Framework(FastAPI):
 
         Parameters
         ----------
-        api_directory (str) : the directory where the api files are located
+        api_directory (str) : the directory where the API routes are located
         """
         module_file_names = [
             join(root, file)
