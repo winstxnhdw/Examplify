@@ -51,7 +51,7 @@ class Framework(FastAPI):
 
         Parameters
         ----------
-        api_directory (str) : the directory where the api files are located
+        api_directory (str) : the directory where the API routes are located
         """
         module_file_names = [
             join(root, file)
