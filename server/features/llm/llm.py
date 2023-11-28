@@ -33,7 +33,7 @@ class LLM:
 
 
     @classmethod
-    def set_static_prompt(cls, static_prompt: str) -> int:
+    def set_static_prompt(cls, static_user_prompt: str, static_assistant_prompt: str) -> int:
         """
         Summary
         -------
@@ -47,13 +47,17 @@ class LLM:
         -------
         tokens (int) : the number of tokens in the static prompt
         """
-        system_message: Message = {
-                'role': 'system',
-                'content': static_prompt
-        }
+        static_prompts: list[Message] = [{
+            'role': 'user',
+            'content': static_user_prompt
+        },
+        {
+            'role': 'assistant',
+            'content': static_assistant_prompt
+        }]
 
         system_prompt = cls.tokeniser.apply_chat_template(
-            [system_message],
+            static_prompts,
             add_generation_prompt=True,
             tokenize=False
         )
@@ -70,7 +74,7 @@ class LLM:
         -------
         download and load the language model
         """
-        model_path = huggingface_download('winstxnhdw/zephyr-7b-beta-ct2-int8')
+        model_path = huggingface_download('winstxnhdw/openchat-3.5-ct2-int8')
         device = 'cuda' if Config.use_cuda else 'cpu'
 
         cls.generator = LLMGenerator(model_path, device=device, compute_type='auto', inter_threads=1)
@@ -79,7 +83,9 @@ class LLM:
         cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
             'You may be given the following chat history. '
             'Answer the question based on the context (if provided) as truthfully as you are able to. '
-            'If you do not know the answer, you may respond with "I do not know".'
+            'If you do not know the answer, you may respond with "I do not know". '
+            'What is the capital of Japan?',
+            'Tokyo.'
         )
 
 

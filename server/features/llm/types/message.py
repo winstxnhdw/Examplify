@@ -14,5 +14,5 @@ class Message(TypedDict):
     role (Literal['user', 'assistant']) : the role of the message
     content (str) : the content of the message
     """
-    role: Literal['user', 'assistant', 'system']
+    role: Literal['user', 'assistant']
     content: str

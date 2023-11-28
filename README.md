@@ -8,7 +8,7 @@
 [![formatter.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml)
 [![dependabot.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml)
 
-`Examplify` is an offline CPU-first memory-scarce chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised zephyr-7b-beta model, running on CTranslate2's inference engine for maximum CPU performance.
+`Examplify` is an offline CPU-first memory-scarce chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised openchat-3.5 model, running on CTranslate2's inference engine for maximum CPU performance.
 
 ## Requirements
 
@@ -21,6 +21,8 @@
 | ----------------------- | ------ | --------- |----------------- | --------------- |
 | zephyr-7b-beta-ct2-int8 | 219    | 2.272     | 96.396           | NVIDIA RTX 3090 |
 | zephyr-7b-beta-ct2-int8 | 211    | 24.482    | 8.619            | Intel i7-8700   |
+| openchat-3.5-ct2-int8   | 151    | 0.832     | 181.469          | NVIDIA RTX 3090 |
+| openchat-3.5-ct2-int8   | 151    | 9.696     | 15.574           | Intel i7-8700   |
 
 ## Setup
 
