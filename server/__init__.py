@@ -25,7 +25,7 @@ class Framework(FastAPI):
     convert_delimiters(string: str, old: str, new: str) -> str
         convert delimiters in a string
 
-    initialise_routes()
+    initialise_routes(api_directory: str)
         dynamically initialise all routes
     """
     def convert_delimiters(self, string: str, old: str, new: str) -> str:
