@@ -43,7 +43,7 @@ def save_messages(
     -------
     save (Callable[[list[Message]], Awaitable[list[Message]]]) : a function that save messages
     """
-    if store_query:
+    if not store_query:
         return throwaway
 
     async def save(messages: list[Message]) -> list[Message]:
@@ -60,7 +60,7 @@ def save_messages(
         -------
         messages (list[Message]) : a list of messages
         """
-        redis.set(f'chat:{chat_id}', dumps(messages))
+        await redis.set(f'chat:{chat_id}', dumps(messages))
         return messages
 
     return save
