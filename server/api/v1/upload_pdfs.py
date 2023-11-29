@@ -19,8 +19,8 @@ from server.features.chunking import SentenceSplitter
 from server.schemas.v1 import DocumentSchema, Uploaded
 
 
-@v1.post('/{chat_id}/upload_files')
-async def upload_files(
+@v1.post('/{chat_id}/upload_pdfs')
+async def upload_pdfs(
     chat_id: str,
     requests: list[UploadFile],
     redis: Annotated[Redis, Depends(get_redis_client)]
@@ -28,7 +28,7 @@ async def upload_files(
     """
     Summary
     -------
-    the `/upload_files` route provides an endpoint for uploading a file to the server
+    the `/upload_pdfs` route provides an endpoint for uploading PDFs to the server
     """
     embedder = Embedding()
     response: list[DocumentSchema | None] = [None] * len(requests)
