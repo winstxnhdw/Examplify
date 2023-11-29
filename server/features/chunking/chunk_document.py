@@ -23,4 +23,5 @@ def chunk_document(document: Document, text_splitter: TextSplitter) -> Generator
         Chunk(i, document.id, chunk)
         for i, section in enumerate(document.sections)
         for chunk in text_splitter.split_text(section.content)
+        if len(chunk.split()) > 3
     )
