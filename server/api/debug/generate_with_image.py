@@ -7,15 +7,17 @@ from server.schemas.v1 import Answer
 
 
 @debug.post('/generate_with_image')
-def generate_with_image(request: UploadFile, extra_query: str) -> Answer:
+def generate_with_image(request: UploadFile, extra_query: str = '') -> Answer:
     """
     Summary
     -------
     the `/generate_with_image` route provides an endpoint for generating text directly from the LLM model
     """
+    query = f'\n{extra_query}' if extra_query else ''
+
     messages: list[Message] = [{
         'role': 'user',
-        'content': f'{extract_text_from_image(request.file)}\n{extra_query}'
+        'content': f'{extract_text_from_image(request.file)}{query}'
     }]
 
     prompt = LLM.tokeniser.apply_chat_template(
