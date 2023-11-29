@@ -7,7 +7,7 @@ from server.schemas.v1 import Answer
 
 
 @debug.post('/generate_with_image')
-def generate_with_image(request: UploadFile) -> Answer:
+def generate_with_image(request: UploadFile, extra_query: str) -> Answer:
     """
     Summary
     -------
@@ -15,7 +15,7 @@ def generate_with_image(request: UploadFile) -> Answer:
     """
     messages: list[Message] = [{
         'role': 'user',
-        'content': extract_text_from_image(request.file)
+        'content': f'{extract_text_from_image(request.file)}\n{extra_query}'
     }]
 
     prompt = LLM.tokeniser.apply_chat_template(
