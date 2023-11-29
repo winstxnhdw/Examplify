@@ -1,0 +1,3 @@
+# pylint: skip-file
+
+def sent_tokenize(text: str ) -> list[str]: ...
