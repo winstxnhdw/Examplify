@@ -9,3 +9,6 @@ d:
 
 gpu:
 	docker compose -f compose.yaml -f compose.gpu.yaml up --build
+
+clean:
+	rm -r tmp

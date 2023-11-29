@@ -59,3 +59,9 @@ Install all dependencies with the following.
 ```bash
 poetry install
 ```
+
+Delete cached models.
+
+```bash
+sudo make clean
+```
