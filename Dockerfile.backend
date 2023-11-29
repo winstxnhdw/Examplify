@@ -9,7 +9,7 @@ WORKDIR /
 COPY pyproject.toml .
 
 RUN apt update
-RUN apt install -y curl
+RUN apt install -y curl libexpat1
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
 RUN curl -sSL https://install.python-poetry.org | python -
 RUN poetry install --without=dev --no-root
@@ -26,6 +26,7 @@ WORKDIR $HOME/app
 
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /eng.traineddata $TESSDATA_PREFIX/eng.traineddata
+COPY --from=builder /lib/x86_64-linux-gnu/libexpat.so.1 /lib/x86_64-linux-gnu/libexpat.so.1
 COPY . $HOME/app
 
 CMD ["python", "main.py"]
