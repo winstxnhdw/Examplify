@@ -37,7 +37,7 @@ class FlagEmbedding(Module):
         self,
         transformer: Sequential,
         model_path: str,
-        compute_type: ComputeTypes = 'default'
+        compute_type: ComputeTypes
     ):
         super().__init__()
 
