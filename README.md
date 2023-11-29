@@ -24,6 +24,7 @@
 | openchat-3.5-ct2-int8   | 151    | 0.832     | 181.469          | NVIDIA RTX 3090 |
 | openchat-3.5-ct2-int8   | 151    | 9.696     | 15.574           | Intel i7-8700   |
 | openchat-3.5-ct2-int8   | 151    | 9.667     | 15.620           | Intel i7-1260P  |
+| openchat-3.5-ct2-int8   | 151    | 20.794    | 7.262            | Intel i9-11900H |
 
 ## Setup
 
