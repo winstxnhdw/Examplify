@@ -41,7 +41,8 @@ class LLM:
 
         Parameters
         ----------
-        static_prompt (str) : the static prompt
+        static_user_prompt (str) : the static user prompt
+        static_assistant_prompt (str) : the static assistant prompt
 
         Returns
         -------
