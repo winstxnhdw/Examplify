@@ -9,7 +9,7 @@ class Generate(BaseModel):
 
     Attributes
     ----------
-    instruction (list[str]) : instructions for the model
+    instructions (list[str]) : instructions for the model
     """
     instructions: list[str] = Field(examples=[
         ['Why did the chicken cross the road?'],
