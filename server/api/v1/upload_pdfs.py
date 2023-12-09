@@ -1,14 +1,11 @@
-from asyncio import gather
 from typing import Annotated
 
 from fastapi import Depends, UploadFile
-from pydantic import ValidationError
 from redis.asyncio import Redis
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from server.api.v1 import v1
-from server.config import Config
 from server.databases.redis.features import store_chunks
 from server.dependencies import get_redis_client
 from server.features import (

@@ -1,10 +1,12 @@
 # pylint: disable=missing-function-docstring
 
+from typing import Sequence
+
 from server.features.llm.types import Message
 from server.features.query.question_answering import question_answering
 
 
-def chain(messages: list[Message]) -> Message | None:
+def chain(messages: Sequence[Message]) -> Message | None:
 
     if len(messages) > 1:
         return None

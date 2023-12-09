@@ -1,4 +1,4 @@
-from typing import Generator, Sequence
+from typing import Generator, Iterable, Sequence
 
 from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
@@ -121,7 +121,7 @@ class LLM:
 
 
     @classmethod
-    def generate(cls, tokens_list: Sequence[list[str]]) -> Generator[str, None, None]:
+    def generate(cls, tokens_list: Iterable[list[str]] | Sequence[list[str]]) -> Generator[str, None, None]:
         """
         Summary
         -------
