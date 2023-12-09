@@ -20,6 +20,7 @@ ignore = ['E501']
 stubPath = 'server/typings'
 reportUnknownVariableType = false
 reportUnknownMemberType = false
+reportUnknownArgumentType = false
 reportMissingTypeStubs = false
 
 [tool.pytest.ini_options]
