@@ -2,12 +2,14 @@ from asyncio import gather
 from typing import Annotated
 
 from fastapi import Depends, UploadFile
+from pydantic import ValidationError
 from redis.asyncio import Redis
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from server.api.v1 import v1
 from server.config import Config
+from server.databases.redis.features import store_chunks
 from server.dependencies import get_redis_client
 from server.features import (
     LLM,
@@ -31,29 +33,19 @@ async def upload_pdfs(
     the `/upload_pdfs` route provides an endpoint for uploading PDFs to the server
     """
     embedder = Embedding()
-    response: list[DocumentSchema | None] = [None] * len(requests)
     text_splitter = SentenceSplitter(LLM.tokeniser, chunk_size=128, chunk_overlap=0)
 
     async with redis.pipeline() as pipeline:
-        for i, document in enumerate(extract_documents_from_pdf_requests(requests)):
-            if not document:
-                raise HTTPException(HTTP_422_UNPROCESSABLE_ENTITY, 'No file name!')
+        responses = [DocumentSchema(id=id, name=name) async for id, name in store_chunks(
+            pipeline,
+            chat_id,
+            embedder,
+            extract_documents_from_pdf_requests(requests),
+            chunk_document,
+            text_splitter
+        ) if id and name]
 
-            response[i] = DocumentSchema(
-                id=document.id,
-                name=document.semantic_identifier
-            )
+    if not responses:
+        raise HTTPException(HTTP_422_UNPROCESSABLE_ENTITY, 'No valid files!')
 
-            hashset_coroutines = [
-                pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}-{chunk.id}', mapping={
-                    'vector': embedder.encode_normalise(chunk.content).tobytes(),
-                    'content': chunk.content,
-                    'tag': chat_id
-                }) for chunk in chunk_document(document, text_splitter)
-            ]
-
-            await gather(*hashset_coroutines) # type: ignore
-
-        await pipeline.execute()
-
-    return Uploaded(documents=response)  # type: ignore
+    return Uploaded(documents=responses)
