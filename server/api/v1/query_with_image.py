@@ -31,13 +31,6 @@ async def query_with_image(
 
     context = await search(redis, chat_id, embedding, top_k)
     message_history: list[Message] = await redis_get(redis, f'chat:{chat_id}', _ := [])
-    save_messages_middleware = save_messages(redis, chat_id, store_query)
+    messages =  query_llm(extracted_query, context, message_history)
 
-    messages = await query_llm(
-        extracted_query,
-        context,
-        message_history,
-        save_messages_middleware
-    )
-
-    return Answer(messages=messages)
+    return Answer(messages = await save_messages(redis, chat_id, messages, store_query))

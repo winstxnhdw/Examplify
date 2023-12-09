@@ -5,11 +5,10 @@ from server.features.llm.types import Message
 from server.features.query.question_answering import question_answering
 
 
-async def query_llm(
+def query_llm(
     query: str,
     context: str,
     message_history: list[Message],
-    save_messages: Callable[[list[Message]], Awaitable[list[Message]]]
 ) -> list[Message]:
     """
     Summary
@@ -21,7 +20,6 @@ async def query_llm(
     query (str) : a query
     context (str) : the context to the query
     message_history (list[Message]) : a list of messages
-    save_messages (Callable[[list[Message]], Awaitable[list[Message]]]) : a function that save messages
 
     Returns
     -------
@@ -34,4 +32,4 @@ async def query_llm(
         'content': f'{context_prompt}Please answer the following question:\n\n{query}'
     })
 
-    return await save_messages(question_answering(message_history, LLM.query))
+    return question_answering(message_history, LLM.query)
