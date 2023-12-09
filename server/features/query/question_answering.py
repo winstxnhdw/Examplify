@@ -1,11 +1,11 @@
-from typing import Callable, Iterable
+from typing import Callable, Sequence
 
 from server.features.llm.types import Message
 
 
 def question_answering(
     messages: list[Message],
-    chain: Callable[[Iterable[Message]], Message | None] | Callable[[list[Message]], Message | None]
+    chain: Callable[[Sequence[Message]], Message | None]
 ) -> list[Message]:
     """
     Summary
@@ -15,7 +15,7 @@ def question_answering(
     Parameters
     ----------
     messages (list[Message]): the message history
-    chain (Callable[[Iterable[Message]], Message | None]): the model
+    chain (Callable[[Sequence[Message]], Message | None]): the model
 
     Returns
     -------

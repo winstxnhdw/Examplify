@@ -1,4 +1,4 @@
-from typing import Generator, Iterable
+from typing import Generator, Sequence
 
 from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
@@ -16,13 +16,16 @@ class LLM:
 
     Methods
     -------
-    stop_generation()
-        stop the generation of text
+    set_static_prompt(static_user_prompt: str, static_assistant_prompt: str) -> int
+        set the model's static prompt
 
-    query(messages: Iterable[Message]) -> Message | None
+    load()
+        download and load the language model
+
+    query(messages: Sequence[Message]) -> Message | None
         query the model
 
-    generate(tokens_list: Iterable[list[str]]) -> Generator[str, None, None]
+    generate(tokens_list: Sequence[list[str]]) -> Generator[str, None, None]
         generate text from a series/single prompt(s)
     """
     generator: LLMGenerator
@@ -91,7 +94,7 @@ class LLM:
 
 
     @classmethod
-    def query(cls, messages: Iterable[Message]) -> Message | None:
+    def query(cls, messages: Sequence[Message]) -> Message | None:
         """
         Summary
         -------
@@ -99,7 +102,7 @@ class LLM:
 
         Parameters
         ----------
-        messages (Iterable[Message]) : the messages to query the model with
+        messages (Sequence[Message]) : the messages to query the model with
 
         Returns
         -------
@@ -118,7 +121,7 @@ class LLM:
 
 
     @classmethod
-    def generate(cls, tokens_list: Iterable[list[str]]) -> Generator[str, None, None]:
+    def generate(cls, tokens_list: Sequence[list[str]]) -> Generator[str, None, None]:
         """
         Summary
         -------

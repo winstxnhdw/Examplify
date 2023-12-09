@@ -1,7 +1,7 @@
 # pylint: skip-file
 
 from os import PathLike
-from typing import Any, Iterable, Literal, Mapping, Self, overload
+from typing import Any, Literal, Mapping, Self, Sequence, overload
 
 from transformers.pipelines.conversational import Conversation
 from transformers.tokenization_utils_base import (
@@ -56,7 +56,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Iterable[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[False] = False,
@@ -71,7 +71,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Iterable[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
@@ -85,7 +85,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
 
     def apply_chat_template(
         self,
-        conversation: Iterable[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, Any]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: bool = True,
