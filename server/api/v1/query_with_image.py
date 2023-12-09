@@ -5,7 +5,7 @@ from fastapi import Depends, UploadFile
 from server.api.v1 import v1
 from server.databases.redis.wrapper import RedisAsyncWrapper
 from server.dependencies import get_redis_client
-from server.features import Embedding, extract_text_from_image, query_llm
+from server.features import LLM, Embedding, extract_text_from_image, question_answering
 from server.schemas.v1 import Answer
 
 
@@ -28,7 +28,7 @@ async def query_with_image(
 
     context = await redis.search(chat_id, embedding, top_k)
     message_history = await redis.get_messages(chat_id)
-    messages = query_llm(extracted_query, context, message_history)
+    messages = question_answering(extracted_query, context, message_history, LLM.query)
 
     if store_query:
         await redis.save_messages(chat_id, messages)

@@ -14,4 +14,4 @@ from server.features.extraction import (
     extract_text_from_image as extract_text_from_image,
 )
 from server.features.llm import LLM as LLM
-from server.features.query import query_llm as query_llm
+from server.features.question_answering import question_answering as question_answering

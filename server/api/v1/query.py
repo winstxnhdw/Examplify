@@ -5,7 +5,7 @@ from fastapi import Depends
 from server.api.v1 import v1
 from server.databases.redis.wrapper import RedisAsyncWrapper
 from server.dependencies import get_redis_client
-from server.features import Embedding, query_llm
+from server.features import LLM, Embedding, question_answering
 from server.schemas.v1 import Answer, Query
 
 
@@ -25,7 +25,7 @@ async def query(
     embedding = Embedding().encode_query(request.query)
     context = await redis.search(chat_id, embedding, top_k)
     message_history = await redis.get_messages(chat_id)
-    messages = query_llm(request.query, context, message_history)
+    messages = question_answering(request.query, context, message_history, LLM.query)
 
     if store_query:
         await redis.save_messages(chat_id, messages)

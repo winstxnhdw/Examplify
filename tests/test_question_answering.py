@@ -3,7 +3,7 @@
 from typing import Sequence
 
 from server.features.llm.types import Message
-from server.features.query.question_answering import question_answering
+from server.features.question_answering.question_answering import question_answering
 
 
 def chain(messages: Sequence[Message]) -> Message | None:
@@ -21,7 +21,7 @@ def test_question_answering():
         {'role': 'user', 'content': 'Hello world!'}
     ]
 
-    answers = question_answering(messages, chain)
+    answers = question_answering('', '', messages, chain)
 
     assert len(answers) == 2
     assert answers[-1]['role'] == 'assistant'
