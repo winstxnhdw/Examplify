@@ -2,12 +2,12 @@ from asyncio import gather
 from typing import Annotated
 
 from fastapi import Depends, UploadFile
-from redis.asyncio import Redis
 from starlette.exceptions import HTTPException
 from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from server.api.v1 import v1
 from server.config import Config
+from server.databases.redis.wrapper import RedisAsyncWrapper
 from server.dependencies import get_redis_client
 from server.features import (
     Embedding,
@@ -21,7 +21,7 @@ from server.schemas.v1 import DocumentSchema, Uploaded
 async def upload_texts(
     chat_id: str,
     requests: list[UploadFile],
-    redis: Annotated[Redis, Depends(get_redis_client)]
+    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)]
 ):
     """
     Summary
@@ -42,10 +42,10 @@ async def upload_texts(
             )
 
             hashset_coroutines = [
-                pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}-{chunk.id}', mapping={
-                    'vector': embedder.encode_normalise(chunk.content).tobytes(),
+                pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}:{chunk.id}', mapping={
+                    'vector': embedder.encode_normalise(chunk.content),
                     'content': chunk.content,
-                    'tag': chat_id
+                    'chat_id': chat_id
                 }) for chunk in naive_chunk(document)
             ]
 

@@ -1,23 +1,22 @@
 from typing import Annotated
 
 from fastapi import Depends
-from redis.asyncio import Redis
 
 from server.api.v1 import v1
+from server.databases.redis.wrapper import RedisAsyncWrapper
 from server.dependencies import get_redis_client
+from server.schemas.v1 import Timestamp
 
 
-@v1.get('/{chat_id}/delete_chat', deprecated=True)
+@v1.get('/{chat_id}/delete_chat')
 async def delete_chat(
     chat_id: str,
-    redis: Annotated[Redis, Depends(get_redis_client)],
-):
+    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)],
+) -> Timestamp:
     """
     Summary
     -------
     the `/delete_chat` route provides an endpoint for deleting a chat
     """
-    for key in redis.scan_iter():  # type: ignore
-        tag = await redis.hget(key, 'tag')  # type: ignore
-        if tag == chat_id:
-            redis.delete(key)  # type: ignore
+    await redis.delete_chat(chat_id)
+    return Timestamp()

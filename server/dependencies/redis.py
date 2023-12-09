@@ -3,9 +3,10 @@ from typing import AsyncGenerator
 from redis.asyncio import Redis as RedisAsync
 
 from server.databases import Redis
+from server.databases.redis.wrapper import RedisAsyncWrapper
 
 
-async def get_redis_client() -> AsyncGenerator[RedisAsync, None]:
+async def get_redis_client() -> AsyncGenerator[RedisAsyncWrapper, None]:
     """
     Summary
     -------
@@ -16,4 +17,4 @@ async def get_redis_client() -> AsyncGenerator[RedisAsync, None]:
     client (RedisAsync) : a Redis client
     """
     async with RedisAsync.from_pool(Redis.pool) as redis:
-        yield redis
+        yield RedisAsyncWrapper(redis)

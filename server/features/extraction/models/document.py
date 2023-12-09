@@ -24,7 +24,7 @@ class Document(NamedTuple):
 
     Attributes
     ----------
-    id (str): the id of the document
+    id (str): the identifier of the document
     sections (list[Section]): the sections of the document
     semantic_identifier (str): the original name of the document
     """

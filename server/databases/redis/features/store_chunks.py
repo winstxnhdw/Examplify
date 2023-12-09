@@ -6,11 +6,7 @@ from typing import (
     Protocol,
 )
 
-from numpy import float64
-from numpy.typing import NDArray
-from redis.asyncio.client import Pipeline
-
-from server.config import Config
+from server.databases.redis.wrapper import RedisAsyncWrapper
 from server.features.chunking.models import Chunk
 from server.features.chunking.sentence_splitter import TextSplitter
 from server.features.extraction.models import Document
@@ -22,7 +18,7 @@ class Embedder(Protocol):
     -------
     a generic protocol for embedding text
     """
-    def encode_normalise(self, sentences: str | list[str]) -> NDArray[float64]:
+    def encode_normalise(self, sentences: str | list[str]) -> bytes:
         """
         Summary
         -------
@@ -32,7 +28,7 @@ class Embedder(Protocol):
 
 
 async def store_chunks(
-    pipeline: Pipeline,
+    redis: RedisAsyncWrapper,
     chat_id: str,
     embedder: Embedder,
     documents: Iterable[Document | None],
@@ -55,24 +51,24 @@ async def store_chunks(
 
     Yields
     ------
-    document_id (str) : the document ID
-    semantic_identifier (str) : the document's semantic identifier
+    document_identity (tuple[str, str] | tuple[None, None]) : the document identifier and semantic name
     """
-    for document in documents:
-        if not document:
-            yield None, None
-            continue
+    async with redis.pipeline() as pipeline:
+        for document in documents:
+            if not document:
+                yield None, None
+                continue
 
-        yield document.id, document.semantic_identifier
+            yield document.id, document.semantic_identifier
 
-        coroutines = [
-            pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}-{chunk.id}', mapping={
-                'vector': embedder.encode_normalise(chunk.content).tobytes(),
-                'content': chunk.content,
-                'tag': chat_id
-            }) for chunk in chunker(document, text_splitter)
-        ]
+            coroutines = [
+                redis.hset(chunk.source_id, chunk.id, mapping={
+                    'vector': embedder.encode_normalise(chunk.content),
+                    'content': chunk.content,
+                    'chat_id': chat_id
+                }) for chunk in chunker(document, text_splitter)
+            ]
 
-        await gather(*coroutines)  # type: ignore
+            await gather(*coroutines)
 
-    await pipeline.execute()
+        await pipeline.execute()

@@ -1,7 +1,7 @@
 from redis.commands.search.query import Query
 
 
-def redis_query(mapping: str, field: str, top_k: int) -> Query:
+def redis_query_builder(mapping: str, field: str, top_k: int) -> Query:
     """
     Summary
     -------
@@ -20,7 +20,7 @@ def redis_query(mapping: str, field: str, top_k: int) -> Query:
     return (
         Query(f'(@{mapping}:{{ {field} }})=>[KNN {top_k} @vector $vec as score]')
             .sort_by('score')
-            .return_fields("content", "score")
+            .return_fields('content', 'score')
             .paging(0, top_k)
             .dialect(2)
     )

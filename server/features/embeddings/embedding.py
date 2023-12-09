@@ -1,6 +1,4 @@
 from huggingface_hub import snapshot_download
-from numpy import float64
-from numpy.typing import NDArray
 from sentence_transformers import SentenceTransformer
 
 from server.features.embeddings.flag_embedding import FlagEmbedding
@@ -14,8 +12,11 @@ class Embedding(SentenceTransformer):
 
     Methods
     -------
-    encode_normalise(sentences: str | list[str]) -> NDArray[float64]
+    encode_normalise(sentences: str | list[str]) -> bytes
         encode a sentence or list of sentences into a normalised embedding
+
+    encode_query(sentence: str) -> bytes
+        encode a sentence for searching relevant passages
     """
     def __init__(self, *, force_download: bool = False):
 
@@ -26,7 +27,7 @@ class Embedding(SentenceTransformer):
         self[0] = FlagEmbedding(self[0], model_path, 'auto')
 
 
-    def encode_normalise(self, sentences: str | list[str]) -> NDArray[float64]:
+    def encode_normalise(self, sentences: str | list[str]) -> bytes:
         """
         Summary
         -------
@@ -38,12 +39,12 @@ class Embedding(SentenceTransformer):
 
         Returns
         -------
-        embeddings (NDArray[float64]) : the normalised embeddings
+        embeddings (bytes) : the normalised embeddings
         """
-        return self.encode(sentences, normalize_embeddings=True)
+        return self.encode(sentences, normalize_embeddings=True).tobytes()
 
 
-    def encode_query(self, sentence: str) -> NDArray[float64]:
+    def encode_query(self, sentence: str) -> bytes:
         """
         Summary
         -------
@@ -55,7 +56,7 @@ class Embedding(SentenceTransformer):
 
         Returns
         -------
-        embeddings (NDArray[float64]) : the normalised embeddings
+        embeddings (bytes) : the normalised embeddings
         """
         return self.encode_normalise(
             f'Represent this sentence for searching relevant passages: {sentence}'
