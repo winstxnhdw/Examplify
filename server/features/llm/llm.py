@@ -19,7 +19,7 @@ class LLM:
     set_static_prompt(static_user_prompt: str, static_assistant_prompt: str) -> int
         set the model's static prompt
 
-    load()
+    load() -> None
         download and load the language model
 
     query(messages: Sequence[Message]) -> Message | None
@@ -33,7 +33,6 @@ class LLM:
     max_generation_length: int
     max_prompt_length: int
     static_prompt: list[str]
-
 
     @classmethod
     def set_static_prompt(cls, static_user_prompt: str, static_assistant_prompt: str) -> int:
