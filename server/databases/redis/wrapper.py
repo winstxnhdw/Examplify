@@ -70,6 +70,8 @@ class RedisAsyncWrapper:
     recreate_index():
         recreate the Redis index
     """
+    __slots__ = ('redis',)
+
     def __init__(self, redis: Redis | Pipeline):
 
         self.redis = redis
