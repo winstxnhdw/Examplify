@@ -1,7 +1,7 @@
 from asyncio import get_event_loop
 
-from nltk.downloader import download
 from nltk.data import find, path
+from nltk.downloader import download
 
 
 def find_or_download_nltk(download_directory: str):
