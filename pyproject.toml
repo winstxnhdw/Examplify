@@ -40,7 +40,7 @@ python-multipart = "^0.0.6"
 pydantic-settings = "^2.1.0"
 hypercorn = "^0.15.0"
 uvloop = "^0.19.0"
-httpx = "^0.25.2"
+httpx = "^0.26.0"
 ctranslate2 = "^3.23.0"
 transformers = "^4.36.2"
 sentencepiece = "^0.1.99"
@@ -53,7 +53,7 @@ tesserocr = "^2.6.2"
 torch = "^2.1.2"
 
 [tool.poetry.group.dev.dependencies]
-pyright = "^1.1.341"
+pyright = "^1.1.342"
 pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^7.4.3"
 ruff = "^0.1.8"
