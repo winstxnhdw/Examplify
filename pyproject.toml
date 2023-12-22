@@ -56,4 +56,4 @@ torch = "^2.1.2"
 pyright = "^1.1.342"
 pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^7.4.3"
-ruff = "^0.1.8"
+ruff = "^0.1.9"
