@@ -35,7 +35,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.105.0"
+fastapi = "^0.106.0"
 python-multipart = "^0.0.6"
 pydantic-settings = "^2.1.0"
 hypercorn = "^0.15.0"
@@ -53,7 +53,7 @@ tesserocr = "^2.6.2"
 torch = "^2.1.2"
 
 [tool.poetry.group.dev.dependencies]
-pyright = "^1.1.342"
+pyright = "^1.1.343"
 pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^7.4.3"
 ruff = "^0.1.9"
