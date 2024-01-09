@@ -53,7 +53,7 @@ tesserocr = "^2.6.2"
 torch = "^2.1.2"
 
 [tool.poetry.group.dev.dependencies]
-pyright = "^1.1.344"
+pyright = "^1.1.345"
 pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^7.4.4"
 ruff = "^0.1.11"
