@@ -1,5 +1,6 @@
 from huggingface_hub import snapshot_download
 from sentence_transformers import SentenceTransformer
+from torch import device
 
 from server.features.embeddings.flag_embedding import FlagEmbedding
 
@@ -22,9 +23,15 @@ class Embedding(SentenceTransformer):
 
         model_name = 'bge-base-en-v1.5'
         super().__init__(f'BAAI/{model_name}')
+        self.cached_device = super().device
 
         model_path = snapshot_download(f'winstxnhdw/{model_name}-ct2', local_files_only=not force_download)
         self[0] = FlagEmbedding(self[0], model_path, 'auto')
+
+
+    @property
+    def device(self) -> device:
+        return self.cached_device
 
 
     def encode_normalise(self, sentences: str | list[str]) -> bytes:
