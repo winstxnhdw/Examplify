@@ -35,7 +35,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.109.2"
+fastapi = "^0.110.0"
 python-multipart = "^0.0.9"
 pydantic-settings = "^2.2.1"
 uvicorn = "^0.27.1"
@@ -57,4 +57,4 @@ nltk = "^3.8.1"
 pyright = "^1.1.351"
 pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^8.0.1"
-ruff = "^0.2.2"
+ruff = "^0.3.0"
