@@ -1,9 +1,18 @@
+{
+	order cache before rewrite
+	cache
+}
+
 {$BACKEND_URL} {
-	handle_path /api/* {
-		reverse_proxy {$BACKEND_INTERNAL_URL} {
-			transport http {
-				versions h2c
-			}
+	cache {
+		allowed_http_verbs POST
+		ttl 24h
+		timeout {
+			backend 1000s
 		}
+	}
+
+	handle_path /api/* {
+		reverse_proxy {$BACKEND_INTERNAL_URL}
 	}
 }

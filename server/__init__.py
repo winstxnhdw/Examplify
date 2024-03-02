@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from server.api import debug, v1
 from server.config import Config
 from server.lifespans import lifespans
+from server.middlewares import LoggingMiddleware
 
 
 class Framework(FastAPI):
@@ -83,6 +84,7 @@ def initialise() -> Framework:
     app.initialise_routes(join('server', 'api'))
     app.include_router(v1)
     app.include_router(debug)
+    app.add_middleware(LoggingMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_credentials=True,

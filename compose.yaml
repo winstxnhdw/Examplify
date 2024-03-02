@@ -16,10 +16,12 @@ services:
       BACKEND_INTERNAL_URL: backend:${BACKEND_PORT}
     image: caddy:alpine
     volumes: [./Caddyfile:/etc/caddy/Caddyfile]
-    entrypoint: ["/bin/sh","-c"]
     ports:
       - '${BACKEND_PORT}:${BACKEND_PORT}'
       - 80:80
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
     command:
       - |
         caddy fmt --overwrite /etc/caddy/Caddyfile

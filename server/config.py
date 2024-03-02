@@ -40,7 +40,7 @@ class Config(BaseSettings):
     """
     server_port: int = 49494
     server_root_path: str = '/api'
-    worker_count: int = 0
+    worker_count: int = 1
     redis_index_name: str = 'index'
     use_cuda: bool = False
     document_index_prefix: str = 'doc'

@@ -1,15 +1,22 @@
-from hypercorn.run import run
+from uvicorn import run
 
-from server.config import ServerConfig
+from server import initialise
+from server.config import Config
 
 
 def main():
     """
     Summary
     -------
-    programmatically run the server with Hypercorn
+    programmatically run the server with Uvicorn
     """
-    run(ServerConfig())
+    run(
+        initialise(),
+        host="0.0.0.0",
+        port=Config.server_port,
+        loop='uvloop',
+        use_colors=True,
+    )
 
 
 if __name__ == '__main__':

@@ -64,6 +64,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
+        return_dict: bool = False,
         **tokenizer_kwargs: Any
     ) -> str: ...
 
@@ -79,6 +80,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
+        return_dict: bool = False,
         **tokenizer_kwargs: Any
     ) -> list[int]: ...
 
@@ -93,6 +95,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         truncation: bool = False,
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
+        return_dict: bool = False,
         **tokenizer_kwargs: Any
     ) -> str | list[int]: ...
 

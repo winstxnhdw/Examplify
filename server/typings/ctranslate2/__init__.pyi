@@ -9,7 +9,7 @@ from typing_extensions import TypeVar
 
 from server.types import ComputeTypes
 
-Devices = Literal['cpu', 'cuda', 'auto']
+type Devices = Literal['cpu', 'cuda', 'auto']
 
 LogProbability = TypeVar('LogProbability', default=None, bound=float | None)
 Scores = TypeVar('Scores', bound=list[float])
