@@ -55,6 +55,6 @@ nltk = "^3.8.1"
 
 [tool.poetry.group.dev.dependencies]
 pyright = "^1.1.351"
-pylint = { git = "https://github.com/pylint-dev/pylint.git" }
 pytest = "^8.0.1"
+pylint = "^3.1.0"
 ruff = "^0.3.0"
