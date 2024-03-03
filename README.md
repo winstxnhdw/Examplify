@@ -35,8 +35,8 @@ To setup the application, we must populate your `.env` file. You can do this wit
 
 ```bash
 {
-  echo BACKEND_URL=http://localhost
-  echo BACKEND_PORT=5000
+  echo BACKEND_URL=localhost
+  echo BACKEND_PORT=443
   echo CT2_USE_EXPERIMENTAL_PACKED_GEMM=1
   echo OMP_NUM_THREADS=8
 } > .env
@@ -44,7 +44,7 @@ To setup the application, we must populate your `.env` file. You can do this wit
 
 ## Usage
 
-You can start the application and access the Swagger UI at [http://localhost:5000/api/docs](http://localhost:5000/api/docs).
+You can start the application and access the Swagger UI at [https://localhost/api/docs](https://localhost/api/docs).
 
 > [!WARNING]\
 > Before offline usage, you must run the application at least once with internet access to install any necessary dependencies.
