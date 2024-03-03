@@ -8,7 +8,7 @@ from server.dependencies import get_redis_client
 from server.schemas.v1 import Timestamp
 
 
-@v1.get('/{chat_id}/delete_file/{file_id}')
+@v1.delete('/{chat_id}/delete_file/{file_id}')
 async def delete_file(
     chat_id: str,
     file_id: str,

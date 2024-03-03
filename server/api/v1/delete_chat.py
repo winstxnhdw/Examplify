@@ -8,7 +8,7 @@ from server.dependencies import get_redis_client
 from server.schemas.v1 import Timestamp
 
 
-@v1.get('/{chat_id}/delete_chat')
+@v1.delete('/{chat_id}/delete_chat')
 async def delete_chat(
     chat_id: str,
     redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)],

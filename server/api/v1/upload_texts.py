@@ -17,7 +17,7 @@ from server.features import (
 from server.schemas.v1 import DocumentSchema, Uploaded
 
 
-@v1.post('/{chat_id}/upload_texts')
+@v1.put('/{chat_id}/upload_texts')
 async def upload_texts(
     chat_id: str,
     requests: list[UploadFile],

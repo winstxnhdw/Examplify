@@ -18,7 +18,7 @@ from server.features.chunking import SentenceSplitter
 from server.schemas.v1 import DocumentSchema, Uploaded
 
 
-@v1.post('/{chat_id}/upload_pdfs')
+@v1.put('/{chat_id}/upload_pdfs')
 async def upload_pdfs(
     chat_id: str,
     requests: list[UploadFile],

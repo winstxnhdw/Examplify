@@ -8,7 +8,7 @@ from server.dependencies import get_redis_client
 from server.schemas.v1 import Timestamp
 
 
-@debug.get('/delete_all')
+@debug.delete('/delete_all')
 async def delete_all(redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)]) -> Timestamp:
     """
     Summary
