@@ -17,14 +17,16 @@
 
 ## Benchmarks
 
-| Model                                                                                | Tokens | Time (s)  | Throughput (t/s) | Device          |
-| ------------------------------------------------------------------------------------ | ------ | --------- |----------------- | --------------- |
-| [zephyr-7b-beta-ct2-int8](https://huggingface.co/winstxnhdw/zephyr-7b-beta-ct2-int8) | 219    | 2.272     | 96.396           | NVIDIA RTX 3090 |
-| [zephyr-7b-beta-ct2-int8](https://huggingface.co/winstxnhdw/zephyr-7b-beta-ct2-int8) | 211    | 24.482    | 8.619            | Intel i7-8700   |
-| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 0.832     | 181.469          | NVIDIA RTX 3090 |
-| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.696     | 15.574           | Intel i7-8700   |
-| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.667     | 15.620           | Intel i7-1260P  |
-| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 20.794    | 7.262            | Intel i9-11900H |
+| Model                                                                                | Tokens | Time (s)  | Throughput (t/s) | Device             |
+| ------------------------------------------------------------------------------------ | ------ | --------- |----------------- | ------------------ |
+| [zephyr-7b-beta-ct2-int8](https://huggingface.co/winstxnhdw/zephyr-7b-beta-ct2-int8) | 219    | 2.272     | 96.396           | NVIDIA RTX 3090    |
+| [zephyr-7b-beta-ct2-int8](https://huggingface.co/winstxnhdw/zephyr-7b-beta-ct2-int8) | 211    | 24.482    | 8.619            | Intel i7-8700      |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 0.832     | 181.469          | NVIDIA RTX 3090    |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 156    | 1.573     | 99.160           | NVIDIA RTX 3080 Ti |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 152    | 10.611    | 14.325           | Intel i7-12800H    |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.696     | 15.574           | Intel i7-8700      |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.667     | 15.620           | Intel i7-1260P     |
+| [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 20.794    | 7.262            | Intel i9-11900H    |
 
 ## Setup
 
