@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
+from starlette.responses import PlainTextResponse
 
 from server.api.debug import debug
 from server.databases.redis.wrapper import RedisAsyncWrapper
@@ -15,11 +16,13 @@ async def search(
     chat_id: str,
     request: Query,
     top_k: int = 5
-) -> str:
+) -> PlainTextResponse:
     """
     Summary
     -------
     the `/search` route provides an endpoint for searching the vector database
     """
     embedding = Embedding().encode_query(request.query)
-    return await redis.search(chat_id, embedding, top_k)
+    result = await redis.search(chat_id, embedding, top_k)
+
+    return PlainTextResponse(result)
