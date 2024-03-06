@@ -33,10 +33,12 @@ class Config(BaseSettings):
     ----------
     port (int) : the port to run the server on
     server_root_path (str) : the root path for the server
-    worker_count (int) : the number of workers to use
     document_index_prefix (str) : the prefix for the document index
     redis_index_name (str) : the name of the Redis index
     use_cuda (bool) : whether to use CUDA for inference
+    document_index_prefix (str) : the common document prefix for Redis Search
+    document_index_tag (str) : the common index prefix for Redis Search
+    embedding_dimensions (int) : the dimensions of the embedding vector space
     """
     server_port: int = 49494
     server_root_path: str = '/api'
