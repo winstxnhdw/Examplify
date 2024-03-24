@@ -49,6 +49,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         local_files_only: bool = False,
         token: str | bool | None = None,
         revision: str = "main",
+        trust_remote_code: bool = False,
         **kwargs: Any
     ) -> Self: ...
 
@@ -56,7 +57,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, object]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[False] = False,
@@ -65,14 +66,15 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
-        **tokenizer_kwargs: Any
+        tokenizer_kwargs: dict[str, Any] | None = None,
+        **kwargs: Any
     ) -> str: ...
 
 
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, object]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
@@ -81,13 +83,14 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
-        **tokenizer_kwargs: Any
+        tokenizer_kwargs: dict[str, Any] | None = None,
+        **kwargs: Any
     ) -> list[int]: ...
 
 
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, Any]] | Conversation,
+        conversation: Sequence[Mapping[str, object]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: bool = True,
@@ -96,12 +99,6 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
-        **tokenizer_kwargs: Any
+        tokenizer_kwargs: dict[str, Any] | None = None,
+        **kwargs: Any
     ) -> str | list[int]: ...
-
-
-    def save_vocabulary(
-        self,
-        save_directory: str,
-        filename_prefix: str | None = None
-    ) -> tuple[str]: ...
