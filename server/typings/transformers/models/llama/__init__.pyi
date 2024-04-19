@@ -57,7 +57,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, object]] | Conversation,
+        conversation: Sequence[Mapping[str, object]],
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[False] = False,
@@ -74,7 +74,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, object]] | Conversation,
+        conversation: Sequence[Mapping[str, object]],
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
@@ -88,9 +88,43 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     ) -> list[int]: ...
 
 
+    @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, object]] | Conversation,
+        conversation: Sequence[Sequence[Mapping[str, object]]],
+        chat_template: str | None = None,
+        add_generation_prompt: bool = False,
+        tokenize: Literal[True] = True,
+        padding: bool = False,
+        truncation: bool = False,
+        max_length: int | None = None,
+        return_tensors: str | TensorType | None = None,
+        return_dict: Literal[False] = False,
+        tokenizer_kwargs: dict[str, Any] | None = None,
+        **kwargs: Any
+    ) -> list[list[int]]: ...
+
+
+    @overload
+    def apply_chat_template(
+        self,
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]] | Conversation,
+        chat_template: str | None = None,
+        add_generation_prompt: bool = False,
+        tokenize: bool = True,
+        padding: bool = False,
+        truncation: bool = False,
+        max_length: int | None = None,
+        return_tensors: str | TensorType | None = None,
+        return_dict: Literal[True] = True,
+        tokenizer_kwargs: dict[str, Any] | None = None,
+        **kwargs: Any
+    ) -> BatchEncoding: ...
+
+
+    def apply_chat_template(
+        self,
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]] | Conversation,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: bool = True,
@@ -101,4 +135,4 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_dict: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any
-    ) -> str | list[int]: ...
+    ) -> str | list[str] | list[int] | list[list[int]] | BatchEncoding: ...
