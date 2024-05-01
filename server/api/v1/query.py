@@ -25,7 +25,7 @@ async def query(
     embedding = Embedding().encode_query(request.query)
     context = await redis.search(chat_id, embedding, top_k)
     message_history = await redis.get_messages(chat_id)
-    messages = question_answering(request.query, context, message_history, LLM.query)
+    messages = await question_answering(request.query, context, message_history, LLM.query)
 
     if store_query:
         await redis.save_messages(chat_id, messages)

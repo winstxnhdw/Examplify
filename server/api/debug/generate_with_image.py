@@ -7,7 +7,7 @@ from server.schemas.v1 import Answer
 
 
 @debug.post('/generate_with_image')
-def generate_with_image(requests: list[UploadFile], extra_query: str = '') -> Answer:
+async def generate_with_image(requests: list[UploadFile], extra_query: str = '') -> Answer:
     """
     Summary
     -------
@@ -29,7 +29,7 @@ def generate_with_image(requests: list[UploadFile], extra_query: str = '') -> An
 
     messages.append({
         'role': 'assistant',
-        'content': ''.join(LLM.generate([LLM.tokeniser(prompt).tokens()]))
+        'content': await LLM.generate(LLM.tokeniser(prompt).tokens())
     })
 
     return Answer(messages=messages)

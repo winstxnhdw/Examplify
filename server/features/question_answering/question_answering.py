@@ -1,13 +1,13 @@
-from typing import Callable, Sequence
+from typing import Awaitable, Callable, Sequence
 
 from server.features.llm.types import Message
 
 
-def question_answering(
+async def question_answering(
     query: str,
     context: str,
     messages: list[Message],
-    chain: Callable[[Sequence[Message]], Message | None]
+    chain: Callable[[Sequence[Message]], Awaitable[Message | None]]
 ) -> list[Message]:
     """
     Summary
@@ -30,7 +30,7 @@ def question_answering(
         'content': f'{context_prompt}Please answer the following question:\n\n{query}'
     })
 
-    while not (answer := chain(messages)):
+    while not (answer := await chain(messages)):
         messages = messages[1:]
 
     return messages + [answer]

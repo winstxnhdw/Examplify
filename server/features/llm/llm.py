@@ -1,4 +1,4 @@
-from typing import Generator, Iterable, Sequence
+from typing import Sequence
 
 from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
@@ -84,7 +84,6 @@ class LLM:
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
         cls.max_generation_length = 1024
         cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
-            'You may be given the following chat history. '
             'Answer the question based on the context (if provided) as truthfully as you are able to. '
             'If you do not know the answer, you may respond with "I do not know". '
             'What is the capital of Japan?',
@@ -93,7 +92,7 @@ class LLM:
 
 
     @classmethod
-    def query(cls, messages: Sequence[Message]) -> Message | None:
+    async def query(cls, messages: Sequence[Message]) -> Message | None:
         """
         Summary
         -------
@@ -115,12 +114,12 @@ class LLM:
 
         return {
             'role': 'assistant',
-            'content': next(cls.generate([tokens]))
+            'content': await cls.generate(tokens)
         }
 
 
     @classmethod
-    def generate(cls, tokens_list: Iterable[list[str]] | Sequence[list[str]]) -> Generator[str, None, None]:
+    async def generate(cls, tokens: list[str]) -> str:
         """
         Summary
         -------
@@ -128,20 +127,18 @@ class LLM:
 
         Parameters
         ----------
-        prompt (str) : the prompt to generate text from
+        tokens (list[str]) : the tokens to generate text from
 
         Yields
         -------
         answer (str) : the generated answer
         """
-        return (
-            cls.tokeniser.decode(result.sequences_ids[0]) for result in cls.generator.generate_iterable(
-                tokens_list,
-                repetition_penalty=1.2,
-                max_length=cls.max_generation_length,
-                static_prompt=cls.static_prompt,
-                include_prompt_in_result=False,
-                sampling_topp=0.9,
-                sampling_temperature=0.9
-            )
-        )
+
+        return cls.tokeniser.decode([result.token_id async for result in cls.generator.async_generate_tokens(
+            tokens,
+            repetition_penalty=1.2,
+            max_length=cls.max_generation_length,
+            static_prompt=cls.static_prompt,
+            sampling_topp=0.9,
+            sampling_temperature=0.9,
+        )], skip_special_tokens=True)

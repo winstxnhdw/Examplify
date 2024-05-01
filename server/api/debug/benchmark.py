@@ -8,7 +8,7 @@ from server.schemas.v1 import Benchmark, Query
 
 
 @debug.post('/benchmark')
-def benchmark(request: Query) -> Benchmark:
+async def benchmark(request: Query) -> Benchmark:
     """
     Summary
     -------
@@ -23,7 +23,7 @@ def benchmark(request: Query) -> Benchmark:
     tokenised_prompt = LLM.tokeniser(prompt).tokens()
 
     start = time()
-    response = ''.join(LLM.generate([tokenised_prompt]))
+    response = await LLM.generate(tokenised_prompt)
     total_time = time() - start
 
     output_tokens = LLM.tokeniser(response).tokens()
