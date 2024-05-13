@@ -4,7 +4,7 @@ from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.config import Config
-from server.features.llm.types import Message
+from server.features.llm.types import LLMOptions, Message
 from server.helpers import huggingface_download
 
 
@@ -78,9 +78,20 @@ class LLM:
         download and load the language model
         """
         model_path = huggingface_download('winstxnhdw/openchat-3.5-ct2-int8')
-        device = 'cuda' if Config.use_cuda else 'cpu'
+        options: LLMOptions = {
+            'model_path': model_path,
+            'device': 'cuda' if Config.use_cuda else 'cpu',
+            'compute_type': 'auto',
+            'inter_threads': 1,
+            'max_queued_batches': -1,
+        }
 
-        cls.generator = LLMGenerator(model_path, device=device, compute_type='auto', inter_threads=1)
+        try:
+            cls.generator = LLMGenerator(**options, flash_attention=Config.use_cuda)
+
+        except ValueError:
+            cls.generator = LLMGenerator(**options)
+
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
         cls.max_generation_length = 1024
         cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(

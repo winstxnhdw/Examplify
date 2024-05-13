@@ -16,9 +16,7 @@ from numpy.typing import NDArray
 from torch import Tensor
 from typing_extensions import TypeVar
 
-from server.types import ComputeTypes
-
-type Devices = Literal['cpu', 'cuda', 'auto']
+from server.types import ComputeTypes, Devices
 
 LogProbability = TypeVar('LogProbability', default=None, bound=float | None)
 Scores = TypeVar('Scores', bound=list[float])
@@ -64,6 +62,8 @@ class Generator:
         inter_threads: int = 1,
         intra_threads: int = 0,
         max_queued_batches: int = 0,
+        flash_attention: bool = False,
+        tensor_parallel: bool = False,
         files: object = None
     ) -> None: ...
 
