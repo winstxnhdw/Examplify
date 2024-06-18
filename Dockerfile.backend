@@ -18,7 +18,7 @@ FROM curlimages/curl:latest as curl-builder
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
 
 
-FROM nvidia/cuda:12.5.0-runtime-ubuntu22.04
+FROM nvidia/cuda:12.4.1-base-ubuntu22.04
 
 ENV HOME /home/user
 ENV PYTHONUNBUFFERED 1
@@ -29,7 +29,6 @@ WORKDIR $HOME/app
 
 COPY --from=curl-builder   /home/curl_user/eng.traineddata $TESSDATA_PREFIX/eng.traineddata
 COPY --from=python-builder /usr/local /usr/local
-COPY --from=python-builder /lib/x86_64-linux-gnu/libexpat.so.1 /lib/x86_64-linux-gnu/libexpat.so.1
 COPY . $HOME/app
 
 CMD ["python", "main.py"]
