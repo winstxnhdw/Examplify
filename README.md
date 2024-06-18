@@ -8,7 +8,7 @@
 [![formatter.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml)
 [![dependabot.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml)
 
-`Examplify` is an offline CPU-first memory-scarce chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised openchat-3.5 model, running on CTranslate2's inference engine for maximum CPU performance.
+`Examplify` is an offline CPU-first memory-scarce chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised openchat-3.6 model, running on CTranslate2's inference engine for maximum CPU performance.
 
 ## Requirements
 
@@ -27,6 +27,8 @@
 | [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.696     | 15.574           | Intel i7-8700      |
 | [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 9.667     | 15.620           | Intel i7-1260P     |
 | [openchat-3.5-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.5-ct2-int8)     | 151    | 20.794    | 7.262            | Intel i9-11900H    |
+| [openchat-3.6-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.6-ct2-int8)     | 174    | 1.340     | 129.828          | NVIDIA RTX 3090    |
+| [openchat-3.6-ct2-int8](https://huggingface.co/winstxnhdw/openchat-3.6-ct2-int8)     | 189    | 22.500    | 8.400            | Intel i7-8700      |
 
 ## Setup
 

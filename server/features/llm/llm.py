@@ -77,7 +77,7 @@ class LLM:
         -------
         download and load the language model
         """
-        model_path = huggingface_download('winstxnhdw/openchat-3.5-ct2-int8')
+        model_path = huggingface_download('winstxnhdw/openchat-3.6-ct2-int8')
         options: LLMOptions = {
             'model_path': model_path,
             'device': 'cuda' if Config.use_cuda else 'cpu',
