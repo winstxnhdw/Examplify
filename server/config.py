@@ -1,11 +1,28 @@
-from typing import TypeVar
+from functools import lru_cache
+from typing import Callable
 
 from pydantic_settings import BaseSettings
 
-T = TypeVar('T')
+
+def cache[T](user_function: Callable[[type[T]], T]) -> Callable[[type[T]], T]:
+    """
+    Summary
+    -------
+    a specific decorator to cache the result of a function
+
+    Parameters
+    ----------
+    user_function (Callable[[type[T]], T]) : the function to cache
+
+    Returns
+    -------
+    wrapper (Callable[[type[T]], T]) : the wrapper function
+    """
+    return lru_cache(maxsize=None)(user_function)
 
 
-def singleton(cls: type[T]) -> T:
+@cache
+def singleton[T](cls: type[T]) -> T:
     """
     Summary
     -------
