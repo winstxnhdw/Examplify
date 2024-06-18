@@ -1,4 +1,4 @@
-FROM python:slim as builder
+FROM python:slim as python-builder
 
 ENV POETRY_VIRTUALENVS_CREATE false
 ENV POETRY_HOME /opt/poetry
@@ -6,13 +6,16 @@ ENV PATH $POETRY_HOME/bin:$PATH
 
 WORKDIR /
 
-COPY pyproject.toml .
+COPY pyproject.toml poetry.lock ./
 
-RUN apt update
-RUN apt install -y curl
+RUN python -m venv $POETRY_HOME
+RUN $POETRY_HOME/bin/pip install poetry
+RUN poetry install --without dev
+
+
+FROM curlimages/curl:latest as curl-builder
+
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
-RUN curl -sSL https://install.python-poetry.org | python -
-RUN poetry install --without dev --no-root
 
 
 FROM nvidia/cuda:12.5.0-runtime-ubuntu22.04
@@ -24,9 +27,9 @@ ENV TESSDATA_PREFIX /usr/share/tessdata
 
 WORKDIR $HOME/app
 
-COPY --from=builder /usr/local /usr/local
-COPY --from=builder /eng.traineddata $TESSDATA_PREFIX/eng.traineddata
-COPY --from=builder /lib/x86_64-linux-gnu/libexpat.so.1 /lib/x86_64-linux-gnu/libexpat.so.1
+COPY --from=curl-builder   /home/curl_user/eng.traineddata $TESSDATA_PREFIX/eng.traineddata
+COPY --from=python-builder /usr/local /usr/local
+COPY --from=python-builder /lib/x86_64-linux-gnu/libexpat.so.1 /lib/x86_64-linux-gnu/libexpat.so.1
 COPY . $HOME/app
 
 CMD ["python", "main.py"]
