@@ -52,7 +52,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, str]],
+        conversation: Sequence[Mapping[str, object]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -69,7 +69,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, str]],
+        conversation: Sequence[Mapping[str, object]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -86,7 +86,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Sequence[Mapping[str, str]]],
+        conversation: Sequence[Sequence[Mapping[str, object]]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -103,7 +103,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, str]] | Sequence[Sequence[Mapping[str, str]]],
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -119,7 +119,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     ) -> BatchEncoding: ...
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, str]] | Sequence[Sequence[Mapping[str, str]]],
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
