@@ -11,11 +11,14 @@ def main():
     programmatically run the server with Uvicorn
     """
     run(
-        initialise(),
-        host="0.0.0.0",
+        f'{initialise.__module__}:{initialise.__name__}',
+        host='0.0.0.0',
         port=Config.server_port,
+        reload=False,
         loop='uvloop',
+        http='httptools',
         use_colors=True,
+        factory=True,
     )
 
 
