@@ -1,11 +1,16 @@
 # pylint: disable=missing-function-docstring
 
-from typing import Sequence
+from typing import Literal, Sequence
 
-from pytest import mark
+from pytest import fixture, mark
 
 from server.features.llm.types import Message
 from server.features.question_answering.question_answering import question_answering
+
+
+@fixture
+def anyio_backend() -> tuple[Literal['asyncio', 'trio'], dict[str, bool]]:
+    return ('asyncio', {'use_uvloop': True})
 
 
 async def chain(messages: Sequence[Message]) -> Message | None:
@@ -15,7 +20,7 @@ async def chain(messages: Sequence[Message]) -> Message | None:
 
     return {'role': 'assistant', 'content': 'Hello world!'}
 
-@mark.asyncio
+@mark.anyio
 async def test_question_answering():
 
     messages: list[Message] = [
