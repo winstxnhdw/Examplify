@@ -3,7 +3,6 @@
 from os import PathLike
 from typing import Any, Literal, Mapping, Self, Sequence, overload
 
-from transformers.pipelines.conversational import Conversation
 from transformers.tokenization_utils_base import (
     BatchEncoding,
     PreTokenizedInput,
@@ -35,10 +34,8 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_offsets_mapping: bool = False,
         return_length: bool = False,
         verbose: bool = True,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> BatchEncoding: ...
-
-
     @classmethod
     def from_pretrained(
         cls,
@@ -50,14 +47,14 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         token: str | bool | None = None,
         revision: str = "main",
         trust_remote_code: bool = False,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> Self: ...
-
-
     @overload
     def apply_chat_template(
         self,
         conversation: Sequence[Mapping[str, object]],
+        tools: list[dict[Any, Any]] | None = None,
+        documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[False] = False,
@@ -67,14 +64,14 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> str: ...
-
-
     @overload
     def apply_chat_template(
         self,
         conversation: Sequence[Mapping[str, object]],
+        tools: list[dict[Any, Any]] | None = None,
+        documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
@@ -84,14 +81,14 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> list[int]: ...
-
-
     @overload
     def apply_chat_template(
         self,
         conversation: Sequence[Sequence[Mapping[str, object]]],
+        tools: list[dict[Any, Any]] | None = None,
+        documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: Literal[True] = True,
@@ -101,14 +98,14 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_tensors: str | TensorType | None = None,
         return_dict: Literal[False] = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> list[list[int]]: ...
-
-
     @overload
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]] | Conversation,
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]],
+        tools: list[dict[Any, Any]] | None = None,
+        documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: bool = True,
@@ -118,13 +115,13 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_tensors: str | TensorType | None = None,
         return_dict: Literal[True] = True,
         tokenizer_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> BatchEncoding: ...
-
-
     def apply_chat_template(
         self,
-        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]] | Conversation,
+        conversation: Sequence[Mapping[str, object]] | Sequence[Sequence[Mapping[str, object]]],
+        tools: list[dict[Any, Any]] | None = None,
+        documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
         tokenize: bool = True,
@@ -134,5 +131,5 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> str | list[str] | list[int] | list[list[int]] | BatchEncoding: ...
