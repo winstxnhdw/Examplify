@@ -63,6 +63,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
+        return_assistant_tokens_mask: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str: ...
@@ -80,6 +81,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
+        return_assistant_tokens_mask: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> list[int]: ...
@@ -97,6 +99,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: Literal[False] = False,
+        return_assistant_tokens_mask: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> list[list[int]]: ...
@@ -114,6 +117,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: Literal[True] = True,
+        return_assistant_tokens_mask: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> BatchEncoding: ...
@@ -130,6 +134,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         max_length: int | None = None,
         return_tensors: str | TensorType | None = None,
         return_dict: bool = False,
+        return_assistant_tokens_mask: bool = False,
         tokenizer_kwargs: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> str | list[str] | list[int] | list[list[int]] | BatchEncoding: ...
