@@ -13,7 +13,8 @@ class Timestamp(BaseModel):
     ----------
     timestamp (str) : the current timestamp
     """
+
     timestamp: str = Field(
         examples=['2021-10-10T10:10:10.000'],
-        default_factory=lambda: datetime.now().isoformat()
+        default_factory=lambda: datetime.now().isoformat(),
     )

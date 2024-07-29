@@ -11,4 +11,5 @@ class Generate(BaseModel):
     ----------
     instruction (str) : instructions for the model
     """
+
     instruction: str = Field(examples=['Why did the chicken cross the road?'])

@@ -42,10 +42,7 @@ def extract_document_from_image(file_name: str, file: BinaryIO) -> Document:
     -------
     document (Document): the parsed document
     """
-    return create_document(file_name, [Section(
-        link=f'{file_name}',
-        content=extract_text_from_image(file)
-    )])
+    return create_document(file_name, [Section(link=f'{file_name}', content=extract_text_from_image(file))])
 
 
 def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
@@ -64,7 +61,5 @@ def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generat
     """
     for request in requests:
         yield (
-            extract_document_from_image(request.filename.rsplit('.', 1)[0], request.file)
-            if request.filename
-            else None
+            extract_document_from_image(request.filename.rsplit('.', 1)[0], request.file) if request.filename else None
         )

@@ -30,24 +30,18 @@ class GenerationStepResult(Generic[LogProbability]):
     token: str
     token_id: int
 
-
 class GenerationResult(Generic[Scores]):
     scores: Scores
     sequences: list[list[str]]
     sequences_ids: list[list[int]]
 
-
 class AsyncGenerationResult(Generic[Scores]):
-
     def done(self) -> bool: ...
-
     def result(self) -> GenerationResult[Scores]: ...
-
 
 class EncoderForwardOutput:
     last_hidden_state: Any
     pooler_output: Any
-
 
 class Generator:
     device: Devices
@@ -64,10 +58,8 @@ class Generator:
         max_queued_batches: int = 0,
         flash_attention: bool = False,
         tensor_parallel: bool = False,
-        files: object = None
+        files: object = None,
     ) -> None: ...
-
-
     @overload
     def generate_batch(
         self,
@@ -99,8 +91,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> list[GenerationResult[list[Any]]]: ...
-
-
     @overload
     def generate_batch(
         self,
@@ -132,8 +122,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> list[GenerationResult[list[float]]]: ...
-
-
     @overload
     def generate_batch(
         self,
@@ -165,8 +153,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> list[AsyncGenerationResult[list[Any]]]: ...
-
-
     @overload
     def generate_batch(
         self,
@@ -198,8 +184,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> list[AsyncGenerationResult[list[float]]]: ...
-
-
     @overload
     def generate_iterable(
         self,
@@ -231,8 +215,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> Iterable[GenerationResult[list[Any]]]: ...
-
-
     @overload
     def generate_iterable(
         self,
@@ -264,8 +246,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> Iterable[AsyncGenerationResult[list[float]]]: ...
-
-
     @overload
     def generate_iterable(
         self,
@@ -297,8 +277,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> Iterable[AsyncGenerationResult[list[Any]]]: ...
-
-
     @overload
     def generate_iterable(
         self,
@@ -330,8 +308,6 @@ class Generator:
         sampling_temperature: float = 1,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> Iterable[GenerationResult[list[float]]]: ...
-
-
     @overload
     def generate_tokens(
         self,
@@ -354,8 +330,6 @@ class Generator:
         cache_static_prompt: bool = True,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> Iterable[GenerationStepResult]: ...
-
-
     @overload
     def generate_tokens(
         self,
@@ -378,8 +352,6 @@ class Generator:
         cache_static_prompt: bool = True,
         callback: Callable[[GenerationStepResult[float]], bool] | None = None,
     ) -> Iterable[GenerationStepResult[float]]: ...
-
-
     @overload
     def async_generate_tokens(
         self,
@@ -402,8 +374,6 @@ class Generator:
         cache_static_prompt: bool = True,
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> AsyncIterable[GenerationStepResult]: ...
-
-
     @overload
     def async_generate_tokens(
         self,
@@ -427,11 +397,9 @@ class Generator:
         callback: Callable[[GenerationStepResult], bool] | None = None,
     ) -> AsyncIterable[GenerationStepResult[float]]: ...
 
-
 class StorageView:
     @classmethod
     def from_array(cls, array: NDArray[float64] | Tensor) -> Self: ...
-
 
 class Encoder:
     def __init__(
@@ -444,14 +412,11 @@ class Encoder:
         inter_threads: int = 1,
         intra_threads: int = 0,
         max_queued_batches: int = 0,
-        files: object = None
+        files: object = None,
     ) -> None: ...
-
-
     def forward_batch(
         self,
         inputs: list[list[str]] | list[list[int]] | StorageView,
         lengths: StorageView | None = None,
-        token_type_ids: list[list[int]] | None = None
+        token_type_ids: list[list[int]] | None = None,
     ) -> EncoderForwardOutput: ...
-

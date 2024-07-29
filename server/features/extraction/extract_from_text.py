@@ -23,11 +23,13 @@ def extract_document_from_text(file_name: str, file: bytes) -> Document:
     -------
     document (Document): the parsed document
     """
-    return create_document(file_name, [
-        Section(link=f'{file_name}#{i}', content=content.strip().replace('?', ''))
-        for i, content
-        in enumerate(file.decode('utf-8').split('\n\n'))
-    ])
+    return create_document(
+        file_name,
+        [
+            Section(link=f'{file_name}#{i}', content=content.strip().replace('?', ''))
+            for i, content in enumerate(file.decode('utf-8').split('\n\n'))
+        ],
+    )
 
 
 def extract_documents_from_text_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:

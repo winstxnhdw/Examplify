@@ -22,20 +22,21 @@ async def try_create_index(client: RedisAsync, index_name: str):
         await client.ft(index_name).info()
 
     except ResponseError:
-        vector_field = VectorField('vector', 'FLAT', {
-            'TYPE': 'FLOAT32',
-            'DISTANCE_METRIC': 'COSINE',
-            'DIM': Config.embedding_dimensions,
-        })
-
-        index_definition = IndexDefinition(
-            [Config.document_index_prefix],
-            index_type=IndexType.HASH
+        vector_field = VectorField(
+            'vector',
+            'FLAT',
+            {
+                'TYPE': 'FLOAT32',
+                'DISTANCE_METRIC': 'COSINE',
+                'DIM': Config.embedding_dimensions,
+            },
         )
+
+        index_definition = IndexDefinition([Config.document_index_prefix], index_type=IndexType.HASH)
 
         await client.ft(index_name).create_index(
             fields=(TagField(Config.document_index_tag), vector_field),
-            definition=index_definition
+            definition=index_definition,
         )
 
 

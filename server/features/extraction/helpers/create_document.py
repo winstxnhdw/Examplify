@@ -22,5 +22,5 @@ def create_document(semantic_identifier: str, sections: list[Section]) -> Docume
     return Document(
         id=str(uuid4()),
         sections=sections,
-        semantic_identifier=semantic_identifier
+        semantic_identifier=semantic_identifier,
     )

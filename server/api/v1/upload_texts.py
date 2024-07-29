@@ -21,7 +21,7 @@ from server.schemas.v1 import DocumentSchema, Uploaded
 async def upload_texts(
     chat_id: str,
     requests: list[UploadFile],
-    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)]
+    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)],
 ):
     """
     Summary
@@ -38,18 +38,22 @@ async def upload_texts(
 
             response[i] = DocumentSchema(
                 id=document.id,
-                name=document.semantic_identifier
+                name=document.semantic_identifier,
             )
 
             hashset_coroutines = [
-                pipeline.hset(f'{Config.document_index_prefix}:{chunk.source_id}:{chunk.id}', mapping={
-                    'vector': embedder.encode_normalise(chunk.content),
-                    'content': chunk.content,
-                    'chat_id': chat_id
-                }) for chunk in naive_chunk(document)
+                pipeline.hset(
+                    f'{Config.document_index_prefix}:{chunk.source_id}:{chunk.id}',
+                    mapping={
+                        'vector': embedder.encode_normalise(chunk.content),
+                        'content': chunk.content,
+                        'chat_id': chat_id,
+                    },
+                )
+                for chunk in naive_chunk(document)
             ]
 
-            await gather(*hashset_coroutines) # type: ignore
+            await gather(*hashset_coroutines)  # type: ignore
 
         await pipeline.execute()
 

@@ -22,7 +22,7 @@ from server.schemas.v1 import DocumentSchema, Uploaded
 async def upload_pdfs(
     chat_id: str,
     requests: list[UploadFile],
-    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)]
+    redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)],
 ) -> Uploaded:
     """
     Summary
@@ -38,7 +38,7 @@ async def upload_pdfs(
         embedder,
         extract_documents_from_pdf_requests(requests),
         chunk_document,
-        text_splitter
+        text_splitter,
     )
 
     async for file_id, file_name in chunk_generator:

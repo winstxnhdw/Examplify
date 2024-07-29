@@ -15,7 +15,7 @@ async def query(
     chat_id: str,
     request: Query,
     top_k: int = 1,
-    store_query: bool = True
+    store_query: bool = True,
 ) -> Answer:
     """
     Summary

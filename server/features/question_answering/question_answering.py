@@ -7,7 +7,7 @@ async def question_answering(
     query: str,
     context: str,
     messages: list[Message],
-    chain: Callable[[Sequence[Message]], Awaitable[Message | None]]
+    chain: Callable[[Sequence[Message]], Awaitable[Message | None]],
 ) -> list[Message]:
     """
     Summary
@@ -25,10 +25,12 @@ async def question_answering(
     """
     context_prompt = f'Given the following context:\n\n{context}\n\n' if context else ''
 
-    messages.append({
-        'role': 'user',
-        'content': f'{context_prompt}Please answer the following question:\n\n{query}'
-    })
+    messages.append(
+        {
+            'role': 'user',
+            'content': f'{context_prompt}Please answer the following question:\n\n{query}',
+        }
+    )
 
     while not (answer := await chain(messages)):
         messages = messages[1:]

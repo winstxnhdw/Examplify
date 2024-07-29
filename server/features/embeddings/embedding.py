@@ -19,8 +19,8 @@ class Embedding(SentenceTransformer):
     encode_query(sentence: str) -> bytes
         encode a sentence for searching relevant passages
     """
-    def __init__(self, *, force_download: bool = False):
 
+    def __init__(self, *, force_download: bool = False):
         model_name = 'bge-base-en-v1.5'
         super().__init__(f'BAAI/{model_name}')
         self.cached_device = super().device  # type: ignore
@@ -28,11 +28,9 @@ class Embedding(SentenceTransformer):
         model_path = snapshot_download(f'winstxnhdw/{model_name}-ct2', local_files_only=not force_download)
         self[0] = FlagEmbedding(self[0], model_path, 'auto')
 
-
     @property
     def device(self) -> device:
         return self.cached_device
-
 
     def encode_normalise(self, sentences: str | list[str]) -> bytes:
         """
@@ -50,7 +48,6 @@ class Embedding(SentenceTransformer):
         """
         return self.encode(sentences, normalize_embeddings=True).tobytes()
 
-
     def encode_query(self, sentence: str) -> bytes:
         """
         Summary
@@ -65,6 +62,4 @@ class Embedding(SentenceTransformer):
         -------
         embeddings (bytes) : the normalised embeddings
         """
-        return self.encode_normalise(
-            f'Represent this sentence for searching relevant passages: {sentence}'
-        )
+        return self.encode_normalise(f'Represent this sentence for searching relevant passages: {sentence}')

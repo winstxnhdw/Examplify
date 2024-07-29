@@ -28,6 +28,7 @@ class LLM:
     generate(tokens_list: Sequence[list[str]]) -> Generator[str, None, None]
         generate text from a series/single prompt(s)
     """
+
     generator: LLMGenerator
     tokeniser: LlamaTokenizerFast
     max_generation_length: int
@@ -50,25 +51,21 @@ class LLM:
         -------
         tokens (int) : the number of tokens in the static prompt
         """
-        static_prompts: list[Message] = [{
-            'role': 'user',
-            'content': static_user_prompt
-        },
-        {
-            'role': 'assistant',
-            'content': static_assistant_prompt
-        }]
+        static_prompts: list[Message] = [
+            {
+                'role': 'user',
+                'content': static_user_prompt,
+            },
+            {
+                'role': 'assistant',
+                'content': static_assistant_prompt,
+            },
+        ]
 
-        system_prompt = cls.tokeniser.apply_chat_template(
-            static_prompts,
-            add_generation_prompt=True,
-            tokenize=False
-        )
-
+        system_prompt = cls.tokeniser.apply_chat_template(static_prompts, add_generation_prompt=True, tokenize=False)
         cls.static_prompt = cls.tokeniser(system_prompt).tokens()
 
         return len(cls.static_prompt)
-
 
     @classmethod
     def load(cls):
@@ -94,13 +91,16 @@ class LLM:
 
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
         cls.max_generation_length = 1024
-        cls.max_prompt_length = 4096 - cls.max_generation_length - cls.set_static_prompt(
-            'Answer the question based on the context (if provided) as truthfully as you are able to. '
-            'If you do not know the answer, you may respond with "I do not know". '
-            'What is the capital of Japan?',
-            'Tokyo.'
+        cls.max_prompt_length = (
+            4096
+            - cls.max_generation_length
+            - cls.set_static_prompt(
+                'Answer the question based on the context (if provided) as truthfully as you are able to. '
+                'If you do not know the answer, you may respond with "I do not know". '
+                'What is the capital of Japan?',
+                'Tokyo.',
+            )
         )
-
 
     @classmethod
     async def query(cls, messages: Sequence[Message]) -> Message | None:
@@ -125,9 +125,8 @@ class LLM:
 
         return {
             'role': 'assistant',
-            'content': await cls.generate(tokens)
+            'content': await cls.generate(tokens),
         }
-
 
     @classmethod
     async def generate(cls, tokens: list[str]) -> str:
@@ -145,11 +144,17 @@ class LLM:
         answer (str) : the generated answer
         """
 
-        return cls.tokeniser.decode([result.token_id async for result in cls.generator.async_generate_tokens(
-            tokens,
-            repetition_penalty=1.2,
-            max_length=cls.max_generation_length,
-            static_prompt=cls.static_prompt,
-            sampling_topp=0.9,
-            sampling_temperature=0.9,
-        )], skip_special_tokens=True)
+        return cls.tokeniser.decode(
+            [
+                result.token_id
+                async for result in cls.generator.async_generate_tokens(
+                    tokens,
+                    repetition_penalty=1.2,
+                    max_length=cls.max_generation_length,
+                    static_prompt=cls.static_prompt,
+                    sampling_topp=0.9,
+                    sampling_temperature=0.9,
+                )
+            ],
+            skip_special_tokens=True,
+        )

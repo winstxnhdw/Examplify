@@ -30,7 +30,4 @@ async def download_nltk():
     download_directory = '/home/user/.cache/nltk'
     path.append(download_directory)
 
-    await get_event_loop().run_in_executor(
-        None,
-        lambda: find_or_download_nltk(download_directory)
-    )
+    await get_event_loop().run_in_executor(None, lambda: find_or_download_nltk(download_directory))

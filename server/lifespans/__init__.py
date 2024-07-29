@@ -17,7 +17,7 @@ async def lifespans(_: FastAPI) -> AsyncGenerator[None, None]:
     -------
     the FastAPI lifespan function
     """
-    print("Server has NOT started. Retrieving dependencies..")
+    print('Server has NOT started. Retrieving dependencies..')
 
     await gather(
         download_nltk(),
@@ -27,6 +27,6 @@ async def lifespans(_: FastAPI) -> AsyncGenerator[None, None]:
 
     LLM.load()
 
-    print("Dependencies retrieved. Waiting for server initialisation..")
+    print('Dependencies retrieved. Waiting for server initialisation..')
 
     yield

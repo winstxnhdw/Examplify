@@ -15,7 +15,8 @@ from typing import Any, Callable, Dict, Generator, List, Optional, Self, Tuple
 from pydantic.v1 import BaseModel, Field, PrivateAttr
 from transformers.models.llama import LlamaTokenizerFast
 
-BASE_TRACE_EVENT = "root"
+BASE_TRACE_EVENT = 'root'
+
 
 class CBEventType(str, Enum):
     """Callback manager event types.
@@ -32,24 +33,25 @@ class CBEventType(str, Enum):
         SUB_QUESTION: Logs for a generated sub question and answer.
     """
 
-    CHUNKING = "chunking"
-    NODE_PARSING = "node_parsing"
-    EMBEDDING = "embedding"
-    LLM = "llm"
-    QUERY = "query"
-    RETRIEVE = "retrieve"
-    SYNTHESIZE = "synthesize"
-    TREE = "tree"
-    SUB_QUESTION = "sub_question"
-    TEMPLATING = "templating"
-    FUNCTION_CALL = "function_call"
-    RERANKING = "reranking"
-    EXCEPTION = "exception"
-    AGENT_STEP = "agent_step"
+    CHUNKING = 'chunking'
+    NODE_PARSING = 'node_parsing'
+    EMBEDDING = 'embedding'
+    LLM = 'llm'
+    QUERY = 'query'
+    RETRIEVE = 'retrieve'
+    SYNTHESIZE = 'synthesize'
+    TREE = 'tree'
+    SUB_QUESTION = 'sub_question'
+    TEMPLATING = 'templating'
+    FUNCTION_CALL = 'function_call'
+    RERANKING = 'reranking'
+    EXCEPTION = 'exception'
+    AGENT_STEP = 'agent_step'
+
 
 LEAF_EVENTS = (CBEventType.CHUNKING, CBEventType.LLM, CBEventType.EMBEDDING)
 logger = logging.getLogger(__name__)
-global_stack_trace = ContextVar("trace", default=[BASE_TRACE_EVENT])
+global_stack_trace = ContextVar('trace', default=[BASE_TRACE_EVENT])
 
 
 class BaseCallbackHandler(ABC):
@@ -69,7 +71,7 @@ class BaseCallbackHandler(ABC):
         self,
         event_type: CBEventType,
         payload: Optional[Dict[str, Any]] = None,
-        event_id: str = "",
+        event_id: str = '',
         **kwargs: Any,
     ) -> str:
         """Run when an event starts and return id of event."""
@@ -79,7 +81,7 @@ class BaseCallbackHandler(ABC):
         self,
         event_type: CBEventType,
         payload: Optional[Dict[str, Any]] = None,
-        event_id: str = "",
+        event_id: str = '',
         **kwargs: Any,
     ) -> None:
         """Run when an event ends."""
@@ -96,14 +98,16 @@ class BaseCallbackHandler(ABC):
     ) -> None:
         """Run when an overall trace is exited."""
 
+
 SENTENCE_CHUNK_OVERLAP = 200
 DEFAULT_CHUNK_SIZE = 1024  # tokens
-CHUNKING_REGEX = "[^,.;。？！]+[,.;。？！]?"
-DEFAULT_PARAGRAPH_SEP = "\n\n\n"
+CHUNKING_REGEX = '[^,.;。？！]+[,.;。？！]?'
+DEFAULT_PARAGRAPH_SEP = '\n\n\n'
 
-global_stack_trace = ContextVar("trace", default=[BASE_TRACE_EVENT])
+global_stack_trace = ContextVar('trace', default=[BASE_TRACE_EVENT])
 empty_trace_ids: List[str] = []
-global_stack_trace_ids = ContextVar("trace_ids", default=empty_trace_ids)
+global_stack_trace_ids = ContextVar('trace_ids', default=empty_trace_ids)
+
 
 class CallbackManager(BaseCallbackHandler, ABC):
     """
@@ -201,7 +205,7 @@ class CallbackManager(BaseCallbackHandler, ABC):
         event_type: CBEventType,
         payload: Optional[Dict[str, Any]] = None,
         event_id: Optional[str] = None,
-    ) -> Generator["EventContext", None, None]:
+    ) -> Generator['EventContext', None, None]:
         """Context manager for lanching and shutdown of events.
 
         Handles sending on_evnt_start and on_event_end to handlers for specified event.
@@ -219,9 +223,7 @@ class CallbackManager(BaseCallbackHandler, ABC):
         try:
             yield event
         except Exception as e:
-            self.on_event_start(
-                CBEventType.EXCEPTION, payload={EventPayload.EXCEPTION: e}
-            )
+            self.on_event_start(CBEventType.EXCEPTION, payload={EventPayload.EXCEPTION: e})
             raise e
         finally:
             # ensure event is ended
@@ -236,9 +238,7 @@ class CallbackManager(BaseCallbackHandler, ABC):
         try:
             yield
         except Exception as e:
-            self.on_event_start(
-                CBEventType.EXCEPTION, payload={EventPayload.EXCEPTION: e}
-            )
+            self.on_event_start(CBEventType.EXCEPTION, payload={EventPayload.EXCEPTION: e})
             raise e
         finally:
             # ensure trace is ended
@@ -286,6 +286,7 @@ class CallbackManager(BaseCallbackHandler, ABC):
     def trace_map(self) -> Dict[str, List[str]]:
         return self._trace_map
 
+
 class EventContext:
     """
     Simple wrapper to call callbacks on event starts and ends
@@ -307,20 +308,14 @@ class EventContext:
     def on_start(self, payload: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:
         if not self.started:
             self.started = True
-            self._callback_manager.on_event_start(
-                self._event_type, payload=payload, event_id=self._event_id, **kwargs
-            )
+            self._callback_manager.on_event_start(self._event_type, payload=payload, event_id=self._event_id, **kwargs)
         else:
-            logger.warning(
-                f"Event {str(self._event_type)}: {self._event_id} already started!"
-            )
+            logger.warning(f'Event {str(self._event_type)}: {self._event_id} already started!')
 
     def on_end(self, payload: Optional[Dict[str, Any]] = None, **kwargs: Any) -> None:
         if not self.finished:
             self.finished = True
-            self._callback_manager.on_event_end(
-                self._event_type, payload=payload, event_id=self._event_id, **kwargs
-            )
+            self._callback_manager.on_event_end(self._event_type, payload=payload, event_id=self._event_id, **kwargs)
 
 
 class BaseComponent(BaseModel):
@@ -338,7 +333,7 @@ class BaseComponent(BaseModel):
 
     def to_dict(self, **kwargs: Any) -> dict[str, Any]:
         data = self.dict(**kwargs)
-        data["class_name"] = self.class_name()
+        data['class_name'] = self.class_name()
         return data
 
     def to_json(self, **kwargs: Any) -> str:
@@ -351,13 +346,14 @@ class BaseComponent(BaseModel):
         if isinstance(kwargs, dict):
             data.update(kwargs)
 
-        data.pop("class_name", None)
+        data.pop('class_name', None)
         return cls(**data)
 
     @classmethod
     def from_json(cls, data_str: str, **kwargs: Any) -> Self:  # type: ignore
         data = json.loads(data_str)
         return cls.from_dict(data, **kwargs)
+
 
 def truncate_text(text: str, text_splitter: Any) -> str:
     """Truncate text to fit within the chunk size."""
@@ -390,7 +386,7 @@ def split_by_sentence_tokenizer() -> Callable[[str], List[str]]:
     from nltk import data
     from nltk.tokenize import PunktSentenceTokenizer
 
-    data.find("tokenizers/punkt")
+    data.find('tokenizers/punkt')
     tokenizer = PunktSentenceTokenizer()
 
     # get the spans and then return the sentences
@@ -428,7 +424,7 @@ def split_by_phrase_regex() -> Callable[[str], List[str]]:
     period, or semicolon. The regular expression will also capture the
     delimiters themselves as separate items in the list of phrases.
     """
-    regex = "[^,.;。]+[,.;。]?"
+    regex = '[^,.;。]+[,.;。]?'
     return split_by_regex(regex)
 
 
@@ -437,8 +433,7 @@ class TextSplitter(ABC, BaseComponent):
         arbitrary_types_allowed = True
 
     @abstractmethod
-    def split_text(self, text: str) -> List[str]:
-        ...
+    def split_text(self, text: str) -> List[str]: ...
 
     def split_texts(self, texts: List[str]) -> List[str]:
         nested_texts = [self.split_text(text) for text in texts]
@@ -447,44 +442,38 @@ class TextSplitter(ABC, BaseComponent):
 
 class MetadataAwareTextSplitter(TextSplitter):
     @abstractmethod
-    def split_text_metadata_aware(self, text: str, metadata_str: str) -> List[str]:
-        ...
+    def split_text_metadata_aware(self, text: str, metadata_str: str) -> List[str]: ...
 
-    def split_texts_metadata_aware(
-        self, texts: List[str], metadata_strs: List[str]
-    ) -> List[str]:
+    def split_texts_metadata_aware(self, texts: List[str], metadata_strs: List[str]) -> List[str]:
         if len(texts) != len(metadata_strs):
-            raise ValueError("Texts and metadata_strs must have the same length")
-        nested_texts = [
-            self.split_text_metadata_aware(text, metadata)
-            for text, metadata in zip(texts, metadata_strs)
-        ]
+            raise ValueError('Texts and metadata_strs must have the same length')
+        nested_texts = [self.split_text_metadata_aware(text, metadata) for text, metadata in zip(texts, metadata_strs)]
         return [item for sublist in nested_texts for item in sublist]
 
 
 class EventPayload(str, Enum):
-    DOCUMENTS = "documents"  # list of documents before parsing
-    CHUNKS = "chunks"  # list of text chunks
-    NODES = "nodes"  # list of nodes
-    PROMPT = "formatted_prompt"  # formatted prompt sent to LLM
-    MESSAGES = "messages"  # list of messages sent to LLM
-    COMPLETION = "completion"  # completion from LLM
-    RESPONSE = "response"  # message response from LLM
-    QUERY_STR = "query_str"  # query used for query engine
-    SUB_QUESTION = "sub_question"  # a sub question & answer + sources
-    EMBEDDINGS = "embeddings"  # list of embeddings
-    TOP_K = "top_k"  # top k nodes retrieved
-    ADDITIONAL_KWARGS = "additional_kwargs"  # additional kwargs for event call
-    SERIALIZED = "serialized"  # serialized object for event caller
-    FUNCTION_CALL = "function_call"  # function call for the LLM
-    FUNCTION_OUTPUT = "function_call_response"  # function call output
-    TOOL = "tool"  # tool used in LLM call
-    MODEL_NAME = "model_name"  # model name used in an event
-    TEMPLATE = "template"  # template used in LLM call
-    TEMPLATE_VARS = "template_vars"  # template variables used in LLM call
-    SYSTEM_PROMPT = "system_prompt"  # system prompt used in LLM call
-    QUERY_WRAPPER_PROMPT = "query_wrapper_prompt"  # query wrapper prompt used in LLM
-    EXCEPTION = "exception"  # exception raised in an event
+    DOCUMENTS = 'documents'  # list of documents before parsing
+    CHUNKS = 'chunks'  # list of text chunks
+    NODES = 'nodes'  # list of nodes
+    PROMPT = 'formatted_prompt'  # formatted prompt sent to LLM
+    MESSAGES = 'messages'  # list of messages sent to LLM
+    COMPLETION = 'completion'  # completion from LLM
+    RESPONSE = 'response'  # message response from LLM
+    QUERY_STR = 'query_str'  # query used for query engine
+    SUB_QUESTION = 'sub_question'  # a sub question & answer + sources
+    EMBEDDINGS = 'embeddings'  # list of embeddings
+    TOP_K = 'top_k'  # top k nodes retrieved
+    ADDITIONAL_KWARGS = 'additional_kwargs'  # additional kwargs for event call
+    SERIALIZED = 'serialized'  # serialized object for event caller
+    FUNCTION_CALL = 'function_call'  # function call for the LLM
+    FUNCTION_OUTPUT = 'function_call_response'  # function call output
+    TOOL = 'tool'  # tool used in LLM call
+    MODEL_NAME = 'model_name'  # model name used in an event
+    TEMPLATE = 'template'  # template used in LLM call
+    TEMPLATE_VARS = 'template_vars'  # template variables used in LLM call
+    SYSTEM_PROMPT = 'system_prompt'  # system prompt used in LLM call
+    QUERY_WRAPPER_PROMPT = 'query_wrapper_prompt'  # query wrapper prompt used in LLM
+    EXCEPTION = 'exception'  # exception raised in an event
 
 
 @dataclass
@@ -501,32 +490,21 @@ class SentenceSplitter(MetadataAwareTextSplitter):
     hanging sentences or parts of sentences at the end of the node chunk.
     """
 
-    chunk_size: int = Field(
-        default=DEFAULT_CHUNK_SIZE, description="The token chunk size for each chunk."
-    )
+    chunk_size: int = Field(default=DEFAULT_CHUNK_SIZE, description='The token chunk size for each chunk.')
     chunk_overlap: int = Field(
         default=SENTENCE_CHUNK_OVERLAP,
-        description="The token overlap of each chunk when splitting.",
+        description='The token overlap of each chunk when splitting.',
     )
-    separator: str = Field(
-        default=" ", description="Default separator for splitting into words"
-    )
-    paragraph_separator: str = Field(
-        default=DEFAULT_PARAGRAPH_SEP, description="Separator between paragraphs."
-    )
+    separator: str = Field(default=' ', description='Default separator for splitting into words')
+    paragraph_separator: str = Field(default=DEFAULT_PARAGRAPH_SEP, description='Separator between paragraphs.')
     secondary_chunking_regex: str = Field(
-        default=CHUNKING_REGEX, description="Backup regex for splitting into sentences."
+        default=CHUNKING_REGEX, description='Backup regex for splitting into sentences.'
     )
     chunking_tokenizer_fn: Callable[[str], List[str]] = Field(
         exclude=True,
-        description=(
-            "Function to split text into sentences. "
-            "Defaults to `nltk.sent_tokenize`."
-        ),
+        description=('Function to split text into sentences. ' 'Defaults to `nltk.sent_tokenize`.'),
     )
-    callback_manager: CallbackManager = Field(
-        default_factory=CallbackManager, exclude=True
-    )
+    callback_manager: CallbackManager = Field(default_factory=CallbackManager, exclude=True)
     tokenizer: Any
 
     _split_fns: List[Callable[[Any], Any]] = PrivateAttr()
@@ -535,7 +513,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
     def __init__(
         self,
         tokenizer: LlamaTokenizerFast,
-        separator: str = " ",
+        separator: str = ' ',
         chunk_size: int = DEFAULT_CHUNK_SIZE,
         chunk_overlap: int = SENTENCE_CHUNK_OVERLAP,
         paragraph_separator: str = DEFAULT_PARAGRAPH_SEP,
@@ -546,8 +524,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
         """Initialize with parameters."""
         if chunk_overlap > chunk_size:
             raise ValueError(
-                f"Got a larger chunk overlap ({chunk_overlap}) than chunk size "
-                f"({chunk_size}), should be smaller."
+                f'Got a larger chunk overlap ({chunk_overlap}) than chunk size ' f'({chunk_size}), should be smaller.'
             )
 
         tokenizer = tokenizer
@@ -578,23 +555,23 @@ class SentenceSplitter(MetadataAwareTextSplitter):
 
     @classmethod
     def class_name(cls) -> str:
-        return "SentenceSplitter"
+        return 'SentenceSplitter'
 
     def split_text_metadata_aware(self, text: str, metadata_str: str) -> List[str]:
         metadata_len = len(self.tokenizer(metadata_str).tokens())
         effective_chunk_size = self.chunk_size - metadata_len
         if effective_chunk_size <= 0:
             raise ValueError(
-                f"Metadata length ({metadata_len}) is longer than chunk size "
-                f"({self.chunk_size}). Consider increasing the chunk size or "
-                "decreasing the size of your metadata to avoid this."
+                f'Metadata length ({metadata_len}) is longer than chunk size '
+                f'({self.chunk_size}). Consider increasing the chunk size or '
+                'decreasing the size of your metadata to avoid this.'
             )
         elif effective_chunk_size < 50:
             print(
-                f"Metadata length ({metadata_len}) is close to chunk size "
-                f"({self.chunk_size}). Resulting chunks are less than 50 tokens. "
-                "Consider increasing the chunk size or decreasing the size of "
-                "your metadata to avoid this.",
+                f'Metadata length ({metadata_len}) is close to chunk size '
+                f'({self.chunk_size}). Resulting chunks are less than 50 tokens. '
+                'Consider increasing the chunk size or decreasing the size of '
+                'your metadata to avoid this.',
                 flush=True,
             )
 
@@ -609,12 +586,10 @@ class SentenceSplitter(MetadataAwareTextSplitter):
 
         Has a preference for complete sentences, phrases, and minimal overlap.
         """
-        if text == "":
+        if text == '':
             return []
 
-        with self.callback_manager.event(
-            CBEventType.CHUNKING, payload={EventPayload.CHUNKS: [text]}
-        ) as event:
+        with self.callback_manager.event(CBEventType.CHUNKING, payload={EventPayload.CHUNKS: [text]}) as event:
             splits = self._split(text, chunk_size)
             chunks = self._merge(splits, chunk_size)
 
@@ -642,9 +617,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
             if self._token_size(text_split_by_fns) <= chunk_size:
                 text_splits.append(_Split(text_split_by_fns, is_sentence=is_sentence))
             else:
-                recursive_text_splits = self._split(
-                    text_split_by_fns, chunk_size=chunk_size
-                )
+                recursive_text_splits = self._split(text_split_by_fns, chunk_size=chunk_size)
                 text_splits.extend(recursive_text_splits)
         return text_splits
 
@@ -659,7 +632,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
         def close_chunk() -> None:
             nonlocal chunks, cur_chunk, last_chunk, cur_chunk_len, new_chunk
 
-            chunks.append("".join([text for text, _ in cur_chunk]))
+            chunks.append(''.join([text for text, _ in cur_chunk]))
             last_chunk = cur_chunk
             cur_chunk = []
             cur_chunk_len = 0
@@ -673,10 +646,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
             # much real world benefit, so it's not implemented now.
             if len(last_chunk) > 0:
                 last_index = len(last_chunk) - 1
-                while (
-                    last_index >= 0
-                    and cur_chunk_len + last_chunk[last_index][1] <= self.chunk_overlap
-                ):
+                while last_index >= 0 and cur_chunk_len + last_chunk[last_index][1] <= self.chunk_overlap:
                     text, length = last_chunk[last_index]
                     cur_chunk_len += length
                     cur_chunk.insert(0, (text, length))
@@ -686,7 +656,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
             cur_split = splits[0]
             cur_split_len = len(self.tokenizer(cur_split.text))
             if cur_split_len > chunk_size:
-                raise ValueError("Single token exceeded chunk size")
+                raise ValueError('Single token exceeded chunk size')
             if cur_chunk_len + cur_split_len > chunk_size and not new_chunk:
                 # if adding split to current chunk exceeds chunk size: close out chunk
                 close_chunk()
@@ -707,7 +677,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
 
         # handle the last chunk
         if not new_chunk:
-            chunk = "".join([text for text, _ in cur_chunk])
+            chunk = ''.join([text for text, _ in cur_chunk])
             chunks.append(chunk)
 
         # run postprocessing to remove blank spaces
@@ -722,7 +692,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
         new_chunks = []
         for chunk in chunks:
             stripped_chunk = chunk.strip()
-            if stripped_chunk == "":
+            if stripped_chunk == '':
                 continue
             new_chunks.append(stripped_chunk)
         return new_chunks

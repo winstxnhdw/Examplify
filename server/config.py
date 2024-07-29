@@ -57,6 +57,7 @@ class Config(BaseSettings):
     document_index_tag (str) : the common index prefix for Redis Search
     embedding_dimensions (int) : the dimensions of the embedding vector space
     """
+
     server_port: int = 49494
     server_root_path: str = '/api'
     redis_index_name: str = 'index'

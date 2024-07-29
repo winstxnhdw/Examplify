@@ -18,6 +18,7 @@ class Embedder(Protocol):
     -------
     a generic protocol for embedding text
     """
+
     def encode_normalise(self, sentences: str | list[str]) -> bytes:
         """
         Summary
@@ -33,7 +34,7 @@ async def store_chunks(
     embedder: Embedder,
     documents: Iterable[Document | None],
     chunker: Callable[[Document, TextSplitter], Iterable[Chunk]],
-    text_splitter: TextSplitter
+    text_splitter: TextSplitter,
 ) -> AsyncGenerator[tuple[str, str] | tuple[None, None], None]:
     """
     Summary
@@ -62,11 +63,16 @@ async def store_chunks(
             yield document.id, document.semantic_identifier
 
             coroutines = [
-                redis.hset(chunk.source_id, chunk.id, mapping={
-                    'vector': embedder.encode_normalise(chunk.content),
-                    'content': chunk.content,
-                    'chat_id': chat_id
-                }) for chunk in chunker(document, text_splitter)
+                redis.hset(
+                    chunk.source_id,
+                    chunk.id,
+                    mapping={
+                        'vector': embedder.encode_normalise(chunk.content),
+                        'content': chunk.content,
+                        'chat_id': chat_id,
+                    },
+                )
+                for chunk in chunker(document, text_splitter)
             ]
 
             await gather(*coroutines)

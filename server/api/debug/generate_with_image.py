@@ -16,20 +16,24 @@ async def generate_with_image(requests: list[UploadFile], extra_query: str = '')
     extracted_query = '\n'.join(extract_text_from_image(request.file) for request in requests)
     query = f'\n{extra_query}' if extra_query else ''
 
-    messages: list[Message] = [{
-        'role': 'user',
-        'content': f'{extracted_query}{query}'
-    }]
+    messages: list[Message] = [
+        {
+            'role': 'user',
+            'content': f'{extracted_query}{query}',
+        }
+    ]
 
     prompt = LLM.tokeniser.apply_chat_template(
         messages,
         tokenize=False,
-        add_generation_prompt=True
+        add_generation_prompt=True,
     )
 
-    messages.append({
-        'role': 'assistant',
-        'content': await LLM.generate(LLM.tokeniser(prompt).tokens())
-    })
+    messages.append(
+        {
+            'role': 'assistant',
+            'content': await LLM.generate(LLM.tokeniser(prompt).tokens()),
+        }
+    )
 
     return Answer(messages=messages)

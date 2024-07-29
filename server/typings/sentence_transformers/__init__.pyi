@@ -13,10 +13,8 @@ class SentenceTransformer(Sequential):
         modules: Iterable[Module] | None = None,
         device: str | None = None,
         cache_folder: str | None = None,
-        use_auth_token: bool | str | None = None
+        use_auth_token: bool | str | None = None,
     ) -> None: ...
-
-
     def encode(
         self,
         sentences: list[str] | str,

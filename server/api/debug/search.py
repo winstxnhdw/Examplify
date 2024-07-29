@@ -15,7 +15,7 @@ async def search(
     redis: Annotated[RedisAsyncWrapper, Depends(get_redis_client)],
     chat_id: str,
     request: Query,
-    top_k: int = 5
+    top_k: int = 5,
 ) -> PlainTextResponse:
     """
     Summary

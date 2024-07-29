@@ -25,6 +25,7 @@ class Framework(FastAPI):
     initialise_routes(api_directory: str)
         dynamically initialise all routes
     """
+
     def convert_delimiters(self, string: str, old: str, new: str) -> str:
         """
         Summary
@@ -42,7 +43,6 @@ class Framework(FastAPI):
         string (str) : the converted string
         """
         return new.join(string.split(old))
-
 
     def initialise_routes(self, api_directory: str):
         """
@@ -62,8 +62,7 @@ class Framework(FastAPI):
         ]
 
         module_names = [
-            import_module(self.convert_delimiters(file_name[:-3], sep, '.')).__name__
-            for file_name in module_file_names
+            import_module(self.convert_delimiters(file_name[:-3], sep, '.')).__name__ for file_name in module_file_names
         ]
 
         for module_name in module_names:

@@ -7,7 +7,7 @@ from pytest import fixture
 
 from server.features import Embedding
 
-Text = Literal['Hello world!']
+type Text = Literal['Hello world!']
 
 
 @fixture()

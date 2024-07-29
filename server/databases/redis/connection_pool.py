@@ -9,4 +9,5 @@ class Redis:
     ----------
     pool (ConnectionPool) : the async Redis connection pool
     """
+
     pool = ConnectionPool(host='redis', port=6379)

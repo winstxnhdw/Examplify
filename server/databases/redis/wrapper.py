@@ -22,6 +22,7 @@ class Mappings(TypedDict):
     content (str) : the document's content
     chat_id (str) : the document's tag
     """
+
     vector: bytes
     content: str
     chat_id: str
@@ -37,6 +38,7 @@ class SearchResponse(NamedTuple):
     ----------
     docs (list[Mappings]) : the documents returned by the search
     """
+
     docs: list[Mappings]
 
 
@@ -70,12 +72,11 @@ class RedisAsyncWrapper:
     recreate_index():
         recreate the Redis index
     """
+
     __slots__ = ('redis',)
 
     def __init__(self, redis: Redis | Pipeline):
-
         self.redis = redis
-
 
     def pipeline(self) -> Pipeline:
         """
@@ -88,7 +89,6 @@ class RedisAsyncWrapper:
         pipeline (Pipeline) : the Redis pipeline
         """
         return self.redis.pipeline()
-
 
     async def hset(self, source_id: str, chunk_id: int, mapping: Mappings) -> int:
         """
@@ -108,9 +108,8 @@ class RedisAsyncWrapper:
         """
         return await self.redis.hset(
             f'{Config.document_index_prefix}:{source_id}:{chunk_id}',
-            mapping=mapping  # type: ignore
+            mapping=mapping,  # type: ignore
         )
-
 
     async def search(self, search_field: str, embedding: bytes, top_k: int) -> str:
         """
@@ -130,17 +129,14 @@ class RedisAsyncWrapper:
         """
         redis_query = redis_query_builder(Config.document_index_tag, search_field, top_k)
 
-        redis_query_parameters = {
-            'vec': embedding
-        }
+        redis_query_parameters = {'vec': embedding}
 
         search_response: SearchResponse = await self.redis.ft(Config.redis_index_name).search(
             redis_query,
-            redis_query_parameters  # type: ignore  (this is a bug in the redis-py library)
+            redis_query_parameters,  # type: ignore  (this is a bug in the redis-py library)
         )
 
         return ' '.join(document['content'] for document in search_response.docs)
-
 
     async def save_messages(self, chat_id: str, messages: Sequence[Message]):
         """
@@ -154,7 +150,6 @@ class RedisAsyncWrapper:
         messages (Sequence[Message]) : the messages to save
         """
         await self.redis.set(f'chat:{chat_id}', dumps(messages))
-
 
     async def get_messages(self, chat_id: str) -> list[Message]:
         """
@@ -173,7 +168,6 @@ class RedisAsyncWrapper:
         messages_json: str | None = await self.redis.get(f'chat:{chat_id}')
         return [] if not messages_json else loads(messages_json)
 
-
     async def get_chat_id(self, key: str) -> str | None:
         """
         Summary
@@ -189,12 +183,10 @@ class RedisAsyncWrapper:
         chat_id (str | None) : the chat identifier
         """
         chat_id: bytes = await self.redis.hget(  # type: ignore
-            key,
-            Config.document_index_tag
+            key, Config.document_index_tag
         )
 
         return None if not chat_id else chat_id.decode('utf-8')
-
 
     async def delete_chat_messages(self, chat_id: str):
         """
@@ -207,7 +199,6 @@ class RedisAsyncWrapper:
         chat_id (str) : the chat identifier
         """
         await self.redis.delete(f'chat:{chat_id}')
-
 
     async def delete_document(self, chat_id: str, file_id: str):
         """
@@ -231,7 +222,6 @@ class RedisAsyncWrapper:
 
             await pipeline.execute()
 
-
     async def delete_chat(self, chat_id: str):
         """
         Summary
@@ -254,7 +244,6 @@ class RedisAsyncWrapper:
                 await pipeline.delete(key)
 
             await pipeline.execute()
-
 
     async def recreate_index(self):
         """

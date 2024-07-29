@@ -13,13 +13,18 @@ class Answer(BaseModel):
     ----------
     answer (str) : the answer
     """
-    messages: list[Message] = Field(examples=[[
-        {
-            'role': 'user',
-            'content': 'What is the capital of Japan?'
-        },
-        {
-            'role': 'assistant',
-            'content': 'Tokyo.'
-        }
-    ]])
+
+    messages: list[Message] = Field(
+        examples=[
+            [
+                {
+                    'role': 'user',
+                    'content': 'What is the capital of Japan?',
+                },
+                {
+                    'role': 'assistant',
+                    'content': 'Tokyo.',
+                },
+            ]
+        ]
+    )

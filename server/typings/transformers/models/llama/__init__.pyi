@@ -45,7 +45,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         force_download: bool = False,
         local_files_only: bool = False,
         token: str | bool | None = None,
-        revision: str = "main",
+        revision: str = 'main',
         trust_remote_code: bool = False,
         **kwargs: Any,
     ) -> Self: ...

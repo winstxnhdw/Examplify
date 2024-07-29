@@ -1,4 +1,3 @@
-
 from time import time
 
 from server.api.debug import debug
@@ -16,7 +15,7 @@ async def benchmark(request: Query) -> Benchmark:
     """
     message: Message = {
         'role': 'user',
-        'content': request.query
+        'content': request.query,
     }
 
     prompt = LLM.tokeniser.apply_chat_template([message], add_generation_prompt=True, tokenize=False)
@@ -33,5 +32,5 @@ async def benchmark(request: Query) -> Benchmark:
         response=response,
         tokens=total_tokens,
         total_time=total_time,
-        tokens_per_second=total_tokens / total_time
+        tokens_per_second=total_tokens / total_time,
     )

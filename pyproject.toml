@@ -1,24 +1,27 @@
 [tool.pylint.format]
-good-names = ['x', 'y', 'z', 'i', 'id', 'ok']
+good-names = ["x", "y", "z", "i", "id", "ok"]
 
 [tool.pylint.messages_control]
 disable = [
-    'missing-module-docstring',
-    'no-name-in-module',
-    'useless-import-alias',
-    'line-too-long',
-    'too-many-arguments',
-    'too-few-public-methods',
-    'too-many-instance-attributes',
-    'unnecessary-ellipsis',
+    "missing-module-docstring",
+    "no-name-in-module",
+    "useless-import-alias",
+    "line-too-long",
+    "too-many-arguments",
+    "too-few-public-methods",
+    "too-many-instance-attributes",
+    "unnecessary-ellipsis",
 ]
 
 [tool.ruff]
 line-length = 120
-ignore = ['E501']
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pyright]
-stubPath = 'server/typings'
+stubPath = "server/typings"
 reportUnknownVariableType = false
 reportUnknownMemberType = false
 reportUnknownArgumentType = false

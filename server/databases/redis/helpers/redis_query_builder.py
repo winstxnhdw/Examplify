@@ -19,8 +19,8 @@ def redis_query_builder(mapping: str, field: str, top_k: int) -> Query:
     """
     return (
         Query(f'(@{mapping}:{{ {field} }})=>[KNN {top_k} @vector $vec as score]')
-            .sort_by('score')
-            .return_fields('content', 'score')
-            .paging(0, top_k)
-            .dialect(2)
+        .sort_by('score')
+        .return_fields('content', 'score')
+        .paging(0, top_k)
+        .dialect(2)
     )

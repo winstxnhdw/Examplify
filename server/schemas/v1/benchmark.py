@@ -14,6 +14,7 @@ class Benchmark(BaseModel):
     total_time (float) : the total time taken to generate the response
     tokens_per_second (float) : the number of tokens generated per second
     """
+
     response: str
     tokens: int
     total_time: float

@@ -11,4 +11,5 @@ class Query(BaseModel):
     ----------
     query (str) : the query
     """
+
     query: str = Field(examples=['What is the definition of ADHD?'])

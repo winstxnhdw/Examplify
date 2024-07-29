@@ -17,6 +17,7 @@ class LLMOptions(TypedDict):
     inter_threads (int) : the number of inter-threads
     max_queued_batches (int) : the number of max queued batches
     """
+
     model_path: str
     device: Devices
     compute_type: ComputeTypes

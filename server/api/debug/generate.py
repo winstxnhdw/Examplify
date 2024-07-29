@@ -11,9 +11,9 @@ async def generate(request: Generate) -> str:
     the `/generate` route provides an endpoint for generating text directly from the LLM model
     """
     prompt = LLM.tokeniser.apply_chat_template(
-        [{ 'role': 'user', 'content': request.instruction}],
+        [{'role': 'user', 'content': request.instruction}],
         tokenize=False,
-        add_generation_prompt=True
+        add_generation_prompt=True,
     )
 
     return await LLM.generate(LLM.tokeniser(prompt).tokens())

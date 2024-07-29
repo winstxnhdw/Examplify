@@ -31,8 +31,4 @@ def naive_chunk(document: Document) -> Generator[Chunk, None, None]:
 
             sentence.append(word)
 
-    return (
-        Chunk(i, document.id, chunk)
-        for i, chunk in enumerate(sentences)
-        if len(chunk.split()) > 3
-    )
+    return (Chunk(i, document.id, chunk) for i, chunk in enumerate(sentences) if len(chunk.split()) > 3)

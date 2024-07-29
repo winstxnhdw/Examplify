@@ -14,6 +14,7 @@ class Features(TypedDict):
     -------
     a type hint for the features passed through the model
     """
+
     input_ids: Any
     attention_mask: Any
     token_type_ids: Any
@@ -33,12 +34,8 @@ class FlagEmbedding(Module):
     encoder (None) : the encoder model
 
     """
-    def __init__(
-        self,
-        transformer: Sequential,
-        model_path: str,
-        compute_type: ComputeTypes
-    ):
+
+    def __init__(self, transformer: Sequential, model_path: str, compute_type: ComputeTypes):
         super().__init__()
 
         self.compute_type: ComputeTypes = compute_type
@@ -46,10 +43,8 @@ class FlagEmbedding(Module):
         self.tokenize = transformer.tokenize
         self.model_path = model_path
 
-
     def children(self) -> Iterator[Module]:
         return iter([])
-
 
     def forward(self, features: Features) -> Features:
         """
@@ -65,7 +60,7 @@ class FlagEmbedding(Module):
         -------
         features (Features) : the features after passing through the model
         """
-        device = features["input_ids"].device
+        device = features['input_ids'].device
 
         if not self.encoder:
             self.encoder = Encoder(
