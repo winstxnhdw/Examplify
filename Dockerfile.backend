@@ -18,7 +18,7 @@ FROM curlimages/curl:latest as curl-builder
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
 
 
-FROM nvidia/cuda:12.6.0-base-ubuntu22.04
+FROM nvidia/cuda:12.6.1-base-ubuntu22.04
 
 ENV HOME /home/user
 ENV PYTHONUNBUFFERED 1
