@@ -1,5 +1,3 @@
-from typing import Sequence
-
 from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
