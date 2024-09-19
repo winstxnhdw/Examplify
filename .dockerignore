@@ -2,6 +2,7 @@
 .dockerignore
 
 *.md
+*.yaml
 Dockerfile*
 
 tests/
