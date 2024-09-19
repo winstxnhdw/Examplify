@@ -1,21 +1,23 @@
+from typing import Callable
+
 from pydantic_settings import BaseSettings
 
 
-def singleton[T](cls: type[T]) -> T:
+def singleton[T](callable_object: Callable[[], T]) -> T:
     """
     Summary
     -------
-    a decorator to make a class a singleton
+    a decorator to transform a callable/class to a singleton
 
     Parameters
     ----------
-    cls (type[T]) : the class to make a singleton
+    callable_object (Callable[[], T]) : the callable to transform
 
     Returns
     -------
-    instance (T) : the singleton instance
+    instance (T) : the singleton
     """
-    return cls()
+    return callable_object()
 
 
 @singleton
@@ -38,9 +40,9 @@ class Config(BaseSettings):
     """
 
     server_port: int = 49494
-    server_root_path: str = "/api"
-    redis_index_name: str = "index"
+    server_root_path: str = '/api'
+    redis_index_name: str = 'index'
     use_cuda: bool = False
-    document_index_prefix: str = "doc"
-    document_index_tag: str = "chat_id"
+    document_index_prefix: str = 'doc'
+    document_index_tag: str = 'chat_id'
     embedding_dimensions: int = 768
