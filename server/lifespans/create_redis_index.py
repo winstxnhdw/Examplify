@@ -35,7 +35,7 @@ async def try_create_index(client: RedisAsync, index_name: str):
         index_definition = IndexDefinition([Config.document_index_prefix], index_type=IndexType.HASH)
 
         await client.ft(index_name).create_index(
-            fields=(TagField(Config.document_index_tag), vector_field),
+            fields=[TagField(Config.document_index_tag), vector_field],
             definition=index_definition,
         )
 

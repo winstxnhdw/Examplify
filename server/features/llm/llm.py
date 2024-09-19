@@ -103,7 +103,7 @@ class LLM:
         )
 
     @classmethod
-    async def query(cls, messages: Sequence[Message]) -> Message | None:
+    async def query(cls, messages: list[Message]) -> Message | None:
         """
         Summary
         -------
@@ -111,7 +111,7 @@ class LLM:
 
         Parameters
         ----------
-        messages (Sequence[Message]) : the messages to query the model with
+        messages (list[Message]) : the messages to query the model with
 
         Returns
         -------

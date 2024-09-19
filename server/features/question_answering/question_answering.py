@@ -1,4 +1,4 @@
-from typing import Awaitable, Callable, Sequence
+from typing import Awaitable, Callable
 
 from server.features.llm.types import Message
 
@@ -7,7 +7,7 @@ async def question_answering(
     query: str,
     context: str,
     messages: list[Message],
-    chain: Callable[[Sequence[Message]], Awaitable[Message | None]],
+    chain: Callable[[list[Message]], Awaitable[Message | None]],
 ) -> list[Message]:
     """
     Summary
