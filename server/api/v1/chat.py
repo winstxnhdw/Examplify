@@ -23,6 +23,12 @@ from server.schemas.v1 import Answer, Chat, Files, Query
 
 
 class ChatController(Controller):
+    """
+    Summary
+    -------
+    Litestar controller for chat endpoints
+    """
+
     path = '/chats'
     dependencies = {'redis': Provide(redis_client)}
 

@@ -6,6 +6,6 @@ def health() -> None:
     """
     Summary
     -------
-    the `/health` route
+    the `/health` will only return a 200 status code if the server is healthy
     """
     return

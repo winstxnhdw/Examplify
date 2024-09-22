@@ -53,7 +53,7 @@ def extract_documents_from_images(files: list[File]) -> Iterator[Document]:
 
     Parameters
     ----------
-    requests (list[UploadFile]): the requests to extract the text from
+    requests (list[File]): the requests to extract the text from
 
     Yields
     ------

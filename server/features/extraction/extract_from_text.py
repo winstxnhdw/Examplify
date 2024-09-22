@@ -15,8 +15,7 @@ def extract_document_from_text(file_name: str, file: BinaryIO) -> Document:
     Parameters
     ----------
     file_name (str): the name of the file
-    file (bytes): the file
-    file_type (str): the type of the file
+    file (BinaryIO): the file
 
     Returns
     -------
@@ -39,7 +38,7 @@ def extract_documents_from_text_requests(files: list[File]) -> Iterator[Document
 
     Parameters
     ----------
-    requests (list[UploadFile]): the requests to extract the text from
+    requests (list[File]): the requests to extract the text from
 
     Yields
     ------

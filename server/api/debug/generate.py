@@ -8,6 +8,12 @@ from server.schemas.v1 import Benchmark, Generate, Query
 
 
 class LLMController(Controller):
+    """
+    Summary
+    -------
+    Litestar controller for LLM-related debug endpoints
+    """
+
     path = '/llm'
 
     @post()

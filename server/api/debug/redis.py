@@ -12,6 +12,12 @@ from server.schemas.v1 import Query
 
 
 class RedisController(Controller):
+    """
+    Summary
+    -------
+    Litestar controller for Redis-related debug endpoints
+    """
+
     path = '/redis'
     dependencies = {'redis': Provide(redis_client)}
 
