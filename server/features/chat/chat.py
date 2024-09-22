@@ -2,11 +2,11 @@ from ctranslate2 import Generator as LLMGenerator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.config import Config
-from server.features.llm.types import LLMOptions, Message
+from server.features.chat.types import LLMOptions, Message
 from server.helpers import huggingface_download
 
 
-class LLM:
+class Chat:
     """
     Summary
     -------

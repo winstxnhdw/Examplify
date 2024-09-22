@@ -12,7 +12,7 @@ from transformers.tokenization_utils_base import (
 from transformers.tokenization_utils_fast import PreTrainedTokenizerFast
 from transformers.utils import PaddingStrategy, TensorType
 
-from server.features.llm.types import Message
+from server.features.chat.types import Message
 
 class LlamaTokenizerFast(PreTrainedTokenizerFast):
     def __call__(

@@ -8,7 +8,7 @@ from redis.commands.search.field import TagField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from server.config import Config
 from server.databases.redis.helpers import redis_query_builder
-from server.features.llm.types import Message
+from server.features.chat.types import Message
 
 
 class Mappings(TypedDict):

@@ -4,7 +4,7 @@ from typing import Sequence
 
 from pytest import mark
 
-from server.features.llm.types import Message
+from server.features.chat.types import Message
 from server.features.question_answering.question_answering import question_answering
 
 

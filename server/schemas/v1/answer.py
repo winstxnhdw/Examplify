@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from server.features.llm.types import Message
+from server.features.chat.types import Message
 
 
 class Answer(BaseModel):

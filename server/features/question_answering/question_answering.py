@@ -1,6 +1,6 @@
 from typing import Awaitable, Callable
 
-from server.features.llm.types import Message
+from server.features.chat.types import Message
 
 
 async def question_answering(

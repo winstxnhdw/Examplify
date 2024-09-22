@@ -7,7 +7,7 @@ from litestar.params import Dependency, Parameter
 from server.config import Config
 from server.databases.redis.wrapper import RedisAsync
 from server.dependencies import redis_client
-from server.features import Embedding
+from server.features.embeddings import Embedding
 from server.schemas.v1 import Query
 
 

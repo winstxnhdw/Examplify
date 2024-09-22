@@ -2,8 +2,8 @@ from time import perf_counter
 
 from litestar import Controller, post
 
-from server.features import LLM
-from server.features.llm.types import Message
+from server.features.chat import Chat
+from server.features.chat.types import Message
 from server.schemas.v1 import Benchmark, Generate, Query
 
 
@@ -23,13 +23,13 @@ class LLMController(Controller):
         -------
         an endpoint for generating text directly from the LLM model
         """
-        prompt = LLM.tokeniser.apply_chat_template(
+        prompt = Chat.tokeniser.apply_chat_template(
             [{'role': 'user', 'content': request.instruction}],
             tokenize=False,
             add_generation_prompt=True,
         )
 
-        return await LLM.generate(LLM.tokeniser(prompt).tokens())
+        return await Chat.generate(Chat.tokeniser(prompt).tokens())
 
     @post('/benchmark')
     async def benchmark(self, data: Query) -> Benchmark:
@@ -40,15 +40,15 @@ class LLMController(Controller):
         """
         message: Message = {'role': 'user', 'content': data.query}
 
-        prompt = LLM.tokeniser.apply_chat_template([message], add_generation_prompt=True, tokenize=False)
-        tokenised_prompt = LLM.tokeniser(prompt).tokens()
+        prompt = Chat.tokeniser.apply_chat_template([message], add_generation_prompt=True, tokenize=False)
+        tokenised_prompt = Chat.tokeniser(prompt).tokens()
 
         start = perf_counter()
-        response = await LLM.generate(tokenised_prompt)
+        response = await Chat.generate(tokenised_prompt)
         total_time = perf_counter() - start
 
-        output_tokens = LLM.tokeniser(response).tokens()
-        total_tokens = len(tokenised_prompt) + len(LLM.static_prompt) + len(output_tokens)
+        output_tokens = Chat.tokeniser(response).tokens()
+        total_tokens = len(tokenised_prompt) + len(Chat.static_prompt) + len(output_tokens)
 
         return Benchmark(
             response=response,

@@ -11,14 +11,11 @@ from litestar.params import Body, Dependency, Parameter
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
 from server.dependencies.redis import redis_client
-from server.features import (
-    LLM,
-    Embedding,
-    chunk_document,
-    extract_documents_from_pdfs,
-    question_answering,
-)
-from server.features.chunking import SentenceSplitter
+from server.features.chat import Chat
+from server.features.chunking import SentenceSplitter, chunk_document
+from server.features.embeddings import Embedding
+from server.features.extraction import extract_documents_from_pdfs
+from server.features.question_answering import question_answering
 from server.schemas.v1 import Answer, Chat, Files, Query
 
 
@@ -86,7 +83,7 @@ class ChatController(Controller):
         an endpoint for uploading files to a chat
         """
         embedder = Embedding()
-        text_splitter = SentenceSplitter(LLM.tokeniser, chunk_size=128, chunk_overlap=0)
+        text_splitter = SentenceSplitter(Chat.tokeniser, chunk_size=128, chunk_overlap=0)
         responses = []
 
         chunk_generator = store_chunks(
@@ -125,7 +122,7 @@ class ChatController(Controller):
         )
 
         message_history = await redis.get_messages(chat_id)
-        messages = await question_answering(data.query, context, message_history, LLM.query)
+        messages = await question_answering(data.query, context, message_history, Chat.query)
 
         if store_query:
             await redis.save_messages(chat_id, messages)
