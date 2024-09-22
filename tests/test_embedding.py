@@ -5,7 +5,7 @@ from typing import Literal
 from numpy import array_equal
 from pytest import fixture
 
-from server.features import Embedding
+from server.features.embeddings import Embedding
 
 type Text = Literal['Hello world!']
 

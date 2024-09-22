@@ -11,12 +11,12 @@ from litestar.params import Body, Dependency, Parameter
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
 from server.dependencies.redis import redis_client
-from server.features.chat import Chat
 from server.features.chunking import SentenceSplitter, chunk_document
 from server.features.embeddings import Embedding
 from server.features.extraction import extract_documents_from_pdfs
 from server.features.question_answering import question_answering
 from server.schemas.v1 import Answer, Chat, Files, Query
+from server.state import AppState
 
 
 class ChatController(Controller):
@@ -73,6 +73,7 @@ class ChatController(Controller):
     @put('/{chat_id:str}/files')
     async def upload_files(
         self,
+        state: AppState,
         redis: Annotated[RedisAsync, Dependency()],
         chat_id: str,
         data: Annotated[list[UploadFile], Body(media_type=RequestEncodingType.MULTI_PART)],
@@ -83,7 +84,7 @@ class ChatController(Controller):
         an endpoint for uploading files to a chat
         """
         embedder = Embedding()
-        text_splitter = SentenceSplitter(Chat.tokeniser, chunk_size=128, chunk_overlap=0)
+        text_splitter = SentenceSplitter(state.chat.tokeniser, chunk_size=128, chunk_overlap=0)
         responses = []
 
         chunk_generator = store_chunks(
@@ -106,6 +107,7 @@ class ChatController(Controller):
     @post('/{chat_id:str}/query')
     async def query(
         self,
+        state: AppState,
         redis: Annotated[RedisAsync, Dependency()],
         chat_id: str,
         data: Query,
@@ -122,7 +124,7 @@ class ChatController(Controller):
         )
 
         message_history = await redis.get_messages(chat_id)
-        messages = await question_answering(data.query, context, message_history, Chat.query)
+        messages = await question_answering(data.query, context, message_history, state.chat.query)
 
         if store_query:
             await redis.save_messages(chat_id, messages)
