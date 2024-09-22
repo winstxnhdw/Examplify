@@ -4,8 +4,6 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 ENV POETRY_HOME=/opt/poetry
 ENV PATH=$POETRY_HOME/bin:$PATH
 
-WORKDIR /
-
 COPY pyproject.toml poetry.lock ./
 
 RUN python -m venv $POETRY_HOME
@@ -18,7 +16,7 @@ FROM curlimages/curl:latest AS curl-builder
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
 
 
-FROM nvidia/cuda:12.6.1-base-ubuntu22.04
+FROM python:slim
 
 ENV HOME=/home/user
 ENV PYTHONUNBUFFERED=1
@@ -28,7 +26,7 @@ ENV TESSDATA_PREFIX=/usr/share/tessdata
 WORKDIR $HOME/app
 
 COPY --from=curl-builder   /home/curl_user/eng.traineddata $TESSDATA_PREFIX/eng.traineddata
-COPY --from=python-builder /usr/local /usr/local
+COPY --from=python-builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY . $HOME/app
 
 CMD ["python", "main.py"]
