@@ -48,7 +48,7 @@ To setup the application, we must populate your `.env` file. You can do this wit
 
 ## Usage
 
-You can start the application and access the Swagger UI at [https://localhost/api/docs](https://localhost/api/docs).
+You can start the application and access the Swagger UI at [https://localhost/api/schema/swagger](https://localhost/api/schema/swagger).
 
 > [!WARNING]\
 > Before offline usage, you must run the application at least once with internet access to install any necessary dependencies.

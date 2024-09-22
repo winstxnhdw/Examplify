@@ -1,5 +1,7 @@
-from asyncio import get_event_loop
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
 
+from litestar import Litestar
 from nltk.data import find, path
 from nltk.downloader import download
 
@@ -21,13 +23,22 @@ def find_or_download_nltk(download_directory: str):
         download('punkt', download_dir=download_directory)
 
 
-async def download_nltk():
+@asynccontextmanager
+async def download_nltk(app: Litestar) -> AsyncIterator[None]:
     """
     Summary
     -------
     an async function to download NLTK
+
+    Parameters
+    ----------
+    app (Litestar) : the Litestar application
     """
     download_directory = '/home/user/.cache/nltk'
     path.append(download_directory)
+    find_or_download_nltk(download_directory)
 
-    await get_event_loop().run_in_executor(None, lambda: find_or_download_nltk(download_directory))
+    try:
+        yield
+    finally:
+        pass

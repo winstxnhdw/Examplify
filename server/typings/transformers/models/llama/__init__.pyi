@@ -1,7 +1,7 @@
 # pylint: skip-file
 
 from os import PathLike
-from typing import Any, Literal, Mapping, Self, overload
+from typing import Any, Literal, Self, overload
 
 from transformers.tokenization_utils_base import (
     BatchEncoding,

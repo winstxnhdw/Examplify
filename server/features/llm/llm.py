@@ -81,12 +81,7 @@ class LLM:
             'max_queued_batches': -1,
         }
 
-        try:
-            cls.generator = LLMGenerator(**options, flash_attention=Config.use_cuda)
-
-        except ValueError:
-            cls.generator = LLMGenerator(**options)
-
+        cls.generator = LLMGenerator(**options)
         cls.tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
         cls.max_generation_length = 1024
         cls.max_prompt_length = (

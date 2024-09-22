@@ -1,12 +1,12 @@
-from typing import BinaryIO, Generator
+from typing import BinaryIO, Iterator
 
-from fastapi import UploadFile
 from PIL.Image import open as open_image
 from tesserocr import image_to_text
 
 from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
+from server.features.extraction.types import File
 
 
 def extract_text_from_image(file: BinaryIO) -> str:
@@ -45,7 +45,7 @@ def extract_document_from_image(file_name: str, file: BinaryIO) -> Document:
     return create_document(file_name, [Section(link=f'{file_name}', content=extract_text_from_image(file))])
 
 
-def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+def extract_documents_from_images(files: list[File]) -> Iterator[Document]:
     """
     Summary
     -------
@@ -59,7 +59,4 @@ def extract_documents_from_image_requests(requests: list[UploadFile]) -> Generat
     ------
     documents (Document): the parsed document
     """
-    for request in requests:
-        yield (
-            extract_document_from_image(request.filename.rsplit('.', 1)[0], request.file) if request.filename else None
-        )
+    return (extract_document_from_image(file['name'], file['data']) for file in files)

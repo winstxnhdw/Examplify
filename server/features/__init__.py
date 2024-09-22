@@ -2,10 +2,10 @@ from server.features.chunking import chunk_document as chunk_document
 from server.features.chunking import naive_chunk as naive_chunk
 from server.features.embeddings import Embedding as Embedding
 from server.features.extraction import (
-    extract_documents_from_image_requests as extract_documents_from_image_requests,
+    extract_documents_from_images as extract_documents_from_images,
 )
 from server.features.extraction import (
-    extract_documents_from_pdf_requests as extract_documents_from_pdf_requests,
+    extract_documents_from_pdfs as extract_documents_from_pdfs,
 )
 from server.features.extraction import (
     extract_documents_from_text_requests as extract_documents_from_text_requests,

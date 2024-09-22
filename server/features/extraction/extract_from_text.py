@@ -1,13 +1,12 @@
-from typing import Generator
-
-from fastapi import UploadFile
+from typing import BinaryIO, Iterator
 
 from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
+from server.features.extraction.types import File
 
 
-def extract_document_from_text(file_name: str, file: bytes) -> Document:
+def extract_document_from_text(file_name: str, file: BinaryIO) -> Document:
     """
     Summary
     -------
@@ -27,12 +26,12 @@ def extract_document_from_text(file_name: str, file: bytes) -> Document:
         file_name,
         [
             Section(link=f'{file_name}#{i}', content=content.strip().replace('?', ''))
-            for i, content in enumerate(file.decode('utf-8').split('\n\n'))
+            for i, content in enumerate(file.read().decode('utf-8').split('\n\n'))
         ],
     )
 
 
-def extract_documents_from_text_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+def extract_documents_from_text_requests(files: list[File]) -> Iterator[Document]:
     """
     Summary
     -------
@@ -46,9 +45,4 @@ def extract_documents_from_text_requests(requests: list[UploadFile]) -> Generato
     ------
     documents (Document): the parsed document
     """
-    for request in requests:
-        yield (
-            extract_document_from_text(request.filename.rsplit('.', 1)[0], file=request.file.read())
-            if request.filename
-            else None
-        )
+    return (extract_document_from_text(file['name'], file['data']) for file in files)

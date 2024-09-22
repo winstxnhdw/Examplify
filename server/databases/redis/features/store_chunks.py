@@ -6,7 +6,7 @@ from typing import (
     Protocol,
 )
 
-from server.databases.redis.wrapper import RedisAsyncWrapper
+from server.databases.redis.wrapper import RedisAsync
 from server.features.chunking.models import Chunk
 from server.features.chunking.sentence_splitter import TextSplitter
 from server.features.extraction.models import Document
@@ -29,7 +29,7 @@ class Embedder(Protocol):
 
 
 async def store_chunks(
-    redis: RedisAsyncWrapper,
+    redis: RedisAsync,
     chat_id: str,
     embedder: Embedder,
     documents: Iterable[Document | None],

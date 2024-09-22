@@ -1,1 +1,1 @@
-from server.databases.redis.connection_pool import Redis as Redis
+from server.databases.redis.wrapper import RedisAsync as RedisAsync

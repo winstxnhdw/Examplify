@@ -1,6 +1,7 @@
-from uvicorn import run
+from granian import Granian
+from granian.constants import Interfaces
 
-from server import initialise
+from server import app
 from server.config import Config
 
 
@@ -8,18 +9,21 @@ def main():
     """
     Summary
     -------
-    programmatically run the server with Uvicorn
+    programmatically run the server with Granian
     """
-    run(
-        f'{initialise.__module__}:{initialise.__name__}',
-        host='0.0.0.0',
-        port=Config.server_port,
-        reload=False,
-        loop='uvloop',
-        http='httptools',
-        use_colors=True,
+    granian = Granian(
+        f'{app.__module__}:{app.__name__}',
+        '0.0.0.0',
+        Config.server_port,
+        Interfaces.ASGI,
+        log_access=True,
+        log_access_format='[%(time)s] %(status)d "%(method)s %(path)s %(protocol)s" %(addr)s in %(dt_ms).2f ms',
+        url_path_prefix=Config.server_root_path,
         factory=True,
+        reload=False,
     )
+
+    granian.serve()
 
 
 if __name__ == '__main__':

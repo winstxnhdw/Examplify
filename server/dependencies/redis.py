@@ -1,20 +1,20 @@
-from typing import AsyncGenerator
+from typing import AsyncIterator
 
-from redis.asyncio import Redis as RedisAsync
+from redis.asyncio import Redis
 
-from server.databases import Redis
-from server.databases.redis.wrapper import RedisAsyncWrapper
+from server.databases.redis import RedisAsync
+from server.state import AppState
 
 
-async def get_redis_client() -> AsyncGenerator[RedisAsyncWrapper, None]:
+async def redis_client(state: AppState) -> AsyncIterator[RedisAsync]:
     """
     Summary
     -------
-    get an async Redis client from the connection pool
+    provides an async Redis client from the connection pool
 
     Yields
     ------
-    client (RedisAsync) : a Redis client
+    client (RedisAsyncWrapper) : a Redis client
     """
-    async with RedisAsync.from_pool(Redis.pool) as redis:
-        yield RedisAsyncWrapper(redis)
+    async with Redis.from_pool(state.redis_pool) as redis:
+        yield RedisAsync(redis)

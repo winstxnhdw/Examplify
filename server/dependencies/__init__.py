@@ -1,1 +1,1 @@
-from server.dependencies.redis import get_redis_client as get_redis_client
+from server.dependencies.redis import redis_client as redis_client

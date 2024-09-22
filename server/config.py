@@ -46,3 +46,6 @@ class Config(BaseSettings):
     document_index_prefix: str = 'doc'
     document_index_tag: str = 'chat_id'
     embedding_dimensions: int = 768
+
+    redis_host: str = 'redis'
+    redis_port: int = 6379

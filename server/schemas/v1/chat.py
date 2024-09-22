@@ -1,7 +1,10 @@
-from pydantic import BaseModel, Field
+from typing import Annotated
+
+from fastnanoid import generate
+from msgspec import Meta, Struct, field
 
 
-class Chat(BaseModel):
+class Chat(Struct):
     """
     Summary
     -------
@@ -9,7 +12,7 @@ class Chat(BaseModel):
 
     Attributes
     ----------
-    chat_id (str) : the chat id
+    id (str) : the chat id
     """
 
-    chat_id: str = Field(examples=['6a67cb2e-a618-46b1-b617-73a0f3805122'])
+    id: Annotated[str, Meta(examples=['glsODUdnaUei_A_IxfSRI'])] = field(default_factory=generate)

@@ -3,21 +3,21 @@ from typing import AsyncIterator
 
 from litestar import Litestar
 
-from server.helpers import huggingface_download
+from server.features import LLM
 
 
 @asynccontextmanager
-async def download_embeddings(app: Litestar) -> AsyncIterator[None]:
+async def chat_model(app: Litestar) -> AsyncIterator[None]:
     """
     Summary
     -------
-    download the embeddings model
+    load the chat model
 
     Parameters
     ----------
     app (Litestar) : the Litestar application
     """
-    huggingface_download('winstxnhdw/bge-base-en-v1.5-ct2')
+    app.state.chat = LLM.load()
 
     try:
         yield

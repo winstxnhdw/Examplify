@@ -1,13 +1,14 @@
 from json import dumps, loads
 from typing import NamedTuple, Sequence, TypedDict
 
+from redis import ResponseError
 from redis.asyncio import Redis
 from redis.asyncio.client import Pipeline
-
+from redis.commands.search.field import TagField, VectorField
+from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 from server.config import Config
 from server.databases.redis.helpers import redis_query_builder
 from server.features.llm.types import Message
-from server.lifespans.create_redis_index import try_create_index
 
 
 class Mappings(TypedDict):
@@ -42,7 +43,7 @@ class SearchResponse(NamedTuple):
     docs: list[Mappings]
 
 
-class RedisAsyncWrapper:
+class RedisAsync:
     """
     Summary
     -------
@@ -245,11 +246,53 @@ class RedisAsyncWrapper:
 
             await pipeline.execute()
 
-    async def recreate_index(self):
+    async def delete_index(self, index_name: str):
         """
         Summary
         -------
-        recreate the Redis index
+        delete the Redis index
+
+        Parameters
+        ----------
+        index_name (str) : the index name
         """
-        await self.redis.ft(Config.redis_index_name).dropindex(True)
-        await try_create_index(self.redis, Config.redis_index_name)
+        await self.redis.ft(index_name).dropindex(True)
+
+    async def create_index(
+        self,
+        index_name: str,
+        vector_dimensions: int,
+        vector_tag: str,
+        index_prefixes: list[str] | None = None,
+    ):
+        """
+        Summary
+        -------
+        create a Redis index if it does not exist
+
+        Parameters
+        ----------
+        client (RedisAsync) : a Redis client
+        vector_dimensions (int) : number of vector dimensions
+        vector_tag (str) : the tag for the vector
+        index_prefix (str) : the prefix for the index
+        """
+        try:
+            await self.redis.ft(index_name).info()
+
+        except ResponseError:
+            vector_attributes = {
+                'TYPE': 'FLOAT32',
+                'DISTANCE_METRIC': 'COSINE',
+                'DIM': vector_dimensions,
+            }
+
+            fields = [
+                TagField(vector_tag),
+                VectorField('vector', 'FLAT', vector_attributes),
+            ]
+
+            await self.redis.ft(index_name).create_index(
+                fields=fields,
+                definition=IndexDefinition(index_prefixes or [], index_type=IndexType.HASH),
+            )

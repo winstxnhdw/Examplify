@@ -1,14 +1,14 @@
-from typing import Generator
+from typing import Iterator
 
-from fastapi import UploadFile
 from fitz import Document as FitzDocument
 
 from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
+from server.features.extraction.types import File
 
 
-def extract_document_from_pdf(file_name: str, file_type: str, file: bytes) -> Document:
+def extract_document_from_pdf(file: File) -> Document:
     """
     Summary
     -------
@@ -16,15 +16,15 @@ def extract_document_from_pdf(file_name: str, file_type: str, file: bytes) -> Do
 
     Parameters
     ----------
-    file_name (str): the name of the file
-    file (bytes): the file
-    file_type (str): the type of the file
+    file (File): the file to extract the text from
 
     Returns
     -------
     document (Document): the parsed document
     """
-    with FitzDocument(stream=file, filetype=file_type) as document:
+    file_name, file_type = file['name'].rsplit('.', 1)
+
+    with FitzDocument(stream=file['data'], filetype=file_type) as document:
         sections = [
             Section(link=f'{file_name}#{page.number}', content=page.get_text(sort=True))  # type: ignore
             for page in document
@@ -33,7 +33,7 @@ def extract_document_from_pdf(file_name: str, file_type: str, file: bytes) -> Do
     return create_document(file_name, sections)
 
 
-def extract_documents_from_pdf_requests(requests: list[UploadFile]) -> Generator[Document | None, None, None]:
+def extract_documents_from_pdfs(files: list[File]) -> Iterator[Document]:
     """
     Summary
     -------
@@ -41,15 +41,10 @@ def extract_documents_from_pdf_requests(requests: list[UploadFile]) -> Generator
 
     Parameters
     ----------
-    requests (list[UploadFile]): the requests to extract the text from
+    files (list[File]): the requests to extract the text from
 
     Yields
     ------
     documents (Document): the parsed document
     """
-    for request in requests:
-        yield (
-            extract_document_from_pdf(*request.filename.rsplit('.', 1), file=request.file.read())
-            if request.filename
-            else None
-        )
+    return (extract_document_from_pdf(file) for file in files)
