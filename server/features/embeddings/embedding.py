@@ -1,11 +1,11 @@
-from huggingface_hub import snapshot_download
 from sentence_transformers import SentenceTransformer
 from torch import device
 
 from server.features.embeddings.flag_embedding import FlagEmbedding
+from server.utils import huggingface_download
 
 
-class Embedding(SentenceTransformer):
+class Embedder(SentenceTransformer):
     """
     Summary
     -------
@@ -20,12 +20,12 @@ class Embedding(SentenceTransformer):
         encode a sentence for searching relevant passages
     """
 
-    def __init__(self, *, force_download: bool = False):
+    def __init__(self):
         model_name = 'bge-base-en-v1.5'
         super().__init__(f'BAAI/{model_name}')
         self.cached_device = super().device  # type: ignore
 
-        model_path = snapshot_download(f'winstxnhdw/{model_name}-ct2', local_files_only=not force_download)
+        model_path = huggingface_download(f'winstxnhdw/{model_name}-ct2')
         self[0] = FlagEmbedding(self[0], model_path, 'auto')
 
     @property

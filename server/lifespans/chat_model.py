@@ -21,5 +21,6 @@ async def chat_model(app: Litestar) -> AsyncIterator[None]:
 
     try:
         yield
+
     finally:
         del app.state.chat

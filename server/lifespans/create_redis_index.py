@@ -29,5 +29,6 @@ async def create_redis_index(app: Litestar) -> AsyncIterator[None]:
 
     try:
         yield
+
     finally:
         pass

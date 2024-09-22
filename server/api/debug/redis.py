@@ -6,8 +6,8 @@ from litestar.params import Dependency, Parameter
 
 from server.config import Config
 from server.databases.redis.wrapper import RedisAsync
-from server.dependencies import redis_client
-from server.features.embeddings import Embedding
+from server.dependencies import embedder, redis_client
+from server.features.embeddings import Embedder
 from server.schemas.v1 import Query
 
 
@@ -19,7 +19,10 @@ class RedisController(Controller):
     """
 
     path = '/redis'
-    dependencies = {'redis': Provide(redis_client)}
+    dependencies = {
+        'redis': Provide(redis_client),
+        'embedder': Provide(embedder),
+    }
 
     @delete()
     async def delete_index(self, redis: Annotated[RedisAsync, Dependency()], recreate: bool = False) -> None:
@@ -42,6 +45,7 @@ class RedisController(Controller):
     async def search(
         self,
         redis: Annotated[RedisAsync, Dependency()],
+        embedder: Annotated[Embedder, Dependency()],
         chat_id: str,
         data: Query,
         search_size: Annotated[int, Parameter(gt=0)] = 1,
@@ -51,4 +55,4 @@ class RedisController(Controller):
         -------
         an endpoint for searching the Redis vector database
         """
-        return await redis.search(chat_id, Embedding().encode_query(data.query), search_size)
+        return await redis.search(chat_id, embedder.encode_query(data.query), search_size)

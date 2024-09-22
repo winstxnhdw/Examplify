@@ -3,11 +3,11 @@ from typing import AsyncIterator
 
 from litestar import Litestar
 
-from server.helpers import huggingface_download
+from server.utils import huggingface_download
 
 
 @asynccontextmanager
-async def download_embeddings(app: Litestar) -> AsyncIterator[None]:
+async def download_embeddings(_: Litestar) -> AsyncIterator[None]:
     """
     Summary
     -------
@@ -21,5 +21,6 @@ async def download_embeddings(app: Litestar) -> AsyncIterator[None]:
 
     try:
         yield
+
     finally:
         pass

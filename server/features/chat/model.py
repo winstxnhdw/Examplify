@@ -3,7 +3,7 @@ from transformers.models.llama import LlamaTokenizerFast
 
 from server.config import Config
 from server.features.chat.types import Message
-from server.helpers import huggingface_download
+from server.utils import huggingface_download
 
 
 class ChatModel:

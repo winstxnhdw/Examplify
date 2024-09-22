@@ -10,9 +10,9 @@ from litestar.params import Body, Dependency, Parameter
 
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
-from server.dependencies.redis import redis_client
+from server.dependencies import embedder, redis_client
 from server.features.chunking import SentenceSplitter, chunk_document
-from server.features.embeddings import Embedding
+from server.features.embeddings import Embedder
 from server.features.extraction import extract_documents_from_pdfs
 from server.features.question_answering import question_answering
 from server.schemas.v1 import Answer, Chat, Files, Query
@@ -27,7 +27,10 @@ class ChatController(Controller):
     """
 
     path = '/chats'
-    dependencies = {'redis': Provide(redis_client)}
+    dependencies = {
+        'redis': Provide(redis_client),
+        'embedder': Provide(embedder),
+    }
 
     @get()
     async def create_chat(self) -> Chat:
@@ -75,6 +78,7 @@ class ChatController(Controller):
         self,
         state: AppState,
         redis: Annotated[RedisAsync, Dependency()],
+        embedder: Annotated[Embedder, Dependency()],
         chat_id: str,
         data: Annotated[list[UploadFile], Body(media_type=RequestEncodingType.MULTI_PART)],
     ) -> Files:
@@ -83,7 +87,6 @@ class ChatController(Controller):
         -------
         an endpoint for uploading files to a chat
         """
-        embedder = Embedding()
         text_splitter = SentenceSplitter(state.chat.tokeniser, chunk_size=128, chunk_overlap=0)
         responses = []
 
@@ -109,6 +112,7 @@ class ChatController(Controller):
         self,
         state: AppState,
         redis: Annotated[RedisAsync, Dependency()],
+        embedder: Annotated[Embedder, Dependency()],
         chat_id: str,
         data: Query,
         search_size: Annotated[int, Parameter(ge=0)] = 0,
@@ -119,9 +123,7 @@ class ChatController(Controller):
         -------
         the `/query` route provides an endpoint for performning retrieval-augmented generation
         """
-        context = (
-            '' if not search_size else await redis.search(chat_id, Embedding().encode_query(data.query), search_size)
-        )
+        context = '' if not search_size else await redis.search(chat_id, embedder.encode_query(data.query), search_size)
 
         message_history = await redis.get_messages(chat_id)
         messages = await question_answering(data.query, context, message_history, state.chat.query)

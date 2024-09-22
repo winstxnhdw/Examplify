@@ -1,1 +1,1 @@
-from server.features.embeddings.embedding import Embedding as Embedding
+from server.features.embeddings.embedding import Embedder as Embedder

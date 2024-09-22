@@ -2,7 +2,7 @@
 
 from pytest import mark
 
-from server.helpers.network.has_internet_access import has_internet_access
+from server.utils.network.has_internet_access import has_internet_access
 
 
 @mark.parametrize(

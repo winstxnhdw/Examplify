@@ -40,5 +40,6 @@ async def download_nltk(app: Litestar) -> AsyncIterator[None]:
 
     try:
         yield
+
     finally:
         pass
