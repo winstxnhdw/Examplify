@@ -1,6 +1,6 @@
 # pylint: disable=missing-function-docstring,redefined-outer-name
 
-from typing import Iterable, Literal
+from typing import Iterator, Literal
 
 from numpy import array_equal
 from pytest import fixture
@@ -11,8 +11,8 @@ from server.features.embeddings import Embedder
 type Text = Literal['Hello world!']
 
 
-@fixture()
-def embedding() -> Iterable[Embedder]:
+@fixture(scope='function')
+def embedding() -> Iterator[Embedder]:
     return embedder_model()
 
 
