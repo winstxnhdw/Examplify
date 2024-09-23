@@ -64,17 +64,20 @@ class RedisAsync:
     hset(source_id: str, chunk_id: int, mapping: Mappings) -> int:
         store a mapping in Redis
 
-    search(search_field: str, embedding: NDArray[float64], top_k: int) -> str:
+    search(search_field: str, embedding: NDArray[float32], top_k: int) -> str:
         retrieve the content of relevant documents
 
-    save_messages(chat_id: str, messages: Sequence[str]):
-        save a sequence of messages in Redis
+    save_messages(chat_id: str, answer: Iterator[str], message_history: list[Message]) -> AsyncIterator[str]:
+        yield a sequence of strings and save the accumulated strings in Redis
 
     get_messages(chat_id: str) -> list[str]:
         retrieve a sequence of messages from Redis
 
-    recreate_index():
-        recreate the Redis index
+    delete_index(index_name: str):
+        delete the Redis index
+
+    create_index(index_name: str, vector_dimensions: int, vector_tag: str):
+        create a Redis index if it does not exist
     """
 
     __slots__ = ('redis',)
@@ -150,7 +153,7 @@ class RedisAsync:
         """
         Summary
         -------
-        save a sequence of messages in Redis
+        yield a sequence of strings and save the accumulated strings in Redis
 
         Parameters
         ----------
