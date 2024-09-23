@@ -2,6 +2,7 @@ from time import perf_counter
 
 from litestar import Controller, post
 from litestar.response import ServerSentEvent
+from litestar.status_codes import HTTP_200_OK
 
 from server.features.chat.types import Message
 from server.schemas.v1 import Benchmark, Query
@@ -17,7 +18,7 @@ class LLMController(Controller):
 
     path = '/llm'
 
-    @post(sync_to_thread=True)
+    @post(status_code=HTTP_200_OK, sync_to_thread=True)
     def generate(self, state: AppState, data: Query) -> ServerSentEvent:
         """
         Summary
