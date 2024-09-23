@@ -2,6 +2,7 @@ services:
   redis:
     container_name: redis
     image: redis/redis-stack-server:latest
+    init: true
     volumes:
       - ./tmp/redis:/data
       - ./redis.conf:/redis-stack.conf
@@ -11,6 +12,7 @@ services:
 
   caddy:
     container_name: caddy
+    init: true
     environment:
       BACKEND_URL: ${BACKEND_URL}:${BACKEND_PORT}
       BACKEND_INTERNAL_URL: backend:${BACKEND_PORT}
@@ -29,6 +31,7 @@ services:
 
   backend:
     container_name: backend
+    init: true
     environment:
       REDIS_URL: redis://redis:6379
       SERVER_PORT: ${BACKEND_PORT}
