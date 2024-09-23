@@ -146,4 +146,4 @@ class ChatController(Controller):
 
         answer = await run_sync(question_answering, message_history, state.chat.query)
 
-        return ServerSentEvent(answer if store_query else redis.save_messages(chat_id, answer, message_history))
+        return ServerSentEvent(answer if not store_query else redis.save_messages(chat_id, answer, message_history))
