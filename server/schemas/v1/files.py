@@ -11,7 +11,7 @@ class Files(Struct):
 
     Attributes
     ----------
-    documents (list[File]) : the document schemas
+    indices (list[File]) : the document schemas
     """
 
-    documents: Annotated[list[str], Meta(examples=['glsODUdnaUei_A_IxfSRI'])]
+    indices: Annotated[list[str], Meta(examples=['glsODUdnaUei_A_IxfSRI'])]

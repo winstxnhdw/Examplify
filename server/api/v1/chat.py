@@ -107,7 +107,7 @@ class ChatController(Controller):
 
             responses.append(file_id)
 
-        return Files(documents=responses)
+        return Files(indices=responses)
 
     @post('/{chat_id:str}/query')
     async def query(
