@@ -1,13 +1,14 @@
 from logging import getLogger
 
-from litestar import Litestar, Response
+from litestar import Litestar, Response, Router
 from litestar.datastructures import State
 from litestar.openapi import OpenAPIConfig
 from litestar.openapi.spec import Server
 from litestar.status_codes import HTTP_500_INTERNAL_SERVER_ERROR
 from redis.asyncio import ConnectionPool
 
-from server.api import debug, v1
+from server.api.debug import LLMController, RedisController
+from server.api.v1 import ChatController, files_to_text, health
 from server.config import Config
 from server.lifespans import chat_model, create_redis_index, download_embeddings, download_nltk
 
@@ -53,6 +54,9 @@ def app() -> Litestar:
         use_handler_docstrings=True,
         servers=[Server(url=Config.server_root_path)],
     )
+
+    v1 = Router('/v1', tags=['v1'], route_handlers=[ChatController, health, files_to_text])
+    debug = Router('/debug', tags=['debug'], route_handlers=[LLMController, RedisController])
 
     return Litestar(
         openapi_config=openapi_config,
