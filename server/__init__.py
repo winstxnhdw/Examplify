@@ -7,7 +7,7 @@ from litestar.openapi.spec import Server
 from litestar.status_codes import HTTP_500_INTERNAL_SERVER_ERROR
 from redis.asyncio import ConnectionPool
 
-from server.api.debug import LLMController, RedisController
+from server.api.debug import EmbeddingController, LLMController, RedisController
 from server.api.v1 import ChatController, files_to_text, health
 from server.config import Config
 from server.lifespans import chat_model, create_redis_index, download_embeddings, download_nltk
@@ -56,7 +56,7 @@ def app() -> Litestar:
     )
 
     v1 = Router('/v1', tags=['v1'], route_handlers=[ChatController, health, files_to_text])
-    debug = Router('/debug', tags=['debug'], route_handlers=[LLMController, RedisController])
+    debug = Router('/debug', tags=['debug'], route_handlers=[LLMController, RedisController, EmbeddingController])
 
     return Litestar(
         openapi_config=openapi_config,

@@ -17,7 +17,7 @@ from server.features.chunking import SentenceSplitter, chunk_document
 from server.features.embeddings import Embedder
 from server.features.extraction import extract_documents_from_pdfs
 from server.features.question_answering import question_answering
-from server.schemas.v1 import Chat, Files, Query
+from server.schemas.v1 import Chat, Files, Messages, Query
 from server.state import AppState
 
 
@@ -42,6 +42,15 @@ class ChatController(Controller):
         an endpoint to get a unique chat id
         """
         return Chat()
+
+    @get('/{chat_id:str}/messages')
+    async def get_chat(self, redis: Annotated[RedisAsync, Dependency()], chat_id: str) -> Messages:
+        """
+        Summary
+        -------
+        an endpoint for getting all chat messages
+        """
+        return Messages(messages=await redis.get_messages(chat_id))
 
     @delete('/{chat_id:str}')
     async def delete_chat(self, redis: Annotated[RedisAsync, Dependency()], chat_id: str) -> None:
