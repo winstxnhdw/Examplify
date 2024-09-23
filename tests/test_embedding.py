@@ -5,19 +5,18 @@ from typing import Iterator, Literal
 from numpy import array_equal
 from pytest import fixture
 
-from server.dependencies import embedder_model
 from server.features.embeddings import Embedder
 
 type Text = Literal['Hello world!']
 
 
-@fixture(scope='function')
+@fixture()
 def embedding() -> Iterator[Embedder]:
-    return embedder_model()
+    yield Embedder()
 
 
 @fixture()
-def text():
+def text() -> Iterator[Text]:
     yield 'Hello world!'
 
 
