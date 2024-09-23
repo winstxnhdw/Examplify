@@ -9,6 +9,7 @@ from litestar.enums import RequestEncodingType
 from litestar.exceptions import ClientException
 from litestar.params import Body, Dependency, Parameter
 from litestar.response import ServerSentEvent
+from litestar.status_codes import HTTP_200_OK, HTTP_201_CREATED
 
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
@@ -146,4 +147,7 @@ class ChatController(Controller):
 
         answer = await run_sync(question_answering, message_history, state.chat.query)
 
-        return ServerSentEvent(answer if not store_query else redis.save_messages(chat_id, answer, message_history))
+        return ServerSentEvent(
+            answer if not store_query else redis.save_messages(chat_id, answer, message_history),
+            status_code=HTTP_201_CREATED if store_query else HTTP_200_OK,
+        )
