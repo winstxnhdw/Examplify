@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
+from typing import Annotated
+
+from msgspec import Meta, Struct
 
 
-class Query(BaseModel):
+class Query(Struct):
     """
     Summary
     -------
@@ -12,4 +14,4 @@ class Query(BaseModel):
     query (str) : the query
     """
 
-    query: str = Field(examples=['What is the definition of ADHD?'])
+    query: Annotated[str, Meta(examples=['What is the definition of ADHD?'])]

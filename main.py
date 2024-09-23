@@ -16,7 +16,6 @@ def main():
         '0.0.0.0',
         Config.server_port,
         Interfaces.ASGI,
-        loop_opt=True,
         log_access=True,
         log_access_format='[%(time)s] %(status)d "%(method)s %(path)s %(protocol)s" %(addr)s in %(dt_ms).2f ms',
         url_path_prefix=Config.server_root_path,

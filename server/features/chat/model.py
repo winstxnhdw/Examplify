@@ -1,4 +1,6 @@
-from ctranslate2 import Generator as LLMGenerator
+from typing import Iterator
+
+from ctranslate2 import Generator
 from transformers.models.llama import LlamaTokenizerFast
 
 from server.config import Config
@@ -36,7 +38,7 @@ class ChatModel:
 
     def __init__(
         self,
-        generator: LLMGenerator,
+        generator: Generator,
         tokeniser: LlamaTokenizerFast,
         min_query_length: int,
         max_context_length: int,
@@ -95,7 +97,7 @@ class ChatModel:
 
         return True
 
-    async def query(self, messages: list[Message]) -> Message | None:
+    def query(self, messages: list[Message]) -> Iterator[str] | None:
         """
         Summary
         -------
@@ -115,14 +117,11 @@ class ChatModel:
         if len(tokens) > self.max_query_length:
             return None
 
-        return {
-            'role': 'assistant',
-            'content': await self.generate(tokens),
-        }
+        return self.generate(tokens)
 
-    async def generate(self, tokens: list[str]) -> str:
+    def generate(self, tokens: list[str]) -> Iterator[str]:
         """
-        Summary
+        SummaryW
         -------
         generate text from a series/single prompt(s)
 
@@ -134,21 +133,18 @@ class ChatModel:
         -------
         answer (str) : the generated answer
         """
+        for result in self.generator.generate_tokens(
+            tokens,
+            repetition_penalty=1.2,
+            max_length=self.max_generation_length,
+            static_prompt=self.static_prompt,
+            sampling_topp=0.9,
+            sampling_temperature=0.9,
+        ):
+            if result.is_last:
+                return
 
-        return self.tokeniser.decode(
-            [
-                result.token_id
-                async for result in self.generator.async_generate_tokens(
-                    tokens,
-                    repetition_penalty=1.2,
-                    max_length=self.max_generation_length,
-                    static_prompt=self.static_prompt,
-                    sampling_topp=0.9,
-                    sampling_temperature=0.9,
-                )
-            ],
-            skip_special_tokens=True,
-        )
+            yield self.tokeniser.decode(result.token_id)
 
 
 def get_chat_model() -> ChatModel:
@@ -163,11 +159,11 @@ def get_chat_model() -> ChatModel:
     """
     model_path = huggingface_download('winstxnhdw/openchat-3.6-ct2-int8')
     tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
-    generator = LLMGenerator(
+    generator = Generator(
         model_path,
         'cuda' if Config.use_cuda else 'cpu',
         compute_type='auto',
-        inter_threads=1,
+        inter_threads=Config.chat_model_threads,
         max_queued_batches=-1,
     )
 

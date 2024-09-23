@@ -1,5 +1,5 @@
 from json import dumps, loads
-from typing import NamedTuple, Sequence, TypedDict
+from typing import AsyncIterator, Iterator, NamedTuple, TypedDict
 
 from redis import ResponseError
 from redis.asyncio import Redis
@@ -139,7 +139,12 @@ class RedisAsync:
 
         return ' '.join(document['content'] for document in search_response.docs)
 
-    async def save_messages(self, chat_id: str, messages: Sequence[Message]):
+    async def save_messages(
+        self,
+        chat_id: str,
+        answer: Iterator[str],
+        message_history: list[Message],
+    ) -> AsyncIterator[str]:
         """
         Summary
         -------
@@ -148,9 +153,20 @@ class RedisAsync:
         Parameters
         ----------
         chat_id (str) : the chat ID
-        messages (Sequence[Message]) : the messages to save
+        answer (Iterator[str]) : the answer to save
+        message_history (list[Message]) : the messages to save
         """
-        await self.redis.set(f'chat:{chat_id}', dumps(messages))
+        answer_accumulator = []
+
+        try:
+            for token in answer:
+                yield token
+                answer_accumulator.append(token)
+
+        finally:
+            answer_to_save: Message = {'role': 'assistant', 'content': ''.join(answer_accumulator)}
+            message_history.append(answer_to_save)
+            await self.redis.set(f'chat:{chat_id}', dumps(message_history))
 
     async def get_messages(self, chat_id: str) -> list[Message]:
         """

@@ -2,11 +2,13 @@ from io import BytesIO
 from typing import Annotated
 
 from litestar import Controller, delete, get, post, put
+from litestar.concurrency import _run_sync_asyncio as run_sync
 from litestar.datastructures import UploadFile
 from litestar.di import Provide
 from litestar.enums import RequestEncodingType
 from litestar.exceptions import ClientException
 from litestar.params import Body, Dependency, Parameter
+from litestar.response import ServerSentEvent
 
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
@@ -15,7 +17,7 @@ from server.features.chunking import SentenceSplitter, chunk_document
 from server.features.embeddings import Embedder
 from server.features.extraction import extract_documents_from_pdfs
 from server.features.question_answering import question_answering
-from server.schemas.v1 import Answer, Chat, Files, Query
+from server.schemas.v1 import Chat, Files, Query
 from server.state import AppState
 
 
@@ -117,18 +119,22 @@ class ChatController(Controller):
         data: Query,
         search_size: Annotated[int, Parameter(ge=0)] = 0,
         store_query: bool = True,
-    ) -> Answer:
+    ) -> ServerSentEvent:
         """
         Summary
         -------
         the `/query` route provides an endpoint for performning retrieval-augmented generation
         """
         context = '' if not search_size else await redis.search(chat_id, embedder.encode_query(data.query), search_size)
-
+        context_content = f'Given the following context:\n\n{context}\n\n' if context else ''
         message_history = await redis.get_messages(chat_id)
-        messages = await question_answering(data.query, context, message_history, state.chat.query)
+        message_history.append(
+            {
+                'role': 'user',
+                'content': f'{context_content}{data.query}',
+            }
+        )
 
-        if store_query:
-            await redis.save_messages(chat_id, messages)
+        answer = await run_sync(question_answering, message_history, state.chat.query)
 
-        return Answer(messages=messages)
+        return ServerSentEvent(answer if store_query else redis.save_messages(chat_id, answer, message_history))

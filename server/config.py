@@ -43,6 +43,8 @@ class Config(BaseSettings):
     server_root_path: str = '/api'
     redis_index_name: str = 'index'
     use_cuda: bool = False
+    chat_model_threads: int = 1
+
     document_index_prefix: str = 'doc'
     document_index_tag: str = 'chat_id'
     embedding_dimensions: int = 768

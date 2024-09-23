@@ -1,14 +1,12 @@
-from typing import Awaitable, Callable
+from typing import Callable, Iterator
 
 from server.features.chat.types import Message
 
 
-async def question_answering(
-    query: str,
-    context: str,
+def question_answering(
     messages: list[Message],
-    chain: Callable[[list[Message]], Awaitable[Message | None]],
-) -> list[Message]:
+    chain: Callable[[list[Message]], Iterator[str] | None],
+) -> Iterator[str]:
     """
     Summary
     -------
@@ -17,22 +15,13 @@ async def question_answering(
     Parameters
     ----------
     messages (list[Message]): the message history
-    chain (Callable[[Sequence[Message]], Message | None]): the model
+    chain (Callable[[Sequence[Message]], Iterator[str] | None]): the callable to chain the messages
 
-    Returns
+    Yields
     -------
-    messages (list[Message]): the message history
+    answer (str): token iterator of the answer
     """
-    context_prompt = f'Given the following context:\n\n{context}\n\n' if context else ''
-
-    messages.append(
-        {
-            'role': 'user',
-            'content': f'{context_prompt}Please answer the following question:\n\n{query}',
-        }
-    )
-
-    while not (answer := await chain(messages)):
+    while (answer := chain(messages)) is None:
         messages = messages[1:]
 
-    return messages + [answer]
+    return answer
