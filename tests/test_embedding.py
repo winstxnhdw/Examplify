@@ -5,7 +5,7 @@ from typing import Iterable, Literal
 from numpy import array_equal
 from pytest import fixture
 
-from server.dependencies import embedder
+from server.dependencies import embedder_model
 from server.features.embeddings import Embedder
 
 type Text = Literal['Hello world!']
@@ -13,7 +13,7 @@ type Text = Literal['Hello world!']
 
 @fixture()
 def embedding() -> Iterable[Embedder]:
-    return embedder()
+    return embedder_model()
 
 
 @fixture()

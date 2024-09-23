@@ -24,7 +24,7 @@ def find_or_download_nltk(download_directory: str):
 
 
 @asynccontextmanager
-async def download_nltk(app: Litestar) -> AsyncIterator[None]:
+async def download_nltk(_: Litestar) -> AsyncIterator[None]:
     """
     Summary
     -------

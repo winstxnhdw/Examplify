@@ -42,9 +42,9 @@ class ChatModel:
         max_context_length: int,
         max_generation_length: int,
     ):
-        self.max_query_length = self.max_context_length - self.max_generation_length
+        self.max_query_length = max_context_length - max_generation_length
 
-        if self.max_query_length < self.min_query_length:
+        if self.max_query_length < min_query_length:
             raise ValueError('The minimum query length cannot be greater than the maximum query length!')
 
         self.generator = generator

@@ -6,7 +6,7 @@ from litestar.params import Dependency, Parameter
 
 from server.config import Config
 from server.databases.redis.wrapper import RedisAsync
-from server.dependencies import embedder, redis_client
+from server.dependencies import embedder_model, redis_client
 from server.features.embeddings import Embedder
 from server.schemas.v1 import Query
 
@@ -21,7 +21,7 @@ class RedisController(Controller):
     path = '/redis'
     dependencies = {
         'redis': Provide(redis_client),
-        'embedder': Provide(embedder),
+        'embedder': Provide(embedder_model),
     }
 
     @delete()

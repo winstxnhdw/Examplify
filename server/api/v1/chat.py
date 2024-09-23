@@ -10,7 +10,7 @@ from litestar.params import Body, Dependency, Parameter
 
 from server.databases.redis.features import store_chunks
 from server.databases.redis.wrapper import RedisAsync
-from server.dependencies import embedder, redis_client
+from server.dependencies import embedder_model, redis_client
 from server.features.chunking import SentenceSplitter, chunk_document
 from server.features.embeddings import Embedder
 from server.features.extraction import extract_documents_from_pdfs
@@ -29,7 +29,7 @@ class ChatController(Controller):
     path = '/chats'
     dependencies = {
         'redis': Provide(redis_client),
-        'embedder': Provide(embedder),
+        'embedder': Provide(embedder_model),
     }
 
     @get()

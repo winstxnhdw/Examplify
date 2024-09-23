@@ -3,7 +3,7 @@ from typing import Iterator
 from server.features.embeddings import Embedder
 
 
-def embedder() -> Iterator[Embedder]:
+def embedder_model() -> Iterator[Embedder]:
     """
     Summary
     -------
