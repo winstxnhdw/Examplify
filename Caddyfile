@@ -4,13 +4,13 @@
 }
 
 {$BACKEND_URL} {
-	cache {
-		allowed_http_verbs POST
-		ttl 24h
-		timeout {
-			backend 1000s
-		}
-	}
+	# cache {
+	# 	allowed_http_verbs POST
+	# 	ttl 24h
+	# 	timeout {
+	# 		backend 1000s
+	# 	}
+	# }
 
 	handle_path /api/* {
 		reverse_proxy {$BACKEND_INTERNAL_URL}
