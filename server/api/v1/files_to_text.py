@@ -21,4 +21,4 @@ async def files_to_text(
     an endpoint to extract text from files
     """
 
-    return ServerSentEvent(file_to_text(BytesIO(await file.read()), file.filename) for file in data)
+    return ServerSentEvent(f'{file_to_text(BytesIO(await file.read()), file.filename)}\n\n' for file in data)
