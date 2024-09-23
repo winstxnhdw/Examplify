@@ -1,6 +1,6 @@
-from json import dumps, loads
 from typing import AsyncIterator, Iterator, NamedTuple, TypedDict
 
+from msgspec.json import decode, encode
 from numpy import float32
 from numpy.typing import NDArray
 
@@ -168,7 +168,7 @@ class RedisAsync:
         finally:
             answer_to_save: Message = {'role': 'assistant', 'content': ''.join(answer_accumulator)}
             message_history.append(answer_to_save)
-            await self.redis.set(f'chat:{chat_id}', dumps(message_history))
+            await self.redis.set(f'chat:{chat_id}', encode(message_history))
 
     async def get_messages(self, chat_id: str) -> list[Message]:
         """
@@ -185,7 +185,7 @@ class RedisAsync:
         messages (list[Message]) : the messages
         """
         messages_json: str | None = await self.redis.get(f'chat:{chat_id}')
-        return [] if not messages_json else loads(messages_json)
+        return [] if not messages_json else decode(messages_json, type=list[Message])
 
     async def get_chat_id(self, key: str) -> str | None:
         """
