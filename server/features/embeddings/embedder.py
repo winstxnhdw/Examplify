@@ -1,3 +1,5 @@
+from numpy import float32
+from numpy.typing import NDArray
 from sentence_transformers import SentenceTransformer
 from torch import device
 
@@ -32,7 +34,7 @@ class Embedder(SentenceTransformer):
     def device(self) -> device:
         return self.cached_device
 
-    def encode_normalise(self, sentences: str | list[str]) -> bytes:
+    def encode_normalise(self, sentences: str | list[str], prompt: str | None = None) -> NDArray[float32]:
         """
         Summary
         -------
@@ -46,9 +48,9 @@ class Embedder(SentenceTransformer):
         -------
         embeddings (bytes) : the normalised embeddings
         """
-        return self.encode(sentences, normalize_embeddings=True).tobytes()
+        return self.encode(sentences, prompt=prompt, normalize_embeddings=True)
 
-    def encode_query(self, sentence: str) -> bytes:
+    def encode_query(self, sentence: str) -> NDArray[float32]:
         """
         Summary
         -------
@@ -62,4 +64,4 @@ class Embedder(SentenceTransformer):
         -------
         embeddings (bytes) : the normalised embeddings
         """
-        return self.encode_normalise(f'Represent this sentence for searching relevant passages: {sentence}')
+        return self.encode_normalise(sentence, 'Represent this sentence for searching relevant passages:')

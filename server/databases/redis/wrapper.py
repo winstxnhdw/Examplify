@@ -1,6 +1,9 @@
 from json import dumps, loads
 from typing import AsyncIterator, Iterator, NamedTuple, TypedDict
 
+from numpy import float32
+from numpy.typing import NDArray
+
 from redis import ResponseError
 from redis.asyncio import Redis
 from redis.asyncio.client import Pipeline
@@ -112,7 +115,7 @@ class RedisAsync:
             mapping=mapping,  # type: ignore
         )
 
-    async def search(self, search_field: str, embedding: bytes, top_k: int) -> str:
+    async def search(self, search_field: str, embedding: NDArray[float32], top_k: int) -> str:
         """
         Summary
         -------
@@ -121,7 +124,7 @@ class RedisAsync:
         Parameters
         ----------
         search_field (str) : the field to search in
-        embedding (NDArray[float64]) : the embedding to search for
+        embedding (NDArray[float32]) : the embedding to search for
         top_k (int) : the number of documents to retrieve
 
         Returns
@@ -129,8 +132,7 @@ class RedisAsync:
         content (str) : the content of the relevant documents
         """
         redis_query = redis_query_builder(Config.document_index_tag, search_field, top_k)
-
-        redis_query_parameters = {'vec': embedding}
+        redis_query_parameters = {'vec': embedding.tobytes()}
 
         search_response: SearchResponse = await self.redis.ft(Config.redis_index_name).search(
             redis_query,

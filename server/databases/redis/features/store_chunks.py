@@ -6,6 +6,9 @@ from typing import (
     Protocol,
 )
 
+from numpy import float32
+from numpy.typing import NDArray
+
 from server.databases.redis.wrapper import RedisAsync
 from server.features.chunking.models import Chunk
 from server.features.chunking.sentence_splitter import TextSplitter
@@ -19,7 +22,7 @@ class Embedder(Protocol):
     a generic protocol for embedding text
     """
 
-    def encode_normalise(self, sentences: str | list[str]) -> bytes:
+    def encode_normalise(self, sentences: str | list[str]) -> NDArray[float32]:
         """
         Summary
         -------
@@ -67,7 +70,7 @@ async def store_chunks(
                     chunk.source_id,
                     chunk.id,
                     mapping={
-                        'vector': embedder.encode_normalise(chunk.content),
+                        'vector': embedder.encode_normalise(chunk.content).tobytes(),
                         'content': chunk.content,
                         'chat_id': chat_id,
                     },
