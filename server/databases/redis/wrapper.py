@@ -22,16 +22,28 @@ class Mappings(TypedDict):
 
     Attributes
     ----------
-    score (float) : the document's score
     vector (bytes) : the document's vector
     content (str) : the document's content
     chat_id (str) : the document's tag
     """
 
-    score: float
     vector: bytes
     content: str
     chat_id: str
+
+
+class SearchResponseMapping(Mappings):
+    """
+    Summary
+    -------
+    a mapping of a document's vector to its content
+
+    Attributes
+    ----------
+    score (float) : the document's score
+    """
+
+    score: float
 
 
 class SearchResponse(NamedTuple):
@@ -45,7 +57,7 @@ class SearchResponse(NamedTuple):
     docs (list[Mappings]) : the documents returned by the search
     """
 
-    docs: list[Mappings]
+    docs: list[SearchResponseMapping]
 
 
 class RedisAsync:
