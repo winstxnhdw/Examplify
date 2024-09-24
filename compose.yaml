@@ -16,7 +16,6 @@ services:
     environment:
       BACKEND_URL: ${BACKEND_URL}:${BACKEND_PORT}
       BACKEND_INTERNAL_URL: backend:${BACKEND_PORT}
-    image: caddy:alpine
     volumes: [./Caddyfile:/etc/caddy/Caddyfile]
     ports:
       - '${BACKEND_PORT}:${BACKEND_PORT}'
