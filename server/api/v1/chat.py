@@ -106,7 +106,7 @@ class ChatController(Controller):
             redis,
             chat_id,
             embedder.encode_normalise,
-            extract_documents_from_pdfs([{'data': BytesIO(await file.read()), 'name': file.filename} for file in data]),
+            extract_documents_from_pdfs([{'data': await file.read(), 'name': file.filename} for file in data]),
             chunk_document,
             text_splitter,
         )

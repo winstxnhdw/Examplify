@@ -1,10 +1,10 @@
-from uuid import uuid4
+from hashlib import md5
 
 from server.features.extraction.models import Document
 from server.features.extraction.models.document import Section
 
 
-def create_document(semantic_identifier: str, sections: list[Section]) -> Document:
+def create_document(file_data: bytes, semantic_identifier: str, sections: list[Section]) -> Document:
     """
     Summary
     -------
@@ -20,7 +20,7 @@ def create_document(semantic_identifier: str, sections: list[Section]) -> Docume
     document (Document): the document
     """
     return Document(
-        id=str(uuid4()),
+        id=md5(file_data).hexdigest(),
         sections=sections,
         semantic_identifier=semantic_identifier,
     )

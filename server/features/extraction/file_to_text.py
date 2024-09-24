@@ -3,7 +3,7 @@ from typing import BinaryIO
 from server.features.extraction import extract_text_from_image
 
 
-def file_to_text(file: BinaryIO, file_name: str) -> str:
+def file_to_text(file: bytes, file_name: str) -> str:
     """
     Summary
     -------
@@ -11,7 +11,7 @@ def file_to_text(file: BinaryIO, file_name: str) -> str:
 
     Parameters
     ----------
-    file (BinaryIO): the file
+    file (bytes): the file
     file_name (str): the name of the file
 
     Returns

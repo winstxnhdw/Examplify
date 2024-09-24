@@ -1,4 +1,5 @@
-from typing import BinaryIO, Iterator
+from io import BytesIO
+from typing import Iterator
 
 from PIL.Image import open as open_image
 from tesserocr import image_to_text
@@ -9,7 +10,7 @@ from server.features.extraction.models.document import Section
 from server.features.extraction.types import File
 
 
-def extract_text_from_image(file: BinaryIO) -> str:
+def extract_text_from_image(file: bytes) -> str:
     """
     Summary
     -------
@@ -17,17 +18,17 @@ def extract_text_from_image(file: BinaryIO) -> str:
 
     Parameters
     ----------
-    file (BinaryIO): the image
+    file (bytes): the image
 
     Returns
     -------
     text (str): the text in the image
     """
-    with open_image(file) as image:
+    with open_image(BytesIO(file)) as image:
         return image_to_text(image)
 
 
-def extract_document_from_image(file_name: str, file: BinaryIO) -> Document:
+def extract_document_from_image(file_name: str, file: bytes) -> Document:
     """
     Summary
     -------
@@ -36,13 +37,13 @@ def extract_document_from_image(file_name: str, file: BinaryIO) -> Document:
     Parameters
     ----------
     file_name (str): the name of the file
-    file (BinaryIO): the image
+    file (bytes): the image
 
     Returns
     -------
     document (Document): the parsed document
     """
-    return create_document(file_name, [Section(link=f'{file_name}', content=extract_text_from_image(file))])
+    return create_document(file, file_name, [Section(link=f'{file_name}', content=extract_text_from_image(file))])
 
 
 def extract_documents_from_images(files: list[File]) -> Iterator[Document]:

@@ -1,4 +1,3 @@
-from io import BytesIO
 from typing import Annotated
 
 from litestar import post
@@ -21,4 +20,4 @@ async def files_to_text(
     an endpoint to extract text from files
     """
 
-    return ServerSentEvent(f'{file_to_text(BytesIO(await file.read()), file.filename)}\n\n' for file in data)
+    return ServerSentEvent(f'{file_to_text(await file.read(), file.filename)}\n\n' for file in data)

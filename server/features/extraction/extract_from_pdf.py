@@ -23,14 +23,15 @@ def extract_document_from_pdf(file: File) -> Document:
     document (Document): the parsed document
     """
     file_name, file_type = file['name'].rsplit('.', 1)
+    file_data = file['data']
 
-    with FitzDocument(stream=file['data'], filetype=file_type) as document:
+    with FitzDocument(stream=file_data, filetype=file_type) as document:
         sections = [
             Section(link=f'{file_name}#{page.number}', content=page.get_text(sort=True))  # type: ignore
             for page in document
         ]
 
-    return create_document(file_name, sections)
+    return create_document(file_data, file_name, sections)
 
 
 def extract_documents_from_pdfs(files: list[File]) -> Iterator[Document]:
