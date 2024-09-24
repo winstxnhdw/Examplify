@@ -105,7 +105,7 @@ class ChatController(Controller):
         chunk_generator = store_chunks(
             redis,
             chat_id,
-            embedder,
+            embedder.encode_normalise,
             extract_documents_from_pdfs([{'data': BytesIO(await file.read()), 'name': file.filename} for file in data]),
             chunk_document,
             text_splitter,
