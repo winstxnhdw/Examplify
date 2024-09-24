@@ -8,6 +8,10 @@
 [![formatter.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml)
 [![dependabot.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml)
 
+<div align="center">
+    <img src="resources/logo.png" width="70%" />
+</div>
+
 `Examplify` is an offline CPU-first low-resource chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised openchat-3.6 model, running on CTranslate2's inference engine for maximum CPU performance.
 
 ## Requirements
