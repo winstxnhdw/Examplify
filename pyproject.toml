@@ -1,3 +1,6 @@
+[tool.pylint]
+ignore-patterns = ".*\\.pyi"
+
 [tool.pylint.format]
 good-names = ["x", "y", "z", "i", "id", "ok"]
 
@@ -14,21 +17,24 @@ disable = [
 ]
 
 [tool.ruff]
+src = ["src"]
 line-length = 120
+
+[tool.ruff.lint]
 ignore = ["E501"]
 
 [tool.ruff.format]
 quote-style = "single"
 
 [tool.pyright]
-stubPath = "server/typings"
+stubPath = "src/typings"
 reportUnknownVariableType = false
 reportUnknownMemberType = false
 reportUnknownArgumentType = false
 reportMissingTypeStubs = false
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+pythonpath = ["src"]
 
 [tool.poetry]
 name = "Examplify"
