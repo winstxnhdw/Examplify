@@ -22,11 +22,13 @@ class Mappings(TypedDict):
 
     Attributes
     ----------
+    score (float) : the document's score
     vector (bytes) : the document's vector
     content (str) : the document's content
     chat_id (str) : the document's tag
     """
 
+    score: float
     vector: bytes
     content: str
     chat_id: str
@@ -142,7 +144,11 @@ class RedisAsync:
             redis_query_parameters,  # type: ignore  (this is a bug in the redis-py library)
         )
 
-        return ' '.join(document['content'] for document in search_response.docs)
+        return ' '.join(
+            document['content']
+            for document in search_response.docs
+            if float(document['score']) > Config.minimum_similarity_score
+        )
 
     async def save_messages(
         self,
