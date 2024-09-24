@@ -121,7 +121,7 @@ class ChatModel:
 
     def generate(self, tokens: list[str]) -> Iterator[str]:
         """
-        SummaryW
+        Summary
         -------
         generate text from a series/single prompt(s)
 
