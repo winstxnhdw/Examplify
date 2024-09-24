@@ -1,5 +1,3 @@
-from typing import BinaryIO
-
 from server.features.extraction import extract_text_from_image
 
 

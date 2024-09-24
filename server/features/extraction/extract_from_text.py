@@ -1,4 +1,4 @@
-from typing import BinaryIO, Iterator
+from typing import Iterator
 
 from server.features.extraction.helpers import create_document
 from server.features.extraction.models import Document
