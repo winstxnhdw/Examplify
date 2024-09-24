@@ -4,14 +4,14 @@ from msgspec.json import decode, encode
 from numpy import float32
 from numpy.typing import NDArray
 
+from examplify.config import Config
+from examplify.databases.redis.helpers import redis_query_builder
+from examplify.features.chat.types import Message
 from redis import ResponseError
 from redis.asyncio import Redis
 from redis.asyncio.client import Pipeline
 from redis.commands.search.field import TagField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition, IndexType
-from examplify.config import Config
-from examplify.databases.redis.helpers import redis_query_builder
-from examplify.features.chat.types import Message
 
 
 class Mappings(TypedDict):
