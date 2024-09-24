@@ -1,16 +1,3 @@
-.gitignore
-.dockerignore
-
-*.md
-*.yaml
-Dockerfile*
-
-tests/
-tmp/
-.github/
-.vscode/
-.venv/
-.pytest_cache/
-
 **/__pycache__
 **/typings
+**/tests
