@@ -158,7 +158,7 @@ def get_chat_model() -> ChatModel:
     model (Chat) : the language model
     """
     model_path = huggingface_download('winstxnhdw/openchat-3.6-ct2-int8')
-    tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True)
+    tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True, legacy=False)
     generator = Generator(
         model_path,
         'cuda' if Config.use_cuda else 'cpu',
