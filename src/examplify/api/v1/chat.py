@@ -1,4 +1,3 @@
-from io import BytesIO
 from typing import Annotated
 
 from litestar import Controller, delete, get, post, put
