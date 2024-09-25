@@ -37,6 +37,11 @@ services:
       CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
       OMP_NUM_THREADS: ${OMP_NUM_THREADS}
     security_opt: [seccomp:unconfined]
+    shm_size: 1G
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
       - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
       - ./tmp/backend/torch:/home/user/.cache/torch
