@@ -8,6 +8,7 @@ services:
       USE_CUDA: True
     shm_size: 1G
     ulimits:
+      stack: 67108864
       memlock:
         soft: -1
         hard: -1
