@@ -128,6 +128,7 @@ class ChatController(Controller):
         data: Query,
         search_size: Annotated[int, Parameter(ge=0)] = 0,
         store_query: bool = True,
+        event_type: str | None = None,
     ) -> ServerSentEvent:
         """
         Summary
@@ -148,5 +149,6 @@ class ChatController(Controller):
 
         return ServerSentEvent(
             answer if not store_query else redis.save_messages(chat_id, answer, message_history),
+            event_type=event_type,
             status_code=HTTP_201_CREATED if store_query else HTTP_200_OK,
         )
