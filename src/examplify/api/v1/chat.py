@@ -10,8 +10,8 @@ from litestar.params import Body, Dependency, Parameter
 from litestar.response import ServerSentEvent
 from litestar.status_codes import HTTP_200_OK, HTTP_201_CREATED
 
-from examplify.databases.redis.features import store_chunks
-from examplify.databases.redis.wrapper import RedisAsync
+from examplify.databases.stores.features import store_chunks
+from examplify.databases.stores.wrapper import RedisAsync
 from examplify.dependencies import embedder_model, redis_client
 from examplify.features.chunking import SentenceSplitter, chunk_document
 from examplify.features.embeddings import Embedder

@@ -26,15 +26,7 @@ class LLMController(Controller):
         an endpoint for generating text directly from the LLM model
         """
         chat = state.chat
-        tokeniser = chat.tokeniser
-
-        prompt = tokeniser.apply_chat_template(
-            [{'role': 'user', 'content': data.query}],
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-
-        return ServerSentEvent(chat.generate(tokeniser(prompt).tokens()))
+        return ServerSentEvent(chat.generate(chat.encode_messages(({'role': 'user', 'content': data.query},))))
 
     @post('/benchmark', sync_to_thread=True)
     def benchmark(self, state: AppState, data: Query) -> Benchmark:
@@ -47,8 +39,7 @@ class LLMController(Controller):
         tokeniser = chat.tokeniser
 
         message: Message = {'role': 'user', 'content': data.query}
-        prompt = tokeniser.apply_chat_template([message], add_generation_prompt=True, tokenize=False)
-        tokenised_prompt = tokeniser(prompt).tokens()
+        tokenised_prompt = chat.encode_messages((message,))
 
         start = perf_counter()
         response = ''.join(chat.generate(tokenised_prompt))
