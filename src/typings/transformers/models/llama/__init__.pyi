@@ -1,5 +1,5 @@
 from os import PathLike
-from typing import Any, Literal, Self, overload
+from typing import Any, Literal, Self, Sequence, overload
 
 from transformers.tokenization_utils_base import (
     BatchEncoding,
@@ -11,6 +11,7 @@ from transformers.tokenization_utils_fast import PreTrainedTokenizerFast
 from transformers.utils import PaddingStrategy, TensorType
 
 from examplify.features.chat.types import Message
+from examplify.types import ListOrTuple
 
 class LlamaTokenizerFast(PreTrainedTokenizerFast):
     def __call__(
@@ -52,7 +53,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: list[Message],
+        conversation: ListOrTuple[Message],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -70,7 +71,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     @overload
     def apply_chat_template(
         self,
-        conversation: list[list[Message]],
+        conversation: ListOrTuple[ListOrTuple[Message]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
@@ -87,7 +88,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     ) -> list[str]: ...
     def apply_chat_template(
         self,
-        conversation: list[dict[str, Any]] | list[list[dict[str, Any]]],
+        conversation: Sequence[dict[str, Any]] | Sequence[Sequence[dict[str, Any]]],
         tools: list[dict[Any, Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,

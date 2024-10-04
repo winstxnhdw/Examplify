@@ -1,10 +1,12 @@
 from typing import Iterator
 
 from ctranslate2 import Generator
+from tokenizers import Encoding
 from transformers.models.llama import LlamaTokenizerFast
 
 from examplify.config import Config
 from examplify.features.chat.types import Message
+from examplify.types import ListOrTuple
 from examplify.utils import huggingface_download
 
 
@@ -59,6 +61,24 @@ class ChatModel:
     def __len__(self) -> int:
         return len(self.static_prompt)
 
+    def encode_messages(self, messages: ListOrTuple[Message]) -> list[str]:
+        """
+        Summary
+        -------
+        encode text into tokens
+
+        Parameters
+        ----------
+        messages (list[Message]) : the messages to encode
+
+        Returns
+        -------
+        tokens (list[str]) : the encoded tokens
+        """
+        prompt = self.tokeniser.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
+        encodings: Encoding = self.tokeniser(prompt).encodings[0]  # type: ignore
+        return encodings.tokens
+
     def set_static_prompt(self, static_user_prompt: str, static_assistant_prompt: str) -> bool:
         """
         Summary
@@ -85,9 +105,8 @@ class ChatModel:
             },
         ]
 
-        system_prompt = self.tokeniser.apply_chat_template(static_prompts, add_generation_prompt=True, tokenize=False)
-        static_prompt = self.tokeniser(system_prompt).tokens()
-        max_query_length = self.max_context_length - self.max_generation_length - len(self.static_prompt)
+        static_prompt = self.encode_messages(static_prompts)
+        max_query_length = self.max_context_length - self.max_generation_length - len(static_prompt)
 
         if max_query_length < self.min_query_length:
             return False
@@ -111,8 +130,7 @@ class ChatModel:
         -------
         answer (Message | None) : the answer to the query
         """
-        prompts: str = self.tokeniser.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        tokens = self.tokeniser(prompts).tokens()
+        tokens = self.encode_messages(messages)
 
         if len(tokens) > self.max_query_length:
             return None
@@ -133,18 +151,20 @@ class ChatModel:
         -------
         answer (str) : the generated answer
         """
-        for result in self.generator.generate_tokens(
+        generator = self.generator.generate_tokens(
             tokens,
             repetition_penalty=1.2,
             max_length=self.max_generation_length,
             static_prompt=self.static_prompt,
             sampling_topp=0.9,
             sampling_temperature=0.9,
-        ):
-            if result.is_last:
-                return
+        )
 
-            yield self.tokeniser.decode(result.token_id)
+        return (
+            self.tokeniser.convert_tokens_to_string((result.token,))  # type: ignore
+            for result in generator
+            if not result.is_last
+        )
 
 
 def get_chat_model() -> ChatModel:
