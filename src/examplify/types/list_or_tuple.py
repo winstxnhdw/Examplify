@@ -1,1 +1,1 @@
-type ListOrTuple[T] = list[T] | tuple[T]
+type ListOrTuple[T] = list[T] | tuple[T, ...]
