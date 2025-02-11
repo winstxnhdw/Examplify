@@ -47,7 +47,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 granian = "^1.6.0"
-litestar = "^2.12.1"
+litestar = "^2.13.0"
 uvloop = "^0.20.0"
 msgspec = "^0.18.6"
 pydantic-settings = "^2.3.4"
