@@ -1,4 +1,4 @@
-FROM python:slim AS python-builder
+FROM python:3.12-slim AS python-builder
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 ENV POETRY_HOME=/opt/poetry
@@ -16,7 +16,7 @@ FROM curlimages/curl:latest AS curl-builder
 RUN curl -O https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata
 
 
-FROM python:slim
+FROM python:3.12-slim
 
 ENV HOME=/home/user
 ENV PYTHONUNBUFFERED=1
