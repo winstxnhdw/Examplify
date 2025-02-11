@@ -1,5 +1,5 @@
 from os import PathLike
-from typing import Any, Literal, Self, Sequence, overload
+from typing import Any, Callable, Literal, Self, Sequence, overload
 
 from transformers.tokenization_utils_base import (
     BatchEncoding,
@@ -16,10 +16,10 @@ from examplify.types import ListOrTuple
 class LlamaTokenizerFast(PreTrainedTokenizerFast):
     def __call__(
         self,
-        text: str | PreTokenizedInput | list[PreTokenizedInput] | None = None,
-        text_pair: TextInput | PreTokenizedInput | list[PreTokenizedInput] | None = None,
-        text_target: TextInput | PreTokenizedInput | list[PreTokenizedInput] | None = None,
-        text_pair_target: TextInput | PreTokenizedInput | list[PreTokenizedInput] | None = None,
+        text: TextInput | PreTokenizedInput | list[TextInput] | list[PreTokenizedInput] | None = None,
+        text_pair: TextInput | PreTokenizedInput | list[TextInput] | list[PreTokenizedInput] | None = None,
+        text_target: TextInput | PreTokenizedInput | list[TextInput] | list[PreTokenizedInput] | None = None,
+        text_pair_target: TextInput | PreTokenizedInput | list[TextInput] | list[PreTokenizedInput] | None = None,
         add_special_tokens: bool = True,
         padding: bool | str | PaddingStrategy = False,
         truncation: bool | str | TruncationStrategy | None = None,
@@ -27,6 +27,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         stride: int = 0,
         is_split_into_words: bool = False,
         pad_to_multiple_of: int | None = None,
+        padding_side: bool | None = None,
         return_tensors: str | TensorType | None = None,
         return_token_type_ids: bool | None = None,
         return_attention_mask: bool | None = None,
@@ -58,6 +59,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
+        continue_final_message: bool = False,
         tokenize: Literal[False] = False,
         padding: bool = False,
         truncation: bool = False,
@@ -76,6 +78,7 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
+        continue_final_message: bool = False,
         tokenize: Literal[False] = False,
         padding: bool = False,
         truncation: bool = False,
@@ -88,11 +91,12 @@ class LlamaTokenizerFast(PreTrainedTokenizerFast):
     ) -> list[str]: ...
     def apply_chat_template(
         self,
-        conversation: Sequence[dict[str, Any]] | Sequence[Sequence[dict[str, Any]]],
-        tools: list[dict[Any, Any]] | None = None,
+        conversation: Sequence[dict[str, str]] | Sequence[Sequence[dict[str, str]]],
+        tools: list[dict[Any, Any] | Callable[..., Any]] | None = None,
         documents: list[dict[str, str]] | None = None,
         chat_template: str | None = None,
         add_generation_prompt: bool = False,
+        continue_final_message: bool = False,
         tokenize: bool = True,
         padding: bool = False,
         truncation: bool = False,
