@@ -66,7 +66,7 @@ picologging = "^0.9.3"
 fastnanoid = "^0.4.1"
 
 [tool.poetry.group.dev.dependencies]
-pyright = "^1.1.393"
+pyright = "^1.1.394"
 pytest = "^8.3.4"
 pylint = "^3.3.4"
 ruff = "^0.9.6"
