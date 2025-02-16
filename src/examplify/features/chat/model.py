@@ -21,10 +21,10 @@ class ChatModel:
     set_static_prompt(static_user_prompt: str, static_assistant_prompt: str) -> int
         set the model's static prompt
 
-    query(messages: Sequence[Message]) -> Message | None
+    query(messages: list[Message]) -> Iterator[str] | None
         query the model
 
-    generate(tokens_list: Sequence[list[str]]) -> Awaitable[str]
+    generate(tokens: ListOrTuple[str]) -> Iterator[str]
         generate text from a series/single prompt(s)
     """
 
@@ -69,7 +69,7 @@ class ChatModel:
 
         Parameters
         ----------
-        messages (list[Message]) : the messages to encode
+        messages (ListOrTuple[Message]) : the messages to encode
 
         Returns
         -------
@@ -116,7 +116,7 @@ class ChatModel:
 
         return True
 
-    def query(self, messages: list[Message]) -> Iterator[str] | None:
+    def query(self, messages: ListOrTuple[Message]) -> Iterator[str] | None:
         """
         Summary
         -------
@@ -124,7 +124,7 @@ class ChatModel:
 
         Parameters
         ----------
-        messages (list[Message]) : the messages to query the model with
+        messages (ListOrTuple[Message]) : the messages to query the model with
 
         Returns
         -------
@@ -175,7 +175,7 @@ def get_chat_model() -> ChatModel:
 
     Returns
     -------
-    model (Chat) : the language model
+    model (ChatModel) : the language model
     """
     model_path = huggingface_download('winstxnhdw/openchat-3.6-ct2-int8')
     tokeniser = LlamaTokenizerFast.from_pretrained(model_path, local_files_only=True, legacy=False)
