@@ -502,7 +502,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
     )
     chunking_tokenizer_fn: Callable[[str], List[str]] = Field(
         exclude=True,
-        description=('Function to split text into sentences. ' 'Defaults to `nltk.sent_tokenize`.'),
+        description=('Function to split text into sentences. Defaults to `nltk.sent_tokenize`.'),
     )
     callback_manager: CallbackManager = Field(default_factory=CallbackManager, exclude=True)
     tokenizer: Any
@@ -524,7 +524,7 @@ class SentenceSplitter(MetadataAwareTextSplitter):
         """Initialize with parameters."""
         if chunk_overlap > chunk_size:
             raise ValueError(
-                f'Got a larger chunk overlap ({chunk_overlap}) than chunk size ' f'({chunk_size}), should be smaller.'
+                f'Got a larger chunk overlap ({chunk_overlap}) than chunk size ({chunk_size}), should be smaller.'
             )
 
         tokenizer = tokenizer
