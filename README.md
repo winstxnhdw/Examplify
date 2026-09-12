@@ -2,17 +2,15 @@
 
 > STILL WIP
 
-[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
 [![main.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/main.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/main.yml)
 [![Dockerise](https://github.com/winstxnhdw/Examplify/actions/workflows/docker.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/docker.yml)
 [![formatter.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/formatter.yml)
-[![dependabot.yml](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml/badge.svg)](https://github.com/winstxnhdw/Examplify/actions/workflows/dependabot.yml)
 
 <div align="center">
     <img src="resources/logo.png" width="70%" />
 </div>
 
-`Examplify` is an offline CPU-first low-resource chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised openchat-3.6 model, running on CTranslate2's inference engine for maximum CPU performance.
+`Examplify` is an offline CPU-first low-resource chat application to perform Retrieval-Augmented Generation (RAG) on your corpus of data. It utilises an 8-bit quantised Qwen-2.5 model, running on CTranslate2's inference engine for maximum CPU performance.
 
 ## Requirements
 

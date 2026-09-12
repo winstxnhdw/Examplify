@@ -1,55 +1,60 @@
 services:
-  redis:
-    container_name: redis
-    image: redis/redis-stack-server:latest
+  postgres:
+    container_name: postgres
+    image: tensorchord/vchord-suite:pg18-latest
     init: true
-    volumes:
-      - ./tmp/redis:/data
-      - ./redis.conf:/redis-stack.conf
-    healthcheck:
-      test: ['CMD-SHELL', 'redis-cli -h localhost -p 6379 ping']
-      interval: 5s
-
-  caddy:
-    container_name: caddy
-    init: true
+    ports: [5432:5432]
     environment:
-      BACKEND_URL: ${BACKEND_URL}:${BACKEND_PORT}
-      BACKEND_INTERNAL_URL: backend:${BACKEND_PORT}
-    volumes: [./Caddyfile:/etc/caddy/Caddyfile]
-    ports:
-      - '${BACKEND_PORT}:${BACKEND_PORT}'
-      - 80:80
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./tmp/postgres:/var/lib/postgresql
+      - ./server/database/postgresql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      retries: 50
+
+  migrations:
+    container_name: migrations
+    init: true
+    command:
+      - sh
+      - -c
+      - |
+        litestar --app-dir .venv/lib/python3.13/site-packages --app src.app:app database upgrade --no-prompt
+        litestar --app-dir .venv/lib/python3.13/site-packages --app src.app:app database make-migrations --no-prompt
+        litestar --app-dir .venv/lib/python3.13/site-packages --app src.app:app database upgrade --no-prompt
+    environment:
+      POSTGRES_ENDPOINT: postgres:5432
     build:
       context: .
-      dockerfile: Dockerfile.caddy
-    command:
-      - |
-        caddy fmt --overwrite /etc/caddy/Caddyfile
-        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+      dockerfile: Dockerfile
+    volumes: [./server/migrations:/home/user/migrations]
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   backend:
     container_name: backend
     init: true
+    ports: [7860:7860]
     environment:
-      REDIS_URL: redis://redis:6379
-      SERVER_PORT: ${BACKEND_PORT}
-      CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
-      OMP_NUM_THREADS: ${OMP_NUM_THREADS}
+      SERVER_PORT: 7860
+      CT2_USE_EXPERIMENTAL_PACKED_GEMM: 1
+      OMP_NUM_THREADS: 2
+      CHAT_MODEL_THREADS: 3
     security_opt: [seccomp:unconfined]
-    shm_size: 1G
+    shm_size: 8G
     ulimits:
       stack: 67108864
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
-      - ./tmp/backend/torch:/home/user/.cache/torch
-      - ./tmp/backend/nltk:/home/user/.cache/nltk
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./tmp/server/huggingface:/home/user/.cache/huggingface/hub
     depends_on:
-      redis:
-        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully

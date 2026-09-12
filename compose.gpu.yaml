@@ -2,26 +2,25 @@ services:
   backend:
     container_name: backend
     init: true
+    ports: [7860:7860]
     environment:
-      REDIS_URL: redis://redis:6379
-      BACKEND_PORT: ${BACKEND_PORT}
+      SERVER_PORT: 7860
+      CHAT_MODEL_THREADS: 3
       USE_CUDA: True
-    shm_size: 1G
+    shm_size: 8G
     ulimits:
       stack: 67108864
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
-      - ./tmp/backend/torch:/home/user/.cache/torch
-      - ./tmp/backend/nltk:/home/user/.cache/nltk
+      - ./tmp/server/huggingface:/home/user/.cache/huggingface/hub
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
     depends_on:
-      redis:
-        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     deploy:
       resources:
         reservations:

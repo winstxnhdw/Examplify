@@ -1,0 +1,53 @@
+[project]
+name = "server"
+version = "3.0.0"
+description = ""
+requires-python = ">=3.13.7, <3.14"
+dependencies = [
+    "advanced-alchemy>=1.6.3",
+    "asyncpg>=0.30.0",
+    "ctranslate2>=4.6.0",
+    "granian>=2.5.4",
+    "litestar>=2.17.0",
+    "msgspec>=0.19.0",
+    "pydantic-settings>=2.11.0",
+    "tesserocr>=2.8.0",
+    "transformers>=4.56.2",
+    "uvloop>=0.21.0",
+    "picologging>=0.9.3; python_version < '3.13'",
+    "pympler>=1.1",
+    "torch>=2.8.0",
+    "uuid-utils>=0.11.0",
+]
+
+[dependency-groups]
+dev = ["nodejs-wheel-binaries>=22.20.0", "pyright>=1.1.405", "pytest>=8.4.2", "ruff>=0.13.2"]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[project.scripts]
+examplify = "src:main"
+
+[tool.uv.build-backend]
+module-root = ""
+module-name = "src"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D", "TC", "INP001", "S104", "PLR0913", "PT013", "ANN401"]
+
+[tool.ruff.lint.flake8-annotations]
+suppress-dummy-args = true
+
+[tool.pyright]
+stubPath = "typings"
+typeCheckingMode = "strict"
+reportUnknownVariableType = false
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+reportMissingTypeStubs = false
