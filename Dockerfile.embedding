@@ -1,0 +1,14 @@
+FROM python:slim AS model-builder
+
+RUN pip install --no-cache-dir huggingface-hub
+
+RUN python -c \
+    "from huggingface_hub import snapshot_download; \
+    snapshot_download('Octen/Octen-Embedding-0.6B', revision='d715b32ee68f057b54dff09fc93c23485bc403d3', local_dir='/model')"
+
+
+FROM ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.4@sha256:2538ea1c9640d3763b15af668039d24172d063b42337b0c27796fc2be180c78d
+
+COPY --from=model-builder /model /model
+
+CMD ["--model-id", "/model", "--served-model-name", "Octen/Octen-Embedding-0.6B", "--dtype", "float32", "--max-batch-tokens", "4096", "--max-client-batch-size", "4", "--max-concurrent-requests", "8", "--port", "7997"]

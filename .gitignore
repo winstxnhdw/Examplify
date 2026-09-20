@@ -1,5 +1,9 @@
-tmp/
-.vscode/
-
+models/
+logs/
+__pycache__/
+api_tokens.yml
 .env
-*.pyc
+.tuning-*/
+.cache/
+memory.md
+data/

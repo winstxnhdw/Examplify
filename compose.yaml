@@ -1,55 +1,88 @@
 services:
-  redis:
-    container_name: redis
-    image: redis/redis-stack-server:latest
+  tabbyapi:
+    build: .
     init: true
-    volumes:
-      - ./tmp/redis:/data
-      - ./redis.conf:/redis-stack.conf
-    healthcheck:
-      test: ['CMD-SHELL', 'redis-cli -h localhost -p 6379 ping']
-      interval: 5s
-
-  caddy:
-    container_name: caddy
-    init: true
+    gpus: all
+    cpuset: "${TABBY_CPUSET:-}"
+    ports: [127.0.0.1:5000:5000]
     environment:
-      BACKEND_URL: ${BACKEND_URL}:${BACKEND_PORT}
-      BACKEND_INTERNAL_URL: backend:${BACKEND_PORT}
-    volumes: [./Caddyfile:/etc/caddy/Caddyfile]
-    ports:
-      - '${BACKEND_PORT}:${BACKEND_PORT}'
-      - 80:80
+      EXL3_INT8_GEMV: "1"
+    devices:
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - ./reliable.yml:/app/sampler_overrides/reliable.yml:ro
+      - ./.cache/exllamav3:/root/.cache/exllamav3
+      - ./.cache/triton:/root/.triton
+
+  embedding:
+    init: true
     build:
       context: .
-      dockerfile: Dockerfile.caddy
-    command:
-      - |
-        caddy fmt --overwrite /etc/caddy/Caddyfile
-        caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+      dockerfile: Dockerfile.embedding
 
-  backend:
-    container_name: backend
+  lightrag:
+    image: ghcr.io/hkuds/lightrag:v1.5.7@sha256:5bdbd524931b011df246fe20888d110cef691e6804c12cde636a2b746d7de27e
     init: true
+    depends_on: [tabbyapi, embedding]
+    ports: [127.0.0.1:9621:9621]
     environment:
-      REDIS_URL: redis://redis:6379
-      SERVER_PORT: ${BACKEND_PORT}
-      CT2_USE_EXPERIMENTAL_PACKED_GEMM: ${CT2_USE_EXPERIMENTAL_PACKED_GEMM}
-      OMP_NUM_THREADS: ${OMP_NUM_THREADS}
-    security_opt: [seccomp:unconfined]
-    shm_size: 1G
-    ulimits:
-      stack: 67108864
-      memlock:
-        soft: -1
-        hard: -1
+      HOST: 0.0.0.0
+      PORT: "9621"
+      WORKERS: "1"
+      WORKING_DIR: /app/data/rag_storage
+      INPUT_DIR: /app/data/inputs
+      LIGHTRAG_DEFAULT_UI: workspace
+
+      LLM_BINDING: openai
+      LLM_BINDING_HOST: http://tabbyapi:5000/v1
+      LLM_BINDING_API_KEY: local-tabbyapi
+      LLM_MODEL: Qwen3.8-27B-exl3-SC_4.00bpw_H5
+      LLM_TIMEOUT: "300"
+      MAX_ASYNC_LLM: "1"
+      KEYWORD_MAX_ASYNC_LLM: "1"
+      QUERY_MAX_ASYNC_LLM: "1"
+      OPENAI_LLM_TEMPERATURE: "1.0"
+      OPENAI_LLM_MAX_TOKENS: "4096"
+      KEYWORD_OPENAI_LLM_EXTRA_BODY: '{"chat_template_kwargs":{"enable_thinking":false}}'
+
+      EMBEDDING_BINDING: openai
+      EMBEDDING_BINDING_HOST: http://embedding:7997/v1
+      EMBEDDING_BINDING_API_KEY: local-embedding
+      EMBEDDING_MODEL: Octen/Octen-Embedding-0.6B
+      EMBEDDING_DIM: "1024"
+      EMBEDDING_TOKEN_LIMIT: "4096"
+      EMBEDDING_ASYMMETRIC: "true"
+      EMBEDDING_QUERY_PREFIX: |-
+        Instruct: Given a web search query, retrieve relevant passages that answer the query
+        Query:
+      EMBEDDING_DOCUMENT_PREFIX: NO_PREFIX
+      EMBEDDING_SEND_DIM: "false"
+      EMBEDDING_USE_BASE64: "false"
+      EMBEDDING_TIMEOUT: "120"
+      EMBEDDING_FUNC_MAX_ASYNC: "1"
+      EMBEDDING_BATCH_NUM: "4"
+
+      MAX_TOTAL_TOKENS: "10000"
+      MAX_ENTITY_TOKENS: "3000"
+      MAX_RELATION_TOKENS: "3000"
+      MAX_EXTRACT_INPUT_TOKENS: "8000"
+      SUMMARY_CONTEXT_SIZE: "8000"
+      CHUNK_SIZE: "1200"
+      CHUNK_OVERLAP_SIZE: "100"
+      LIGHTRAG_PARSER: "*:native-teP,*:legacy-R"
+      SUMMARY_LANGUAGE: English
+      ENABLE_LLM_CACHE: "true"
+      ENABLE_LLM_CACHE_FOR_EXTRACT: "true"
+      RERANK_BINDING: "null"
+      RERANK_BY_DEFAULT: "false"
+      VLM_PROCESS_ENABLE: "false"
+
+      LIGHTRAG_KV_STORAGE: JsonKVStorage
+      LIGHTRAG_DOC_STATUS_STORAGE: JsonDocStatusStorage
+      LIGHTRAG_GRAPH_STORAGE: NetworkXStorage
+      LIGHTRAG_VECTOR_STORAGE: NanoVectorDBStorage
     volumes:
-      - ./tmp/backend/huggingface:/home/user/.cache/huggingface/hub
-      - ./tmp/backend/torch:/home/user/.cache/torch
-      - ./tmp/backend/nltk:/home/user/.cache/nltk
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
-    depends_on:
-      redis:
-        condition: service_healthy
+      - ./data/rag_storage:/app/data/rag_storage
+      - ./data/inputs:/app/data/inputs
