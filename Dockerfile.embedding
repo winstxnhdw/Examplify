@@ -4,7 +4,7 @@ RUN pip install --no-cache-dir huggingface-hub
 
 RUN python -c \
     "from huggingface_hub import snapshot_download; \
-    snapshot_download('Octen/Octen-Embedding-0.6B', revision='d715b32ee68f057b54dff09fc93c23485bc403d3', local_dir='/model')"
+    snapshot_download('Octen/Octen-Embedding-0.6B', revision='5c8a0c35452b7bf57b05069368fae594c44d78c8', local_dir='/model', ignore_patterns=['model.safetensors'])"
 
 
 FROM ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.4@sha256:2538ea1c9640d3763b15af668039d24172d063b42337b0c27796fc2be180c78d
