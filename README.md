@@ -10,6 +10,7 @@
 ## Start
 
 LightRAG opens at <http://127.0.0.1:9621> and TabbyAPI at <http://127.0.0.1:5000>.
+Set `OPENAI_API_KEY` in `.env` before starting; LightRAG uses it for document extraction.
 
 ```bash
 docker compose up
