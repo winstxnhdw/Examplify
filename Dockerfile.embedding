@@ -11,4 +11,4 @@ FROM ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.4@sha256:2538ea1c9640
 
 COPY --from=model-builder /model /model
 
-CMD ["--model-id", "/model", "--served-model-name", "Octen/Octen-Embedding-0.6B", "--dtype", "float32", "--max-batch-tokens", "4096", "--max-client-batch-size", "4", "--max-concurrent-requests", "8", "--port", "7997"]
+CMD ["--model-id", "/model", "--served-model-name", "Octen/Octen-Embedding-0.6B", "--dtype", "float32", "--max-batch-tokens", "4096", "--max-batch-requests", "4", "--max-client-batch-size", "4", "--max-concurrent-requests", "8", "--hostname", "0.0.0.0", "--port", "7997"]
