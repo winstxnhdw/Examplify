@@ -1,0 +1,5 @@
+model_list:
+  - model_name: lightrag
+    litellm_params:
+      model: ollama_chat/lightrag:latest
+      api_base: http://lightrag:9621
