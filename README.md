@@ -16,10 +16,7 @@ Set `OPENAI_API_KEY` in `.env` before starting; LightRAG uses it for document ex
 docker compose up
 ```
 
-The OpenAI-compatible LightRAG endpoint is `http://127.0.0.1:4000/v1`:
-
-- Model: `lightrag`
-- API key: `sk-local-lightrag`
+The OpenAI-compatible LightRAG endpoint is `http://127.0.0.1:4000/v1` (model `lightrag`).
 
 Then, from another terminal:
 

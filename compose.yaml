@@ -98,7 +98,5 @@ services:
     depends_on: [lightrag]
     command: [--config, /app/config.yaml]
     ports: [127.0.0.1:4000:4000]
-    environment:
-      LITELLM_MASTER_KEY: sk-local-lightrag
     volumes:
       - ./litellm.yml:/app/config.yaml:ro
