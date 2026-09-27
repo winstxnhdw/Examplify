@@ -61,7 +61,7 @@ services:
       EXTRACT_LLM_MODEL: gpt-6-luna
       EXTRACT_LLM_BINDING_HOST: https://api.openai.com/v1
       EXTRACT_LLM_BINDING_API_KEY: ${OPENAI_API_KEY:?Set OPENAI_API_KEY in .env}
-      EXTRACT_OPENAI_LLM_REASONING_EFFORT: medium
+      EXTRACT_OPENAI_LLM_REASONING_EFFORT: low
       EXTRACT_OPENAI_LLM_MAX_COMPLETION_TOKENS: "8192"
 
       EMBEDDING_BINDING: openai
@@ -90,6 +90,7 @@ services:
       CHUNK_OVERLAP_SIZE: "100"
       LIGHTRAG_PARSER: "*:native-teP,*:legacy-R"
       SUMMARY_LANGUAGE: English
+      ENTITY_EXTRACTION_USE_JSON: "true"
       ENABLE_LLM_CACHE: "true"
       ENABLE_LLM_CACHE_FOR_EXTRACT: "true"
       RERANK_BINDING: "null"
