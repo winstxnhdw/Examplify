@@ -7,9 +7,6 @@ services:
     ports: [127.0.0.1:5000:5000]
     environment:
       EXL3_INT8_GEMV: "1"
-    devices:
-      - /dev/nvidia-uvm:/dev/nvidia-uvm
-      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
     volumes:
       - ./config.yml:/app/config.yml:ro
       - ./reliable.yml:/app/sampler_overrides/reliable.yml:ro
