@@ -18,11 +18,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.embedding
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://localhost:7997/health]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10m
 
   lightrag:
     image: ghcr.io/hkuds/lightrag:v1.5.7@sha256:5bdbd524931b011df246fe20888d110cef691e6804c12cde636a2b746d7de27e
     init: true
-    depends_on: [tabbyapi, embedding]
+    depends_on:
+      tabbyapi:
+        condition: service_started
+      embedding:
+        condition: service_healthy
     ports: [127.0.0.1:9621:9621]
     environment:
       HOST: 0.0.0.0
@@ -37,7 +47,9 @@ services:
       LLM_BINDING_API_KEY: local-tabbyapi
       LLM_MODEL: Qwen3.8-27B-exl3-SC_4.00bpw_H5
       LLM_TIMEOUT: "300"
-      MAX_ASYNC_LLM: "1"
+      MAX_ASYNC_LLM: "8"
+      EXTRACT_MAX_ASYNC_LLM: "8"
+      MAX_PARALLEL_INSERT: "3"
       KEYWORD_MAX_ASYNC_LLM: "1"
       QUERY_MAX_ASYNC_LLM: "1"
       KEYWORD_OPENAI_LLM_TEMPERATURE: "1.0"
@@ -49,7 +61,7 @@ services:
       EXTRACT_LLM_MODEL: gpt-6-luna
       EXTRACT_LLM_BINDING_HOST: https://api.openai.com/v1
       EXTRACT_LLM_BINDING_API_KEY: ${OPENAI_API_KEY:?Set OPENAI_API_KEY in .env}
-      EXTRACT_OPENAI_LLM_REASONING_EFFORT: low
+      EXTRACT_OPENAI_LLM_REASONING_EFFORT: medium
       EXTRACT_OPENAI_LLM_MAX_COMPLETION_TOKENS: "8192"
 
       EMBEDDING_BINDING: openai
@@ -65,7 +77,7 @@ services:
       EMBEDDING_DOCUMENT_PREFIX: NO_PREFIX
       EMBEDDING_SEND_DIM: "false"
       EMBEDDING_USE_BASE64: "false"
-      EMBEDDING_TIMEOUT: "120"
+      EMBEDDING_TIMEOUT: "300"
       EMBEDDING_FUNC_MAX_ASYNC: "1"
       EMBEDDING_BATCH_NUM: "4"
 
