@@ -25,13 +25,42 @@ services:
       retries: 3
       start_period: 10m
 
+  keyword:
+    image: ghcr.io/ggml-org/llama.cpp:server@sha256:00bd6c289c590e576948cb3639b8195e4d3e6dd6ba1d761f0e2b871fcd4df24f
+    init: true
+    environment:
+      LLAMA_CACHE: /models
+    command:
+      - --hf-repo
+      - ${KEYWORD_MODEL_REPO:-Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M}
+      - --alias
+      - keyword-cpu
+      - --ctx-size
+      - "4096"
+      - --parallel
+      - "1"
+      - --threads
+      - "6"
+      - --n-gpu-layers
+      - "0"
+    volumes:
+      - ./.cache/keyword-model:/models
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://localhost:8080/health]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15m
+
   lightrag:
-    image: ghcr.io/hkuds/lightrag:v1.5.7@sha256:5bdbd524931b011df246fe20888d110cef691e6804c12cde636a2b746d7de27e
+    build:
+      context: .
+      dockerfile: Dockerfile.lightrag
     init: true
     depends_on:
-      tabbyapi:
-        condition: service_started
       embedding:
+        condition: service_healthy
+      keyword:
         condition: service_healthy
     ports: [127.0.0.1:9621:9621]
     environment:
@@ -52,11 +81,11 @@ services:
       MAX_PARALLEL_INSERT: "3"
       KEYWORD_MAX_ASYNC_LLM: "1"
       QUERY_MAX_ASYNC_LLM: "1"
-      KEYWORD_OPENAI_LLM_TEMPERATURE: "1.0"
-      KEYWORD_OPENAI_LLM_MAX_TOKENS: "4096"
-      KEYWORD_OPENAI_LLM_EXTRA_BODY: '{"chat_template_kwargs":{"enable_thinking":false}}'
-      QUERY_OPENAI_LLM_TEMPERATURE: "1.0"
-      QUERY_OPENAI_LLM_MAX_TOKENS: "4096"
+      KEYWORD_LLM_MODEL: keyword-cpu
+      KEYWORD_LLM_BINDING_HOST: http://keyword:8080/v1
+      KEYWORD_LLM_BINDING_API_KEY: local-keyword
+      KEYWORD_OPENAI_LLM_TEMPERATURE: "0"
+      KEYWORD_OPENAI_LLM_MAX_TOKENS: "512"
 
       EXTRACT_LLM_MODEL: gpt-6-luna
       EXTRACT_LLM_BINDING_HOST: https://api.openai.com/v1
@@ -81,9 +110,11 @@ services:
       EMBEDDING_FUNC_MAX_ASYNC: "1"
       EMBEDDING_BATCH_NUM: "4"
 
-      MAX_TOTAL_TOKENS: "10000"
-      MAX_ENTITY_TOKENS: "3000"
-      MAX_RELATION_TOKENS: "3000"
+      TOP_K: "40"
+      CHUNK_TOP_K: "20"
+      MAX_TOTAL_TOKENS: "6000"
+      MAX_ENTITY_TOKENS: "1200"
+      MAX_RELATION_TOKENS: "1200"
       MAX_EXTRACT_INPUT_TOKENS: "8000"
       SUMMARY_CONTEXT_SIZE: "8000"
       CHUNK_SIZE: "1200"

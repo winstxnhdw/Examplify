@@ -1,0 +1,11 @@
+services:
+  tabbyapi:
+    profiles: [tabby]
+
+  lightrag:
+    environment:
+      QUERY_LLM_BINDING: openai
+      QUERY_LLM_MODEL: gpt-6-astra
+      QUERY_LLM_BINDING_HOST: https://api.openai.com/v1
+      QUERY_LLM_BINDING_API_KEY: ${OPENAI_API_KEY:?Set OPENAI_API_KEY in .env}
+      QUERY_OPENAI_LLM_SERVICE_TIER: fast

@@ -13,10 +13,11 @@ model:
   max_batch_size: 1
   vision: false
   template_vars_default:
-    enable_thinking: true
-    preserve_thinking: true
-    reasoning_effort: medium
-  reasoning: true
+    enable_thinking: false
+    preserve_thinking: false
+  template_vars_force:
+    enable_thinking: false
+  reasoning: false
   tool_format: qwen3_5
 
 draft_model:

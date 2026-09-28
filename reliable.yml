@@ -1,11 +1,11 @@
 # Fallbacks only: callers can override every value per request.
-# These are Qwen's recommended Qwen3.8 thinking-mode settings.
+# These are Qwen's recommended Qwen3.8 non-thinking settings.
 temperature:
-  override: 1.0
+  override: 0.7
   force: false
 
 top_p:
-  override: 0.95
+  override: 0.8
   force: false
 
 top_k:
@@ -17,7 +17,7 @@ min_p:
   force: false
 
 presence_penalty:
-  override: 0.0
+  override: 1.5
   force: false
 
 repetition_penalty:

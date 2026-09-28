@@ -3,3 +3,4 @@ model_list:
     litellm_params:
       model: ollama_chat/lightrag:latest
       api_base: http://lightrag:9621
+      additional_drop_params: [service_tier]

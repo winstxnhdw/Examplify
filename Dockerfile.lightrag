@@ -1,0 +1,17 @@
+FROM ghcr.io/hkuds/lightrag:v1.5.7@sha256:5bdbd524931b011df246fe20888d110cef691e6804c12cde636a2b746d7de27e AS upstream
+FROM upstream AS patcher
+
+COPY patches/normalize_system_messages.py /tmp/normalize_system_messages.py
+COPY patches/client_owned_query_prompts.py /tmp/client_owned_query_prompts.py
+
+RUN python /tmp/normalize_system_messages.py
+RUN python /tmp/client_owned_query_prompts.py
+RUN mkdir -p /tmp/patched/llm /tmp/patched/api/routers
+RUN cp /app/lightrag/llm/openai.py /tmp/patched/llm/openai.py
+RUN cp /app/lightrag/operate.py /tmp/patched/operate.py
+RUN cp /app/lightrag/api/routers/ollama_api.py /tmp/patched/api/routers/ollama_api.py
+
+
+FROM upstream
+
+COPY --from=patcher /tmp/patched/ /app/lightrag/

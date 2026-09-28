@@ -7,3 +7,4 @@ api_tokens.yml
 .cache/
 memory.md
 data/
+backups/
