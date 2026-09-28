@@ -142,5 +142,7 @@ services:
     depends_on: [lightrag]
     command: [--config, /app/config.yaml]
     ports: [127.0.0.1:4000:4000]
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?Set OPENAI_API_KEY in .env}
     volumes:
       - ./litellm.yml:/app/config.yaml:ro
